@@ -50,8 +50,23 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField(_l('Register'))
 
     def validate_email(self, email):
+        print(email.data)
         if User.email_exists(email.data):
             raise ValidationError(_('Already a user with this email.'))
+
+    def validate_on_submit(self):
+        try:           
+            print(self.email.data)
+            self.validate_email(self.email)        
+        except:
+            print("This email already has an account registered!") #change to flash later
+            return False
+
+            
+        return True
+
+        
+
 
 
 @bp.route('/register', methods=['GET', 'POST'])
@@ -65,6 +80,8 @@ def register():
                          form.firstname.data,
                          form.lastname.data):
             flash('Congratulations, you are now a registered user!')
+            print('Congratulations, you are now a registered user!')
+
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 

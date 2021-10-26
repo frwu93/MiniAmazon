@@ -42,19 +42,21 @@ WHERE email = :email
     def register(email, password, firstname, lastname):
         try:
             rows = app.db.execute("""
-INSERT INTO Users(email, password, firstname, lastname)
-VALUES(:email, :password, :firstname, :lastname)
-RETURNING id
-""",
+                INSERT INTO Users(id, email, password, firstname, lastname, balance)
+                VALUES(5,:email, :password, :firstname, :lastname,0.0)
+                RETURNING id
+                """,
                                   email=email,
                                   password=generate_password_hash(password),
                                   firstname=firstname,
                                   lastname=lastname)
             id = rows[0][0]
+            print("backend reg; inserted into db")
             return User.get(id)
         except Exception:
             # likely email already in use; better error checking and
             # reporting needed
+            print("not added")
             return None
 
     @staticmethod
