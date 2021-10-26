@@ -1,1 +1,2 @@
-testing pushing and merging
+dropdb amazon; createdb amazon; psql amazon -af create.sql
+psql amazon -af load.sql

@@ -42,8 +42,8 @@ WHERE email = :email
     def register(email, password, firstname, lastname):
         try:
             rows = app.db.execute("""
-                INSERT INTO Users(id, email, password, firstname, lastname, balance)
-                VALUES(5,:email, :password, :firstname, :lastname,0.0)
+                INSERT INTO Users(id,email, password, firstname, lastname, balance)
+                VALUES(DEFAULT, :email, :password, :firstname, :lastname,0.0)
                 RETURNING id
                 """,
                                   email=email,
@@ -53,7 +53,8 @@ WHERE email = :email
             id = rows[0][0]
             print("backend reg; inserted into db")
             return User.get(id)
-        except Exception:
+        except Exception as e:
+            print(e)
             # likely email already in use; better error checking and
             # reporting needed
             print("not added")
