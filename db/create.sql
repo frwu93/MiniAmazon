@@ -26,7 +26,8 @@ CREATE TABLE Products (
     description VARCHAR(255),
     imageLink VARCHAR(255),
     category VARCHAR NOT NULL,
-    price FLOAT NOT NULL
+    price FLOAT NOT NULL,
+    available BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE Sells (
