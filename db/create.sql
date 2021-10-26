@@ -2,7 +2,7 @@
 -- Here we only create 3 tables for demo purpose.
 
 CREATE TABLE Users (
-    id INT NOT NULL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     email VARCHAR UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     firstname VARCHAR(255) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE Sellers (
 );
 
 CREATE TABLE Products (
-    id INT NOT NULL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(255) UNIQUE NOT NULL,
     description VARCHAR(255),
     imageLink VARCHAR(255),
