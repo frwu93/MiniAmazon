@@ -66,7 +66,9 @@ class RegistrationForm(FlaskForm):
         return True
 
         
-
+@bp.route('/profile')
+def profile():
+    return render_template('profile.html', title='Profile')
 
 
 @bp.route('/register', methods=['GET', 'POST'])
