@@ -35,10 +35,30 @@ SELECT product_id, name, price, available
 FROM Products, Sells
 WHERE seller_id = :id
 AND Products.id = Sells.product_id
+AND available = :available
+ORDER BY product_id
 ''',
-                              id=id)
+                              id=id,
+                              available=available)
         
         return [Product(*row) for row in rows]
+    
+    @staticmethod
+    def remove_listing(id):
+        try: 
+            app.db.execute('''
+    UPDATE Products
+    SET available=false
+    WHERE id = :id
+    RETURNING id
+    ''',
+                                id=id)
+            return id
+        except Exception  as e:
+            print(e)
+            print("Could not delete: ", id)
+            return None
+
 
 
     @staticmethod

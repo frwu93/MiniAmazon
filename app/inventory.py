@@ -54,3 +54,11 @@ def sellItem():
         return redirect(url_for('inventory.inventory'))
     return render_template('listItem.html', title='Sign In', form=form)
 
+@bp.route('/deleteItem/<int:id>')
+def deleteItem(id):
+    # get all available products for sale:
+    print("Removing  item: ", id)
+
+    product = Product.remove_listing(id)
+    return redirect(url_for('inventory.inventory'))
+
