@@ -52,13 +52,6 @@ WHERE email = :email
                                   lastname=lastname)
             id = rows[0][0]
             print("backend reg; inserted into db")
-            rows2 = app.db.execute("""
-                INSERT INTO Buyers(id)
-                VALUES(:id)
-                RETURNING id
-                """,
-                id = id)
-            print("added to buyers")
             rows3 = app.db.execute("""
                 INSERT INTO Sellers(id)
                 VALUES(:id)
