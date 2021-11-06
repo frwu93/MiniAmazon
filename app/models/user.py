@@ -52,6 +52,13 @@ WHERE email = :email
                                   lastname=lastname)
             id = rows[0][0]
             print("backend reg; inserted into db")
+            rows3 = app.db.execute("""
+                INSERT INTO Sellers(id)
+                VALUES(:id)
+                RETURNING id
+                """,
+                id = id)
+            print("added to sellers")
             return User.get(id)
         except Exception as e:
             print(e)

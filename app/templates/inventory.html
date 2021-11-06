@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+<a href="{{ url_for('inventory.sellItem') }}" type="button" class="btn btn-dark">Sell a product</a>
+<br><br>
+<h2>Your products for sale:</h2>
+<table class='table table-hover table-bordered container' id="myTable">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product ID</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Product Quantity</th>
+      <th scope="col">Price</th>
+      <th scope="col">Remove Listing</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in avail_products%}
+      <tr id={{product.id}}>
+        <th scope="row">{{product.id}}</th>
+        <td>{{product.name}}</td>
+        <td>{{product.quantity}}</td>
+        <td>{{product.price}}</td>
+        <td><a href="{{ url_for('inventory.deleteItem', id=product.id) }}" type="button" class="btn btn-dark" onclick="return confirm('Are you sure?')">Remove listing</a>
+        </td>
+        <!--<td><button type="button" onclick='productDelete(this);'>Remove</button></td> -->
+      </tr>
+    {% endfor %}
+  </tbody>
+  <script>
+    function productDelete(ctl) {
+      //var i = ctl.parentNode.parentNode.row.Index;
+      //document.getElementById("myTable").deleteRow(0);
+      //document.write(id);
+      console.log($(ctl).parents("tr"));
+      $(ctl).parents("tr").remove();
+    }
+    </script>
+</table>
+
+<br><br>
+{% if current_user.is_authenticated %}
+<h2>Your recent sales:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Purchase ID</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for purchase in purchase_history%}
+      <tr>
+        <th scope="row">{{purchase.id}}</th>
+        <td>{{purchase.pid}}</td>
+        <td>{{purchase.time_purchased}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
+{% endif %}
+
+{% endblock %}
