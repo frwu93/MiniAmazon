@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <body>
+        <div class="sidenav">
+          {% block msg %}
+            <h1 style="color:black">Hello {{current_user.firstname}}! This is your cart!</h1>
+            <div style="color: black; text-align: right; margin-bottom: 25px">
+            </div>
+          {% endblock %}
+        </div>
+        <div class="main">
+          {% block content %}{% endblock %}
+        </div>
+    </body>
+
+    <br><br>
+{% if current_user.is_authenticated %}
+<h2>Your Cart:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Item ID</th>
+      <th scope="col">Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in cart_items%}
+      <tr>
+        <th scope="row">{{item.product_id}}</th>
+        <td>{{item.quantity}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
+{% endif %}
+      

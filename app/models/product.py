@@ -27,3 +27,6 @@ WHERE available = :available
 ''',
                               available=available)
         return [Product(*row) for row in rows]
+
+
+
