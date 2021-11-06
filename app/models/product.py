@@ -2,16 +2,16 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, name, price, available):
+    def __init__(self, id, name, price, quantity):
         self.id = id
         self.name = name
         self.price = price
-        self.available = available
+        self.quantity = quantity
 
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT id, name, price, available
+SELECT id, name, price, quantity
 FROM Products
 WHERE id = :id
 ''',
@@ -21,7 +21,7 @@ WHERE id = :id
     @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
-SELECT id, name, price, available
+SELECT id, name, price, quantity
 FROM Products
 WHERE available = :available
 ''',
@@ -31,22 +31,58 @@ WHERE available = :available
     @staticmethod
     def get_all_by_seller(id, available=True):
         rows = app.db.execute('''
-SELECT product_id, name, price, available
-FROM Products, Sells
+SELECT id, name, price, quantity
+FROM Products
 WHERE seller_id = :id
-AND Products.id = Sells.product_id
+AND available = :available
+ORDER BY id
 ''',
-                              id=id)
+                              id=id,
+                              available=available)
         
         return [Product(*row) for row in rows]
+    
+    @staticmethod
+    def remove_listing(id):
+        try: 
+            app.db.execute('''
+    UPDATE Products
+    SET available=false
+    WHERE id = :id
+    RETURNING id
+    ''',
+                                id=id)
+            print("Deleted: ", id)
+            return id
+        except Exception  as e:
+            print(e)
+            print("Could not delete: ", id)
+            return None
+
+    @staticmethod
+    def change_quantity(id, quantity):
+        try: 
+            app.db.execute('''
+    UPDATE Products
+    SET quantity=:quantity
+    WHERE id = :id
+    RETURNING id
+    ''',
+                                id=id,
+                                quantity=quantity)
+            return id
+        except Exception  as e:
+            print(e)
+            print("Could not change quantity: ", id)
+            return None
 
 
     @staticmethod
     def new_listing(seller_id, name, quantity, description, imageLink, category, price):
         try:
             rows = app.db.execute("""
-                INSERT INTO Products(id, name, description, imageLink, category, price, available)
-                VALUES(DEFAULT, :name, :description, :imageLink, :category, :price, TRUE)
+                INSERT INTO Products(id, seller_id, name, description, imageLink, category, price, available, quantity)
+                VALUES(DEFAULT, :seller_id, :name, :description, :imageLink, :category, :price, TRUE, :quantity)
                 returning id
                 """,
                                   name=name,
@@ -54,16 +90,10 @@ AND Products.id = Sells.product_id
                                   description=description,
                                   imageLink=imageLink,
                                   category=category,
-                                  price=price)
+                                  price=price,
+                                  seller_id=seller_id)
             id = rows[0][0]
-            rows2 = app.db.execute("""
-                INSERT INTO Sells(seller_id, product_id, quantity)
-                VALUES(:seller_id, :product_id, :quantity)
-            """,
-                            seller_id = seller_id,
-                            product_id = id,
-                            quantity = quantity)
-            print("backend reg; inserted into db")
+            print("Inserted: ", id)
             return Product.get(id)
         except Exception as e:
             print(e)
