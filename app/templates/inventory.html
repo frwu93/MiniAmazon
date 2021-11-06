@@ -21,12 +21,64 @@
       <tr id={{product.id}}>
         <th scope="row">{{product.id}}</th>
         <td>{{product.name}}</td>
-        <td>{{product.quantity}}</td>
+        <td>
+          {{product.quantity}} 
+          <button type="button" class="btn btn-dark" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{product.id}}" data-id={{product.id}}>
+            Change
+          </button>
+          
+          <!-- <a href="{{ url_for('inventory.changeQuantity', id=product.id, quantity=10) }}" type="button" class="btn btn-dark" onclick="return confirm('Are you sure?')" style="float: right">Change Quantity</a></td> -->
         <td>{{product.price}}</td>
         <td><a href="{{ url_for('inventory.deleteItem', id=product.id) }}" type="button" class="btn btn-dark" onclick="return confirm('Are you sure?')">Remove listing</a>
         </td>
         <!--<td><button type="button" onclick='productDelete(this);'>Remove</button></td> -->
       </tr>
+      
+      <div class="modal fade" id="exampleModal{{product.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Enter New Quantity</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <label for="newQuantity">New Quantity: {{product.id}}</label>
+                <input class="quantity" type="number" min="1" step="1" id="newQuantity{{product.id}}" name="newQuantity"
+                  oninput="validity.valid||(valtmlue='');">
+
+              <button type="button" onclick='passNewQuantity("{{product.id}}");'>Change Quantity</button>
+              <script>
+                function passNewQuantity(id){
+                    var inputVal = document.getElementById("newQuantity"+id).value;
+                    alert(id);
+                    if(isNaN(inputVal)) alert("Not a numnber");
+                    var value = parseInt(inputVal);
+                    if (value < 1 || !Number.isInteger(value)){ 
+                      alert("Quantities must be positive integers");
+                      var baseUrl = window.location.href;
+                      window.location.href = baseUrl;
+                    }
+                    else{
+                    // Selecting the input element and get its value 
+                      var baseUrl = window.location.href;
+                      alert(inputVal);
+                      var url = baseUrl.concat("/", "changeQuantity", "/", id, "/", inputVal);
+                      alert(url);
+                      // Displaying the value
+                      //var link = "Stupd";
+                      window.location.href = url;
+                    }
+                }
+            </script>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+      
     {% endfor %}
   </tbody>
   <script>
@@ -39,6 +91,8 @@
     }
     </script>
 </table>
+
+
 
 <br><br>
 {% if current_user.is_authenticated %}

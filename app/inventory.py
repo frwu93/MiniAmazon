@@ -62,3 +62,9 @@ def deleteItem(id):
     product = Product.remove_listing(id)
     return redirect(url_for('inventory.inventory'))
 
+@bp.route('/inventory/changeQuantity/<int:id>/<int:quantity>')
+def changeQuantity(id, quantity):
+    # get all available products for sale:
+    print("Changing quantity of ", id, " to ", quantity)
+    product = Product.change_quantity(id, quantity)
+    return redirect(url_for('inventory.inventory'))
