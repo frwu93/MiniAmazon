@@ -21,3 +21,49 @@ position: absolute;
 right: 0px;
 width: 50%;
 }
+
+button {
+    background: none;
+    padding: 5px 5px;
+    width: fit-content;
+    text-align: center;
+    outline: none;
+  }
+  button:active {
+    border-style: outset;
+  }
+
+/* td,
+th {
+    border: 1px solid rgb(190, 190, 190);
+    padding: 10px;
+}
+
+td {
+    text-align: center;
+}
+
+tr:nth-child(even) {
+    background-color: #eee;
+}
+
+th[scope="col"] {
+    background-color: #696969;
+    color: #fff;
+}
+
+th[scope="row"] {
+    background-color: #d7d9f2;
+}
+
+caption {
+    padding: 10px;
+    caption-side: bottom;
+}
+
+table {
+    border: 2px solid rgb(200, 200, 200);
+    letter-spacing: 1px;
+    font-family: sans-serif;
+    font-size: .8rem;
+} */

@@ -10,11 +10,6 @@ CREATE TABLE Users (
     balance FLOAT NOT NULL
 );
 
-CREATE TABLE Buyers (
-    id INT NOT NULL PRIMARY KEY,
-    FOREIGN KEY (id) REFERENCES Users(id)
-);
-
 CREATE TABLE Sellers (
     id INT NOT NULL PRIMARY KEY,
     FOREIGN KEY (id) REFERENCES Users(id)
@@ -22,21 +17,15 @@ CREATE TABLE Sellers (
 
 CREATE TABLE Products (
     id SERIAL PRIMARY KEY,
+    seller_id INT NOT NULL,
     name VARCHAR(255) UNIQUE NOT NULL,
     description VARCHAR(255),
     imageLink VARCHAR(255),
     category VARCHAR NOT NULL,
     price FLOAT NOT NULL,
-    available BOOLEAN DEFAULT TRUE
-);
-
-CREATE TABLE Sells (
-    seller_id INT NOT NULL,
-    product_id INT NOT NULL,
+    available BOOLEAN DEFAULT TRUE,
     quantity INT NOT NULL,
-    PRIMARY KEY (seller_id, product_id),
-    FOREIGN KEY (seller_id) REFERENCES Sellers(id),
-    FOREIGN KEY (product_id) REFERENCES Products(id)
+    FOREIGN KEY (seller_id) REFERENCES Sellers(id)
 );
 
 CREATE TABLE Seller_Rating (
@@ -46,7 +35,7 @@ CREATE TABLE Seller_Rating (
     time_reviewed timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     CHECK(rating in (0, 1, 2, 3, 4, 5)),
     FOREIGN KEY (seller_id) REFERENCES Sellers(id),
-    FOREIGN KEY (buyer_id) REFERENCES Buyers(id),
+    FOREIGN KEY (buyer_id) REFERENCES Users(id),
     PRIMARY KEY (buyer_id, seller_id)
 );
 
@@ -54,7 +43,7 @@ CREATE TABLE Cart (
     buyer_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL,
-    FOREIGN KEY (buyer_id) REFERENCES Buyers(id),
+    FOREIGN KEY (buyer_id) REFERENCES Users(id),
     FOREIGN KEY (product_id) REFERENCES Products(id),
     PRIMARY KEY (buyer_id, product_id)
 );
@@ -62,7 +51,7 @@ CREATE TABLE Cart (
 CREATE TABLE Product_Rating (
     buyer_id INT NOT NULL,
     product_id INT NOT NULL,
-    FOREIGN KEY (buyer_id) REFERENCES Buyers(id),
+    FOREIGN KEY (buyer_id) REFERENCES Users(id),
     FOREIGN KEY (product_id) REFERENCES Products(id),
     rating INT NOT NULL,
     CHECK(rating in (0, 1, 2, 3, 4, 5)),
@@ -71,12 +60,20 @@ CREATE TABLE Product_Rating (
     PRIMARY KEY (buyer_id, product_id)
 );
 
-CREATE TABLE Order_History (
+CREATE TABLE Orders(
+    order_id SERIAL PRIMARY KEY,
     buyer_id INT NOT NULL,
+    FOREIGN KEY (buyer_id) REFERENCES Users(id),
+    time_ordered timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+);
+
+CREATE TABLE Order_History (
+    order_id INT NOT NULL,
     product_id INT NOT NULL,
-    FOREIGN KEY (buyer_id) REFERENCES Buyers(id),
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
     FOREIGN KEY (product_id) REFERENCES Products(id),
-    time_purchased timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    price FLOAT NOT NULL,
     quantity INT NOT NULL,
-    PRIMARY KEY (buyer_id, product_id, time_purchased)
+    fulfilled BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (product_id, order_id)
 );
