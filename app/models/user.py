@@ -6,16 +6,17 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, id, email, firstname, lastname):
+    def __init__(self, id, email, firstname, lastname, balance):
         self.id = id
         self.email = email
         self.firstname = firstname
         self.lastname = lastname
+        self.balance = balance
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname
+SELECT password, id, email, firstname, lastname, balance
 FROM Users
 WHERE email = :email
 """,
@@ -64,9 +65,52 @@ WHERE email = :email
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-SELECT id, email, firstname, lastname
+SELECT id, email, firstname, lastname, balance
 FROM Users
 WHERE id = :id
 """,
                               id=id)
         return User(*(rows[0])) if rows else None
+
+    @staticmethod
+    def updateFirstName(id, newName):
+        rows = app.db.execute("""
+UPDATE Users
+SET firstname=:newName
+WHERE id = :id
+RETURNING id
+""",
+id=id,
+newName=newName)
+        return id
+
+    @staticmethod
+    def updateLastName(id, newName):
+        rows = app.db.execute("""
+UPDATE Users
+SET lastname=:newName
+WHERE id = :id
+RETURNING id
+""",
+id=id,
+newName=newName)
+        return id
+
+    @staticmethod
+    def updateEmail(id, newEmail):
+        try:
+            rows = app.db.execute("""
+                UPDATE Users
+                SET email=:newEmail
+                WHERE id = :id
+                RETURNING id
+                """,
+                id=id,
+                newEmail=newEmail)
+            return id
+        except Exception as e:
+            print(e)
+            return None
+
+
+

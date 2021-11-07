@@ -3,20 +3,23 @@
 {% block content %}
 
 <html>
+
 <head>
     <link rel="stylesheet" type="text/css" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="profile.css">
-</head>    
+</head>
+
 <body>
     <div>
         <div class="row">
             <div class="col-md-3 mt-1">
                 <div class="card text-center sidebar">
                     <div class="card-body">
-                        <img src="https://users.cs.duke.edu/~junyang/media/portrait.jpg" class="rounded-circle" width="150">
+                        <img src="https://users.cs.duke.edu/~junyang/media/portrait.jpg" class="rounded-circle"
+                            width="150">
                         <div class="mt-3">
-                            <h3>Zachary Zheng</h3>
-                            <p>Account ID: XXXXXXX</p>
+                            <h3>{{user.firstname}} {{user.lastname}}</h3>
+                            <p>Account ID: {{user.id}}</p>
                             <hr>
                             <div class="tabs">
                                 <a href="">Account Details</a>
@@ -42,7 +45,34 @@
                                 <h5>First Name</h5>
                             </div>
                             <div class="col-md-9 text-secondary">
-                                Zachary
+                                {{user.firstname}} 
+                                <button type="button" class="btn btn-dark" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalFirstName">
+                                    Change
+                                </button>
+                            </div>
+                            <div class="modal fade" id="exampleModalFirstName" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Change First Name</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+                                                <label for="firstname">First Name: </label>
+                                                <input type="text" id="firstname" name="firstname">
+                                                <input type="submit" value="Submit">
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <hr>
@@ -51,7 +81,34 @@
                                 <h5>Last Name</h5>
                             </div>
                             <div class="col-md-9 text-secondary">
-                                Zheng
+                                {{user.lastname}}
+                                <button type="button" class="btn btn-dark" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLastName">
+                                    Change
+                                </button>
+                            </div>
+                            <div class="modal fade" id="exampleModalLastName" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Change Last Name</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+                                                <label for="lastname">Last Name: </label>
+                                                <input type="text" id="lastname" name="lastname">
+                                                <input type="submit" value="Submit">
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <hr>
@@ -60,16 +117,34 @@
                                 <h5>Email</h5>
                             </div>
                             <div class="col-md-9 text-secondary">
-                                zzackzheng@gmail.com
+                                {{user.email}}
+                                <button type="button" class="btn btn-dark" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalEmail">
+                                    Change
+                                </button>
                             </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <h5>Phone</h5>
-                            </div>
-                            <div class="col-md-9 text-secondary">
-                                9198007255
+                            <div class="modal fade" id="exampleModalEmail" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Enter New Email</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+                                                <label for="email">Email: </label>
+                                                <input type="text" id="email" name="email">
+                                                <input type="submit" value="Submit">
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <hr>
@@ -79,6 +154,28 @@
                             </div>
                             <div class="col-md-9 text-secondary">
                                 412 Chapel Drive, Durham NC, 27514
+                                <button type="button" class="btn btn-dark" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalAddress">
+                                    Change
+                                </button>
+                            </div>
+                            <div class="modal fade" id="exampleModalAddress" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Enter New Quantity</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -92,6 +189,28 @@
                             </div>
                             <div class="col-md-9 text-secondary">
                                 ********
+                                <button type="button" class="btn btn-dark" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalPassword">
+                                    Change
+                                </button>
+                            </div>
+                            <div class="modal fade" id="exampleModalPassword" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Enter New Quantity</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -99,8 +218,11 @@
             </div>
         </div>
     </div>
+
 </body>
+
 </html>
+
 
 
 {% endblock %}
