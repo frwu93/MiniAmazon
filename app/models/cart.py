@@ -45,4 +45,18 @@ class Cart:
             print(e)
             print(f"Could not change quantity of {product_id} to {quantity}")
             return None
+
+    @staticmethod
+    def delete_item(buyer_id, product_id):
+        try:
+            app.db.execute('''
+            DELETE FROM Cart
+            WHERE buyer_id = :buyer_id AND product_id = :product_id
+            ''', 
+                                buyer_id = buyer_id, 
+                                product_id = product_id)
+        except Exception as e:
+            print(e)
+            print(f'Could note delete {product_id}')
+            return None
     

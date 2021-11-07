@@ -13,8 +13,9 @@
       <th scope="col">Seller</th>
       <th scope="col">Price</th>
       <th scope="col">Quantity</th>
-      <th scope="col"></th>
-      <th scope="col">Total</th>
+
+      <th scope="col">Delete Item</th>  
+      <th scope="col">Total</th>   
     </tr>
   </thead>
   <tbody>
@@ -24,8 +25,9 @@
         <td>{{item.product_name}}</td>
         <td>{{item.seller}}</td>
         <td>${{item.price}}</td>
-        <td>{{item.quantity}}</td>
-        <td><button type="button" class="btn btn-dark" data-toggle="modal" data-target="#quantityChange{{item.product_id}}">Change Quantity</button>
+        <td>{{item.quantity}}
+        <button type="button" style = "float: right", class="btn btn-dark" data-toggle="modal" data-target="#quantityChange{{item.product_id}}">Change Quantity</button> </td>
+        <td><a href="{{ url_for('carts.deleteItem', buyer_id = current_user.id, product_id=item.product_id) }}" type="button" class="btn btn-dark" onclick="return confirm('Are you sure?')" style = "float: left">Delete Item</a>
         <td>${{item.total_cost}}</td>
       </tr>
     
@@ -46,12 +48,12 @@
             <input class="quantity" type="number" min="1" step="1" id="newQuantity{{item.product_id}}" name="newQuantity"
               oninput="validity.valid||(valtmlue='');">
 
-          <button type="button" onclick='passNewQuantity("{{item.product_id}}")'>Change Quantity</button>
+          <button type="button" onclick="passNewQuantity('{{current_user.id}}','{{item.product_id}}')"> Change Quantity</button>
 
           <script>
-            function passNewQuantity(id){
-                var inputVal = document.getElementById("newQuantity"+id).value;
-                alert(id);
+            function passNewQuantity(buyer_id, product_id){
+                var inputVal = document.getElementById("newQuantity"+product_id).value;
+                alert(product_id);
                 if(isNaN(inputVal)) alert("Not a numnber");
                 var value = parseInt(inputVal);
                 if (value < 1 || !Number.isInteger(value)){ 
@@ -63,7 +65,7 @@
                 // Selecting the input element and get its value 
                   var baseUrl = window.location.href;
                   alert(inputVal);
-                  var url = baseUrl.concat("/", "changeQuantity", "/", id, "-", id, "-", inputVal);
+                  var url = baseUrl.concat("/", "changeQuantity", "/", buyer_id, "-", product_id, "-", inputVal);
                   alert(url);
                   // Displaying the value
                   //var link = "Stupd";
@@ -83,6 +85,7 @@
 </table>
 
 <p align="right">Total Cost: {{subtotal}}</p>
+
 {% endif %}
 
 {% endblock %}

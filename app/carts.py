@@ -30,6 +30,11 @@ def changeQuantity(buyer_id, product_id, quantity):
     Cart.change_quantity(buyer_id, product_id, quantity)
     return redirect(url_for('carts.cart'))
 
+@bp.route('/cart/deleteItem/<int:buyer_id>-<int:product_id>')
+def deleteItem(buyer_id, product_id):
+    print(f'Deleting item {product_id} from {buyer_id}\'s cart')
+    deleted = Cart.delete_item(buyer_id, product_id)
+    return redirect(url_for('carts.cart'))
 
     
 

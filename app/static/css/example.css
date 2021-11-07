@@ -25,7 +25,7 @@ width: 50%;
 button {
     background: none;
     padding: 5px 5px;
-    width: 30%;
+    width: fit-content;
     text-align: center;
     outline: none;
   }
