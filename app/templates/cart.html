@@ -1,39 +1,91 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-    <body>
-        <div class="sidenav">
-          {% block msg %}
-            <h1 style="color:black">Hello {{current_user.firstname}}! This is your cart!</h1>
-            <div style="color: black; text-align: right; margin-bottom: 25px">
-            </div>
-          {% endblock %}
-        </div>
-        <div class="main">
-          {% block content %}{% endblock %}
-        </div>
-    </body>
+{% block content %}
 
-    <br><br>
+<br><br>
 {% if current_user.is_authenticated %}
 <h2>Your Cart:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
-      <th scope="col">Item ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Seller</th>
+      <th scope="col">Price</th>
       <th scope="col">Quantity</th>
+      <th scope="col"></th>
+      <th scope="col">Total</th>
     </tr>
   </thead>
   <tbody>
     {% for item in cart_items%}
       <tr>
         <th scope="row">{{item.product_id}}</th>
+        <td>{{item.product_name}}</td>
+        <td>{{item.seller}}</td>
+        <td>${{item.price}}</td>
         <td>{{item.quantity}}</td>
+        <td><button type="button" class="btn btn-dark" data-toggle="modal" data-target="#quantityChange{{item.product_id}}">Change Quantity</button>
+        <td>${{item.total_cost}}</td>
       </tr>
-    {% endfor %}
+    
+
+  <div class="modal fade" id="quantityChange{{item.product_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Enter New Quantity for {{item.product_name}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <label for="newQuantity">New Quantity:</label>
+            <input class="quantity" type="number" min="1" step="1" id="newQuantity{{item.product_id}}" name="newQuantity"
+              oninput="validity.valid||(valtmlue='');">
+
+          <button type="button" onclick='passNewQuantity("{{item.product_id}}")'>Change Quantity</button>
+
+          <script>
+            function passNewQuantity(id){
+                var inputVal = document.getElementById("newQuantity"+id).value;
+                alert(id);
+                if(isNaN(inputVal)) alert("Not a numnber");
+                var value = parseInt(inputVal);
+                if (value < 1 || !Number.isInteger(value)){ 
+                  alert("Quantities must be positive integers");
+                  var baseUrl = window.location.href;
+                  window.location.href = baseUrl;
+                }
+                else{
+                // Selecting the input element and get its value 
+                  var baseUrl = window.location.href;
+                  alert(inputVal);
+                  var url = baseUrl.concat("/", "changeQuantity", "/", id, "-", id, "-", inputVal);
+                  alert(url);
+                  // Displaying the value
+                  //var link = "Stupd";
+                  window.location.href = url;
+                }
+            }
+        </script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
   </tbody>
 </table>
-{% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
+
+<p align="right">Total Cost: {{subtotal}}</p>
 {% endif %}
+
+{% endblock %}
+      
+
       
