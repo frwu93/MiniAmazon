@@ -28,6 +28,7 @@ WHERE available = :available
                               available=available)
         return [Product(*row) for row in rows]
 
+
     @staticmethod
     def get_all_by_seller(id, available=True):
         rows = app.db.execute('''

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+{% if current_user.is_authenticated %}
+<h2>Your Cart:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Seller</th>
+      <th scope="col">Price</th>
+      <th scope="col">Quantity</th>
+
+      <th scope="col">Delete Item</th>  
+      <th scope="col">Total</th>   
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in cart_items%}
+      <tr>
+        <th scope="row">{{item.product_id}}</th>
+        <td>{{item.product_name}}</td>
+        <td>{{item.seller}}</td>
+        <td>${{item.price}}</td>
+        <td>{{item.quantity}}
+        <button type="button" style = "float: right", class="btn btn-dark" data-toggle="modal" data-target="#quantityChange{{item.product_id}}">Change Quantity</button> </td>
+        <td><a href="{{ url_for('carts.deleteItem', buyer_id = current_user.id, product_id=item.product_id) }}" type="button" class="btn btn-dark" onclick="return confirm('Are you sure?')" style = "float: left">Delete Item</a>
+        <td>${{item.total_cost}}</td>
+      </tr>
+    
+
+  <div class="modal fade" id="quantityChange{{item.product_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Enter New Quantity for {{item.product_name}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <label for="newQuantity">New Quantity:</label>
+            <input class="quantity" type="number" min="1" step="1" id="newQuantity{{item.product_id}}" name="newQuantity"
+              oninput="validity.valid||(valtmlue='');">
+
+          <button type="button" onclick="passNewQuantity('{{current_user.id}}','{{item.product_id}}')"> Change Quantity</button>
+
+          <script>
+            function passNewQuantity(buyer_id, product_id){
+                var inputVal = document.getElementById("newQuantity"+product_id).value;
+                alert(product_id);
+                if(isNaN(inputVal)) alert("Not a numnber");
+                var value = parseInt(inputVal);
+                if (value < 1 || !Number.isInteger(value)){ 
+                  alert("Quantities must be positive integers");
+                  var baseUrl = window.location.href;
+                  window.location.href = baseUrl;
+                }
+                else{
+                // Selecting the input element and get its value 
+                  var baseUrl = window.location.href;
+                  alert(inputVal);
+                  var url = baseUrl.concat("/", "changeQuantity", "/", buyer_id, "-", product_id, "-", inputVal);
+                  alert(url);
+                  // Displaying the value
+                  //var link = "Stupd";
+                  window.location.href = url;
+                }
+            }
+        </script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  </tbody>
+</table>
+
+<p align="right">Total Cost: {{subtotal}}</p>
+
+{% endif %}
+
+{% endblock %}
+      
+
+      
