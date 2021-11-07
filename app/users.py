@@ -66,7 +66,21 @@ class RegistrationForm(FlaskForm):
         return True
 
         
-
+@bp.route('/profile')
+def profile():
+    #efef
+    firstname = request.args.get('firstname')
+    lastname = request.args.get('lastname')
+    email = request.args.get('email')
+    if firstname:
+        id = User.updateFirstName(current_user.id, firstname)
+    if lastname:
+        id = User.updateLastName(current_user.id, lastname)
+    if email:
+        id = User.updateEmail(current_user.id, email)
+    
+    user = User.get(current_user.id)
+    return render_template('profile.html', title='Profile', user=user)
 
 
 @bp.route('/register', methods=['GET', 'POST'])
