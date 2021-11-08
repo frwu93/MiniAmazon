@@ -4,10 +4,32 @@
 
 <br><br>
 {% if current_user.is_authenticated %}
-<h2>Checkout:</h2>
+<h2>Checkout ( 
+    {% if cart_items|length > 1 %}
+    {{cart_items|length}} items
+    {% else %}
+     {{cart_items|length}} item
+    {% endif %}
+    )</h2>
+<p>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li style="color: red;">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+</p>
+<br><br>
 <h3>Your Address:</h3>
-<p>{{address}}</p> 
-
+<p>{{user.address}}</p> 
+<br><br>
+<h3>Payment Method:</h3>
+<p>Balance: ${{user.balance}}</p>
+<br><br> 
+<h3>Review Items:</h3>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
@@ -16,7 +38,6 @@
       <th scope="col">Seller</th>
       <th scope="col">Price</th>
       <th scope="col">Quantity</th>
-
       <th scope="col">Delete Item</th>  
       <th scope="col">Total</th>   
     </tr>
@@ -68,7 +89,7 @@
                 // Selecting the input element and get its value 
                   var baseUrl = window.location.href;
                   alert(inputVal);
-                  var url = baseUrl.concat("/", "changeQuantity", "/", buyer_id, "-", product_id, "-", inputVal);
+                  var url = baseUrl.concat("/", "changeQuantity", "/", buyer_id, "-", product_id, "-", inputVal, "-", 1);
                   alert(url);
                   // Displaying the value
                   //var link = "Stupd";
@@ -88,8 +109,7 @@
 </table>
 
 <p align="right">Total Cost: {{subtotal}}</p>
-<a href="{{ url_for('orders.checkout_success')}}" type = "button" class="btn btn-dark" style = "float:right"> Check Out </a>
-
+<a href="{{ url_for('orders.verify_transaction') }}" type="button" class="btn btn-dark" onclick="return confirm('Are you sure?')" style = "float: right">Place Your Order</a>
 {% endif %}
 
 {% endblock %}
