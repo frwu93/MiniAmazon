@@ -37,6 +37,7 @@ class Cart:
     UPDATE Cart
     SET quantity=:quantity
     WHERE buyer_id = :buyer_id AND product_id = :product_id
+    RETURNING product_id
     ''',
                                 buyer_id=buyer_id,
                                 product_id = product_id,
@@ -52,6 +53,7 @@ class Cart:
             app.db.execute('''
             DELETE FROM Cart
             WHERE buyer_id = :buyer_id AND product_id = :product_id
+            RETURNING product_id
             ''', 
                                 buyer_id = buyer_id, 
                                 product_id = product_id)

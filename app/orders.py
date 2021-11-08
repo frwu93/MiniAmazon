@@ -5,6 +5,8 @@ import datetime
 from .models.cart import Cart
 from .models.user import User
 from .models.product import Product
+from .models.order import Order
+
 from flask import render_template, redirect, url_for, flash, request
 
 
@@ -38,10 +40,19 @@ def verify_transaction():
         if float(User.get(current_user.id).balance) < float(Cart.get_subtotal(cart_items)):
             flash(f'Take some stuff out! You too damn poor!')
             return redirect(url_for('orders.checkout'))
+        #successful transaction
+        return redirect(url_for('orders.checkout_success'))
+    else:
+        redirect(url_for('index.index'))
 
 
 @bp.route('/checkout/success', methods=['GET'])
 def checkout_success():
     ##Must verify that a) enough supply b) enough monie
+    order_id = Order.add_order(current_user.id)
+    print(order_id)
+    cart_items = Cart.get_cart_products_by_uid(current_user.id)
+    print(cart_items)
+    Order.add_to_history(order_id, cart_items)
     return render_template('order_success.html', title='Order Success')
 
