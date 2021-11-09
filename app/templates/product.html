@@ -1,0 +1,54 @@
+<head>
+  <link rel="stylesheet" href="../static/css/product.css">
+</head>
+<a href="{{ url_for('index.index') }}" type="button" class="btn btn-dark">Home</a>
+
+<p>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+</p>
+<main class="container">
+ 
+  <!-- Left Column / Headphones Image -->
+  <div class="left-column">
+    <img data-image="red" class="active"  src="{{product.imageLink}}" alt="">
+  </div>
+ 
+ 
+  <!-- Right Column -->
+  <div class="right-column">
+ 
+    <!-- Product Description -->
+    <div class="product-description">
+      <span>{{product.category}}</span>
+      <h1>{{product.name}}</h1>
+      <p>{{product.description}}</p>
+      <p>{% if product.quantity <= 10 %} Only {{product.quantity}} left in stock{% else %}{% endif %}</p>
+    </div>
+
+ 
+    <!-- Product Pricing -->
+    <div class="product-price">
+      <span>${{product.price}}</span>
+    </div>
+    <br><br>
+    <div class="product-addcart">
+      <form>
+        <label for="quantity">Quantity:</label><br>
+        <input type="number" id="quantity" name="quantity">
+        <br><br>
+        <input type="submit" value="Add to Cart" class="cart-btn">
+      </form>
+    </div>
+
+  </div>
+
+
+</main>

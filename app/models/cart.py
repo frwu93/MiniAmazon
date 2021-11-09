@@ -62,3 +62,21 @@ class Cart:
             print(f'Could note delete {product_id}')
             return None
     
+    @staticmethod
+    def add_to_cart(buyer_id, product_id, quantity):
+        try:
+            rows = app.db.execute('''
+            INSERT INTO Cart(buyer_id, product_id, quantity)
+            VALUES(:buyer_id, :product_id, :quantity)
+            RETURNING buyer_id, product_id
+            ''',
+                    buyer_id = buyer_id,
+                    product_id = product_id,
+                    quantity = quantity)
+            buyer_id = rows[0][0]
+            return buyer_id
+        except Exception as e:
+            print(e)
+            print("Adding to Orders Failed")
+            return None
+    
