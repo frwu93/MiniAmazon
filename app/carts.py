@@ -24,11 +24,14 @@ def cart():
         cart_items = None
     return render_template('cart.html', title='Cart', cart_items=cart_items, subtotal = subtotal)
 
-@bp.route('/cart/changeQuantity/<int:buyer_id>-<int:product_id>-<int:quantity>')
-def changeQuantity(buyer_id, product_id, quantity):
-    print("Changing quantity of ", id, " to ", quantity)
+@bp.route('/cart/changeQuantity/<int:buyer_id>-<int:product_id>-<int:quantity>-<int:page>')
+@bp.route('/checkout/changeQuantity/<int:buyer_id>-<int:product_id>-<int:quantity>-<int:page>')
+def changeQuantity(buyer_id, product_id, quantity, page):
+    print("Changing quantity of ", product_id, " to ", quantity)
     Cart.change_quantity(buyer_id, product_id, quantity)
-    return redirect(url_for('carts.cart'))
+    if page == 1:
+        return redirect(url_for('orders.checkout'))
+    return  redirect(url_for('carts.cart'))
 
 @bp.route('/cart/deleteItem/<int:buyer_id>-<int:product_id>')
 def deleteItem(buyer_id, product_id):

@@ -21,10 +21,10 @@ WHERE id = :id
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
-SELECT order_id, time_ordered
-FROM Orders
+SELECT Orders.order_id, buyer_id, Order_History.product_id, time_ordered
+FROM Orders, Order_History
 WHERE buyer_id = :uid
-
+AND Orders.order_id = Order_History.order_id
 AND time_ordered >= :since
 ORDER BY time_ordered DESC
 ''',

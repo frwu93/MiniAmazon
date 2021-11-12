@@ -2,16 +2,21 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, name, price, quantity):
+    def __init__(self, id, seller_id, name, description, imageLink, category, price, available, quantity):
         self.id = id
+        self.seller_id = seller_id
         self.name = name
-        self.price = price
+        self.description = description
+        self.imageLink = imageLink
+        self.category = category
+        self.price = '{:.2f}'.format(price)
+        self.available = available
         self.quantity = quantity
 
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT id, name, price, quantity
+SELECT *
 FROM Products
 WHERE id = :id
 ''',
@@ -21,9 +26,10 @@ WHERE id = :id
     @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
-SELECT id, name, price, quantity
+SELECT *
 FROM Products
 WHERE available = :available
+ORDER BY id
 ''',
                               available=available)
         return [Product(*row) for row in rows]
@@ -32,7 +38,7 @@ WHERE available = :available
     @staticmethod
     def get_all_by_seller(id, available=True):
         rows = app.db.execute('''
-SELECT id, name, price, quantity
+SELECT *
 FROM Products
 WHERE seller_id = :id
 AND available = :available
@@ -102,4 +108,5 @@ ORDER BY id
             # reporting needed
             print("not added")
             return None
+
 

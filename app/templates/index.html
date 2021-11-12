@@ -11,14 +11,16 @@
       <th scope="col">Product ID</th>
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
+      <th scope="col">Quantity</th>
     </tr>
   </thead>
   <tbody>
     {% for product in avail_products%}
       <tr>
         <th scope="row">{{product.id}}</th>
-        <td>{{product.name}}</td>
+        <td><a href="{{ url_for('index.product', id=product.id) }}">{{product.name}}</a></td>
         <td>{{product.price}}</td>
+        <td>{{product.quantity}}</td>
       </tr>
     {% endfor %}
   </tbody>

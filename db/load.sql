@@ -1,4 +1,4 @@
-\COPY Users (email, password, firstname, lastname, balance) FROM 'data/Users.csv' WITH DELIMITER ',' NULL '' CSV
+\COPY Users (email, password, firstname, lastname, address, balance) FROM 'data/Users.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY Sellers FROM 'data/Sellers.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY Products (seller_id, name, description, imageLink,category, price, available, quantity)FROM 'data/Products.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY Seller_Rating FROM 'data/Seller_Rating.csv' WITH DELIMITER ',' NULL '' CSV

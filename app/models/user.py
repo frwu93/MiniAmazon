@@ -6,17 +6,18 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, id, email, firstname, lastname, balance):
+    def __init__(self, id, email, firstname, lastname, address, balance):
         self.id = id
         self.email = email
         self.firstname = firstname
         self.lastname = lastname
-        self.balance = balance
+        self.address = address
+        self.balance = '{:.2f}'.format(balance)
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname, balance
+SELECT password, id, email, firstname, lastname, address, balance
 FROM Users
 WHERE email = :email
 """,
@@ -40,17 +41,18 @@ WHERE email = :email
         return len(rows) > 0
 
     @staticmethod
-    def register(email, password, firstname, lastname):
+    def register(email, password, firstname, lastname, address):
         try:
             rows = app.db.execute("""
-                INSERT INTO Users(id,email, password, firstname, lastname, balance)
-                VALUES(DEFAULT, :email, :password, :firstname, :lastname,0.0)
+                INSERT INTO Users(id,email, password, firstname, lastname, address,balance)
+                VALUES(DEFAULT, :email, :password, :firstname, :lastname, :address, 0.0)
                 RETURNING id
                 """,
                                   email=email,
                                   password=generate_password_hash(password),
                                   firstname=firstname,
-                                  lastname=lastname)
+                                  lastname=lastname,
+                                  address = address)
             id = rows[0][0]
             print("backend reg; inserted into db")
             rows3 = app.db.execute("""
@@ -72,7 +74,7 @@ WHERE email = :email
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-SELECT id, email, firstname, lastname, balance
+SELECT id, email, firstname, lastname, address, balance
 FROM Users
 WHERE id = :id
 """,

@@ -54,7 +54,8 @@
                     var inputVal = document.getElementById("newQuantity"+id).value;
                     alert(id);
                     if(isNaN(inputVal)) alert("Not a numnber");
-                    var value = parseInt(inputVal);
+                    var value = parseFloat(inputVal);
+                    alert(Number.isInteger(value));
                     if (value < 1 || !Number.isInteger(value)){ 
                       alert("Quantities must be positive integers");
                       var baseUrl = window.location.href;
@@ -64,7 +65,7 @@
                     // Selecting the input element and get its value 
                       var baseUrl = window.location.href;
                       alert(inputVal);
-                      var url = baseUrl.concat("/", "changeQuantity", "/", id, "/", inputVal);
+                      var url = baseUrl.concat("/", "changeQuantity", "/", id, "-", inputVal);
                       alert(url);
                       // Displaying the value
                       //var link = "Stupd";
@@ -99,20 +100,48 @@
 <h2>Your recent sales:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
+    <script type="text/javascript">  
+      function selects(){  
+          var masterCheck = document.getElementById("masterCheck");
+          masterCheck.checked = !masterCheck.checked; 
+          var ele=document.getElementsByTagName('input');  
+          for(var i=0; i<ele.length; i++){  
+              if(ele[i].type=='checkbox')  
+                  ele[i].checked = !ele[i].checked;  
+          }  
+      } 
+                          
+  </script>  
     <tr>
+      <th scope="col"><input type="checkbox"  onclick='selects()' value="Select All" id="masterCheck"/> </th>
       <th scope="col">Purchase ID</th>
-      <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
+      <th scope="col">Buyer Address</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Time Ordered</th>
+      <th scope="col">Fulfillment Status</th>
     </tr>
   </thead>
   <tbody>
-    {% for purchase in purchase_history%}
-      <tr>
-        <th scope="row">{{purchase.id}}</th>
-        <td>{{purchase.pid}}</td>
-        <td>{{purchase.time_purchased}}</td>
-      </tr>
-    {% endfor %}
+    <form>
+      <input type="submit" value="Fulfill" style="float: left">
+      <br><br>
+      {% for fulfill in order_fulfill%}
+        <tr>
+          <td>
+            <input type="checkbox" name="fulfill-{{fulfill.id}}-{{fulfill.product_id}}"
+            value="fulfill" {% if fulfill.fulfilled == "Fulfilled" %} disabled {% else %}{% endif %}>
+          </td>
+          <th scope="row">{{fulfill.id}}</th>
+          <td>{{fulfill.buyer_address}}</td>
+          <td>{{fulfill.product_id}}</td>
+          <td>{{fulfill.quantity}}</td>
+          <td>{{fulfill.time_ordered}}</td>
+          <td>{{fulfill.fulfilled}} </td>
+
+        </tr>
+      {% endfor %}
+    </form>
   </tbody>
 </table>
 {% else %}

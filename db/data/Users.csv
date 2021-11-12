@@ -1,3 +1,3 @@
-test@gmail.com,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb,Joe,Mama,0.0
-adam@yahoo.com,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb,Adam,Sandler,100.0
-franklinw888@gmail.com,pbkdf2:sha256:260000$kMOJIhcaJcCyC494$e247678d00fb57a15d3e6a4f5ad72f122e0f64571fe93780935c01e2d5b58d71,Franklin,Wu,10.0
+test@gmail.com,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb,Joe,Mama,"1 Main St Los Angeles, California",0.0
+adam@yahoo.com,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb,Adam,Sandler,"100 Dumbo Gumbo Rd Durham, North Carolina",100.0
+franklinw888@gmail.com,pbkdf2:sha256:260000$kMOJIhcaJcCyC494$e247678d00fb57a15d3e6a4f5ad72f122e0f64571fe93780935c01e2d5b58d71,Franklin,Wu,"14 Northbriar Rd Acton, MA", 10.0
