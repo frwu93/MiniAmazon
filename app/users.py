@@ -7,6 +7,7 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from flask_babel import _, lazy_gettext as _l
 
 from .models.user import User
+from .models.Purchase_History import Purchase_History
 
 
 from flask import Blueprint
@@ -73,12 +74,15 @@ def profile():
     firstname = request.args.get('firstname')
     lastname = request.args.get('lastname')
     email = request.args.get('email')
+    address = request.args.get('address')
     if firstname:
         id = User.updateFirstName(current_user.id, firstname)
     if lastname:
         id = User.updateLastName(current_user.id, lastname)
     if email:
         id = User.updateEmail(current_user.id, email)
+    if address:
+        id = User.updateAddress(current_user.id, address)
     
     user = User.get(current_user.id)
     return render_template('profile.html', title='Profile', user=user)
@@ -101,6 +105,33 @@ def register():
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
+@bp.route('/paymentHistory', methods=['GET', 'POST'])
+def paymentHistory():
+    deposit = request.args.get('deposit')
+    withdraw = request.args.get('withdraw')
+    if deposit:
+        id = User.updateBalanceDeposit(current_user.id, deposit)
+    if withdraw:
+        id = User.updateBalanceWithdrawal(current_user.id, withdraw)
+
+    user = User.get(current_user.id)
+    return render_template('profile_subpages/payment_history.html', title='Payment', user=user)
+
+@bp.route('/purchaseHistory', methods=['GET', 'POST'])
+def purchaseHistory():
+    purchase_history = Purchase_History.get_purchase_history_by_uid(current_user.id)
+    user = User.get(current_user.id)
+    return render_template('profile_subpages/purchase_history.html', title='Purchase', purchase_history=purchase_history, user=user)
+
+@bp.route('/reviews', methods=['GET', 'POST'])
+def reviews():
+    user = User.get(current_user.id)
+    return render_template('profile_subpages/reviews.html', title='Reviews', user=user)
+
+@bp.route('/settings', methods=['GET', 'POST'])
+def settings():
+    user = User.get(current_user.id)
+    return render_template('profile_subpages/settings.html', title='Settings', user=user)
 
 @bp.route('/logout')
 def logout():
