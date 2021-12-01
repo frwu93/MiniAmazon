@@ -6,7 +6,7 @@ from flask import render_template, redirect, url_for, flash, request
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.fulfill import Fulfill
-from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField
+from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
 from flask_wtf import FlaskForm
 from flask_babel import _, lazy_gettext as _l
@@ -19,11 +19,13 @@ bp = Blueprint('inventory', __name__)
 class ProductForm(FlaskForm):
     productName = StringField(_l('Product Name'), validators=[DataRequired()])
     quantity = IntegerField(_l('Quantity'), validators=[DataRequired(), NumberRange(min=1, message="Quantity must be at least 1")])
+    #quantity = SelectField(_l('Quantity'), validators = [DataRequired()], choices=[(1,"Group1"),(2,"Group2")])    
     description = StringField(_l('Description'), validators=[DataRequired()])
     imageLink = StringField(_l('Image Link'), validators=[DataRequired()])
     category = StringField(_l('Category'), validators=[DataRequired()])
     price = DecimalField(_l('List Price'), validators=[DataRequired(), NumberRange(min=0, message="Price must be nonnegative")])
     submit = SubmitField(_l('List Item'))
+
 
 
 @bp.route('/inventory')

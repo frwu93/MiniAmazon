@@ -20,3 +20,9 @@ def messages():
 def feedback():
     print("go to messageshtml")
     return render_template('feedback.html', title='Feedback')
+
+
+@bp.route('/post_review.html', methods=['GET'])
+def post_review():
+    print("go to post_review")
+    return render_template('post_review.html', title='Post Review')
