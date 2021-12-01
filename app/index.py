@@ -6,7 +6,7 @@ from flask import render_template, redirect, url_for, flash, request
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.cart import Cart
-#from .models.testingDevon import Review
+from .models.testingDevon import Review
 from flask import Blueprint
 from flask import render_template
 from flask_login import current_user
