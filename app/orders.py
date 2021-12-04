@@ -38,7 +38,7 @@ def verify_transaction():
                 flash(f'There is not enough of {item.product_name} in stock! Please check the amount in stock.')
                 return redirect(url_for('orders.checkout'))
         if float(User.get(current_user.id).balance) < float(Cart.get_subtotal(cart_items)):
-            flash(f'Take some stuff out! You too damn poor!')
+            flash(f'Take some stuff out! You don\'t have enough in your balance!')
             return redirect(url_for('orders.checkout'))
         #successful transaction
         return redirect(url_for('orders.checkout_success'))
