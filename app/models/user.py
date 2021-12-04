@@ -121,5 +121,52 @@ newName=newName)
             print(e)
             return None
 
+    @staticmethod
+    def updateAddress(id, newAddress):
+        try:
+            rows = app.db.execute("""
+                UPDATE Users
+                SET address=:newAddress
+                WHERE id = :id
+                RETURNING id
+                """,
+                id=id,
+                newAddress=newAddress)
+            return id
+        except Exception as e:
+            print(e)
+            return None
+
+    @staticmethod
+    def updateBalanceDeposit(id, deposit):
+        try:
+            rows = app.db.execute("""
+                UPDATE Users
+                SET balance=balance + :deposit
+                WHERE id = :id
+                RETURNING id
+                """,
+                id=id,
+                deposit=deposit)
+            return id
+        except Exception as e:
+            print(e)
+            return None
+
+    @staticmethod
+    def updateBalanceWithdrawal(id, withdrawal):
+        try:
+            rows = app.db.execute("""
+                UPDATE Users
+                SET balance=balance - :withdrawal
+                WHERE id = :id
+                RETURNING id
+                """,
+                id=id,
+                withdrawal=withdrawal)
+            return id
+        except Exception as e:
+            print(e)
+            return None
 
 

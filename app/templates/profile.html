@@ -24,13 +24,13 @@
                             <div class="tabs">
                                 <a href="">Account Details</a>
                                 <hr>
-                                <a href="">Payment Info</a>
+                                <a href="{{ url_for('users.paymentHistory') }}">Payment Info</a>
                                 <hr>
-                                <a href="">Purchase History</a>
+                                <a href="{{ url_for('users.purchaseHistory') }}">Purchase History</a>
                                 <hr>
-                                <a href="">Reviews</a>
+                                <a href="{{ url_for('users.reviews') }}">Reviews</a>
                                 <hr>
-                                <a href="">Settings</a>
+                                <a href="{{ url_for('users.settings') }}">Settings</a>
                             </div>
                         </div>
                     </div>
@@ -153,7 +153,7 @@
                                 <h5>Address</h5>
                             </div>
                             <div class="col-md-9 text-secondary">
-                                412 Chapel Drive, Durham NC, 27514
+                                {{user.address}}
                                 <button type="button" class="btn btn-dark" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalAddress">
                                     Change
                                 </button>
@@ -163,12 +163,17 @@
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Enter New Quantity</h5>
+                                            <h5 class="modal-title" id="exampleModalLabel">Enter New Address</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
+                                            <form>
+                                                <label for="address">Address: </label>
+                                                <input type="text" id="address" name="address">
+                                                <input type="submit" value="Submit">
+                                            </form>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
