@@ -4,5 +4,5 @@
 \COPY Seller_Rating FROM 'data/Seller_Rating.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY Cart FROM 'data/Cart.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY Product_Rating FROM 'data/Product_Rating.csv' WITH DELIMITER ',' NULL '' CSV
-\COPY Orders (buyer_id, time_ordered) FROM 'data/Orders.csv' WITH DELIMITER ',' NULL '' CSV
+\COPY Orders (buyer_id, total_cost, time_ordered) FROM 'data/Orders.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY Order_History FROM 'data/Order_History.csv' WITH DELIMITER ',' NULL '' CSV

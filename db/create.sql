@@ -64,6 +64,7 @@ CREATE TABLE Product_Rating (
 CREATE TABLE Orders(
     order_id SERIAL PRIMARY KEY,
     buyer_id INT NOT NULL,
+    total_cost FLOAT NOT NULL,
     FOREIGN KEY (buyer_id) REFERENCES Users(id),
     time_ordered timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
 );
