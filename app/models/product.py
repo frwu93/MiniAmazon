@@ -83,6 +83,24 @@ ORDER BY id
             print("Could not change quantity: ", id)
             return None
 
+    @staticmethod
+    def decrease_purchased_quantity(purchased_items):
+        try: 
+            for item in purchased_items:
+                id = item.product_id
+                amount = item.quantity
+                rows = app.db.execute('''
+                    UPDATE Products
+                    SET quantity= quantity - :amount
+                    WHERE id = :id
+                    ''',
+                                id=id,
+                                amount=amount)
+            return id
+        except Exception  as e:
+            print(e)
+            print("Decreasing purchased items failed")
+
 
     @staticmethod
     def new_listing(seller_id, name, quantity, description, imageLink, category, price):

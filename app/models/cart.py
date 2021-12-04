@@ -28,7 +28,7 @@ class Cart:
         total = 0
         for product in cart:
             total += float(product.total_cost)
-        return '{:.2f}'.format(total)
+        return total
     
     @staticmethod
     def change_quantity(buyer_id, product_id, quantity):
@@ -79,4 +79,16 @@ class Cart:
             print(e)
             print("Adding to Orders Failed")
             return None
+    
+    @staticmethod
+    def clear_user_cart(buyer_id):
+        try:
+            rows = app.db.execute('''
+            DELETE FROM Cart
+            WHERE buyer_id = :buyer_id
+            ''',
+                    buyer_id = buyer_id)
+        except Exception as e:
+            print(e)
+            print("Clearing Cart failed")
     

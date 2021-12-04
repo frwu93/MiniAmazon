@@ -19,10 +19,10 @@ def cart():
     print("go to cart")
     if current_user.is_authenticated:
         cart_items = Cart.get_cart_products_by_uid(current_user.id) #TODO: make this goddamn fcn
-        subtotal = Cart.get_subtotal(cart_items)
+        payment = calculate_payment(cart_items)
     else:
         cart_items = None
-    return render_template('cart.html', title='Cart', cart_items=cart_items, subtotal = subtotal)
+    return render_template('cart.html', title='Cart', cart_items=cart_items, payment = payment)
 
 @bp.route('/cart/changeQuantity/<int:buyer_id>-<int:product_id>-<int:quantity>-<int:page>')
 @bp.route('/checkout/changeQuantity/<int:buyer_id>-<int:product_id>-<int:quantity>-<int:page>')
@@ -39,7 +39,12 @@ def deleteItem(buyer_id, product_id):
     deleted = Cart.delete_item(buyer_id, product_id)
     return redirect(url_for('carts.cart'))
 
-    
+def calculate_payment(cart_items):
+    subtotal = Cart.get_subtotal(cart_items)
+    tax = 0.03*subtotal
+    total = subtotal + tax
+    payment = {"subtotal": subtotal, "tax": tax,  "total":total}
+    return payment
 
 
 

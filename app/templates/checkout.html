@@ -108,7 +108,11 @@
   </tbody>
 </table>
 
-<p align="right">Total Cost: {{subtotal}}</p>
+<h5 align="right">Subtotal: ${{'{:.2f}'.format(payment["subtotal"])}}</h5>
+<p align="right">
+    Tax: ${{'{:.2f}'.format(payment["tax"])}}
+</p> 
+<h3 align="right">Total: ${{'{:.2f}'.format(payment["total"])}}</h3>
 <a href="{{ url_for('orders.verify_transaction') }}" type="button" class="btn btn-dark" onclick="return confirm('Are you sure?')" style = "float: right">Place Your Order</a>
 {% endif %}
 
