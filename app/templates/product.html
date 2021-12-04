@@ -1,6 +1,8 @@
 <head>
   <link rel="stylesheet" href="../static/css/product.css">
 </head>
+
+ 
 <a href="{{ url_for('index.index') }}" type="button" class="btn btn-dark">Home</a>
 
 <p>
@@ -8,7 +10,7 @@
   {% if messages %}
   <ul>
     {% for message in messages %}
-    <li>{{ message }}</li>
+    <li style="color: red;">{{ message }}</li>
     {% endfor %}
   </ul>
   {% endif %}
@@ -30,7 +32,8 @@
       <span>{{product.category}}</span>
       <h1>{{product.name}}</h1>
       <p>{{product.description}}</p>
-      <p>{% if product.quantity <= 10 %} Only {{product.quantity}} left in stock{% else %}{% endif %}</p>
+      <p>{% if product.quantity == 0 %} OUT OF STOCK {% elif product.quantity <= 10%} Only {{product.quantity}} left in stock {% else %} {% endif %}</p>
+
     </div>
 
  

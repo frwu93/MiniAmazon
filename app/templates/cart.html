@@ -5,6 +5,17 @@
 <br><br>
 {% if current_user.is_authenticated %}
 <h2>Your Cart:</h2>
+<p>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li style="color: red;">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+</p>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
@@ -13,7 +24,6 @@
       <th scope="col">Seller</th>
       <th scope="col">Price</th>
       <th scope="col">Quantity</th>
-
       <th scope="col">Delete Item</th>  
       <th scope="col">Total</th>   
     </tr>
@@ -84,7 +94,11 @@
   </tbody>
 </table>
 
-<p align="right">Total Cost: {{subtotal}}</p>
+<h5 align="right">Subtotal: ${{'{:.2f}'.format(payment["subtotal"])}}</h5>
+<p align="right">
+    Tax: ${{'{:.2f}'.format(payment["tax"])}}
+</p> 
+<h3 align="right">Total: ${{'{:.2f}'.format(payment["total"])}}</h3>
 <a href="{{ url_for('orders.checkout')}}" type = "button" class="btn btn-dark" style = "float:right"> Check Out </a>
 
 {% endif %}
