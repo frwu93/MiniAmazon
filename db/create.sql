@@ -80,3 +80,21 @@ CREATE TABLE Order_History (
     fulfilled BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (product_id, order_id)
 );
+
+
+CREATE TABLE Coupons (
+    coupon_code VARCHAR(10) NOT NULL,
+    PRIMARY KEY (coupon_code)
+);
+
+CREATE TABLE ProductCoupons (
+    coupon VARCHAR(10) NOT NULL,
+    product_id INT NOT NULL,
+    PRIMARY KEY (coupon),
+    FOREIGN KEY (coupon) REFERENCES Coupons(coupon_code),
+    FOREIGN KEY (product_id) REFERENCES Products(id)
+);
+
+
+
+

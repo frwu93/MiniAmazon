@@ -95,7 +95,7 @@ class Cart:
             return None
 
     @staticmethod
-    def add_to_saved(buyer_id, product_id, quantity):
+    def add_to_saved(buyer_id, product_id):
         try:
             rows = app.db.execute('''
             INSERT INTO Cart(buyer_id, product_id, quantity, saved)
@@ -104,7 +104,7 @@ class Cart:
             ''',
                     buyer_id = buyer_id,
                     product_id = product_id,
-                    quantity = quantity)
+                    quantity = 1)
             buyer_id = rows[0][0]
             return buyer_id
         except Exception as e:
@@ -130,9 +130,10 @@ class Cart:
         try:
             rows = app.db.execute('''
             UPDATE Cart
-            SET CASE WHEN 
-                saved = TRUE THEN FALSE
-                ELSE TRUE 
+            SET saved = 
+                CASE WHEN 
+                    saved = TRUE THEN FALSE
+                    ELSE TRUE 
                 END
             WHERE buyer_id = :buyer_id AND product_id = :product_id
             ''',
