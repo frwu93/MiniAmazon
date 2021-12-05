@@ -78,7 +78,7 @@ ORDER BY id
        rows = app.db.execute('''
 SELECT AVG(rating)
 FROM Product_Rating
-WHERE product_id = product_id
+WHERE product_id = :product_id
 ''', product_id=product_id
                              )
        return round((rows[0][0]), 2) if rows is not None else None

@@ -2,20 +2,14 @@ from flask import render_template
 from flask_login import current_user
 import datetime
 from flask import render_template, redirect, url_for, flash, request
-
+import datetime
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.cart import Cart
 from .models.testingDevon import Review
-from flask import Blueprint
-from flask import render_template
-from flask_login import current_user
-import datetime
-
-from flask import render_template, redirect, url_for, flash, request
-from .models.product import Product
-from .models.purchase import Purchase
 from .models.fulfill import Fulfill
+
+
 from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
 from flask_wtf import FlaskForm
@@ -51,12 +45,18 @@ def index():
 @bp.route('/product/<int:id>', methods = ["GET", "POST"])
 def product(id):
     # get all available products for sale:
+    print(id)
     form = ReviewForm()
     product = Product.get(id)
     quantity = request.args.get('quantity')
+    review=Review.get_avg(id)
+    print(review)
+    if review==None:
+        review=0
     if form.validate_on_submit():
-        Review.submitReview(current_user.id, id, form.rating.data, form.request.args.get("time"), form.description.data)     
-        return render_template('product.html', product=product, form = form)
+        datetime.time
+        Review.submitReview(current_user.id, id, form.rating.data, datetime.datetime.now() , form.description.data)     
+        return render_template('product.html', product=product, review=review, form = form)
     else: 
         if quantity: 
             success = Cart.add_to_cart(current_user.id, id, quantity)
@@ -65,13 +65,13 @@ def product(id):
             else:
                 flash('Could not add to cart. Check to see if you already have this item in your cart.')
                 return render_template('product.html',
-                    product=product, form = form)
+                    product=product, review=review, form = form)
                 
 
         # find the products current user has bought:
         if product:
             return render_template('product.html',
-                            product=product, form = form)
+                            product=product, review = review, form = form)
         else:
             return render_template('index.html',
                             avail_products= products,
@@ -82,4 +82,3 @@ def product(id):
 def added_to_cart(id):
     product = Product.get(id)
     return render_template('added_to_cart.html', product=product)
-
