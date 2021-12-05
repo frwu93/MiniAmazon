@@ -1,83 +1,112 @@
 from flask import current_app as app
+from flask import render_template
 from flask import Flask
-from flask import Flask, render_template, flash, request, redirect, url_for
-from datetime import datetime 
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from werkzeug.security import generate_password_hash, check_password_hash 
-from datetime import date
-from webforms import LoginForm, PostForm, UserForm, PasswordForm, NamerForm, SearchForm
-from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
-from webforms import LoginForm, PostForm, UserForm, PasswordForm, NamerForm
-from flask_ckeditor import CKEditor
-
-
+from flask_login import current_user
+import datetime
+from flask import render_template, redirect, url_for, flash, request
+from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
+from flask_wtf import FlaskForm
+from flask_babel import _, lazy_gettext as _l
+import time
+ 
+from flask import Blueprint
+#from flask_ckeditor import CKEditor
+ 
+ 
+ 
+ 
+ 
 ##I am going to try and implement all of my stuff below here
-class Review(newReview):
-    def __init__(self, buyer_id, product_id, rating, time_reviewed, description):
-        self.buyer_id = buyer_id
-        self.product_id = product_id
-        self.rating = rating
-        self.time_reviewed = time_reviewed
-        self.description= description
-
-    @staticmethod
-    def get(buyer_id, prdocut_id):
-        rows = app.db.execute('''
+class Review:
+   def __init__(self, buyer_id, product_id, rating, time_reviewed, description):
+       self.buyer_id = buyer_id
+       self.product_id = product_id
+       self.rating = rating
+       self.time_reviewed = time_reviewed
+       self.description= description
+ 
+   @staticmethod
+   def get(buyer_id, product_id):
+       rows = app.db.execute('''
 SELECT *
 FROM Product_Rating
 WHERE buyer_id = :buyer_id AND product_id = :product_id
 ''',
-                              buyer_id=buyer_id, product_id = product_id)
-        return Product_Rating(*(rows[0]), *(rows[1])) if rows is not None else None
-
-
-    @staticmethod
-    def submitReview(buyer_id, product_id, rating, time_reviewed, description):
-        try:
-            rows = app.db.execute("""
-                INSERT INTO Product_Rating(buyer_id,product_id, rating, time_reviewed, lastname, description)
-                VALUES(DEFAULT, :buyer_id, :password, :product_id, :rating, :time_reviewed, 0.0)
-                RETURNING id
-                """,
-                                  buyer_id=buyer_id,
-                                  product_id=product_id,
-                                  rating=rating,
-                                  time_reviewed=time_reviewed,
-                                  description = description)
-            buyer_id = rows[0][0]
-            #print("backend reg; inserted into db")
-            #print("Inserted: ", id)
-            return None
-        except Exception as e:
-            print(e)
-            # likely user already reviewed this
-            # reporting needed
-            print("not added")
-            return None
-
+                             buyer_id=buyer_id, product_id = product_id)
+       return (*(rows[0]), *(rows[1]) )if rows is not None else None
+ 
+ 
+   @staticmethod
+   def submitReview(buyer_id, product_id, rating, time_reviewed, description):
+       try:
+           rows = app.db.execute("""
+               INSERT INTO Product_Rating(buyer_id,product_id, rating, time_reviewed, description)
+               VALUES(:buyer_id, :product_id, :rating, :time_reviewed, :description)
+               """,
+                                 buyer_id=buyer_id,
+                                 product_id=product_id,
+                                 rating=int(rating),
+                                 time_reviewed=time_reviewed,
+                                 description = description)
+      
+           print("backend reg; inserted into db")
+           #print("Inserted: ", id)
+           return None
+       except Exception as e:
+           print(e)
+           # likely user already reviewed this
+           # reporting needed
+           print("not added")
+           return None
+ 
+ 
+   @staticmethod
+   def get_all(available=True):
+       rows = app.db.execute('''
+SELECT *
+FROM Product_Rating
+WHERE available = :available
+ORDER BY id
+''',
+                             available=available)
+       return [Review(*row) for row in rows]
+ 
+ 
+   @staticmethod
+   def get_avg(product_id):
+       rows = app.db.execute('''
+SELECT AVG(rating)
+FROM Product_Rating
+WHERE product_id = product_id
+''', product_id=product_id
+                             )
+       return round((rows[0][0]), 2) if rows is not None else None
+ 
+ 
 ratingChoices=[(1,1), (2,2), (3,3), (4,4), (5,5)]
 class ReviewForm(FlaskForm):
-    rating = IntegerField(_l('Product Rating'), validators=[DataRequired(), NumberRange(min=1, max=5, message="Please enter and integer between 1 and 5")])
-    #rating = SelectField(_l('Product Rating'), validators = [DataRequired()], choices=ratingChoices)    
-    description = StringField(_l('Description'), validators=[DataRequired()])
-    submit = SubmitField(_l('Leave Review'))
-
-
-
+   rating = IntegerField(_l('Product Rating'), validators=[DataRequired(), NumberRange(min=1, max=5, message="Please enter and integer between 1 and 5")])
+   #rating = SelectField(_l('Product Rating'), validators = [DataRequired()], choices=ratingChoices)   
+   description = StringField(_l('Description'), validators=[DataRequired()])
+   submit = SubmitField(_l('Leave Review'))
+ 
+ 
+ 
 #@bp.route('/product/<int:id>', methods = ["Get", "Post"])
-@bp.route('/later', methods = ["Get", "Post"])
-def leaveReview():
-    form = ReviewForm()
-    if form.validate_on_submit():
-        testingDevon.submitReview(current_user.id,     
-                            ## add product ID,
-                            id
-                            form.rating.data,
-                            form.request.args.get("time") 
-                            form.description.data)
-       return redirect(url_for(('messaging.post_review') ) ## CHANGE THIS)      
-       return render_template('listItem.html', title='Sign In', form=form)
+#@bp.route('/later', methods = ["Get", "Post"])
+#def leaveReview():
+   #form = ReviewForm()
+   #if form.validate_on_submit():
+     #  testingDevon.submitReview(current_user.id,    
+                           ## add product ID,
+       #                    id,
+      #                     form.rating.data,
+        #                   form.request.args.get("time"),
+        #                   form.description.data)
+      # return redirect(url_for(('messaging.post_review') )   
+   #return render_template('listItem.html', title='Sign In', form=form)
+#
 
 
 

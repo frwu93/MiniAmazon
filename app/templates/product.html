@@ -1,9 +1,9 @@
 <head>
   <link rel="stylesheet" href="../static/css/product.css">
-</head>
-<a href="{{ url_for('index.index') }}" type="button" class="btn btn-dark">Home</a>
-
-<p>
+ </head>
+ <a href="{{ url_for('index.index') }}" type="button" class="btn btn-dark">Home</a>
+  
+ <p>
   {% with messages = get_flashed_messages() %}
   {% if messages %}
   <ul>
@@ -13,18 +13,14 @@
   </ul>
   {% endif %}
   {% endwith %}
-</p>
-<main class="container">
- 
+ </p>
+ <main class="container">
   <!-- Left Column / Headphones Image -->
   <div class="left-column">
     <img data-image="red" class="active"  src="{{product.imageLink}}" alt="">
   </div>
- 
- 
   <!-- Right Column -->
   <div class="right-column">
- 
     <!-- Product Description -->
     <div class="product-description">
       <span>{{product.category}}</span>
@@ -32,8 +28,7 @@
       <p>{{product.description}}</p>
       <p>{% if product.quantity <= 10 %} Only {{product.quantity}} left in stock{% else %}{% endif %}</p>
     </div>
-
- 
+  
     <!-- Product Pricing -->
     <div class="product-price">
       <span>${{product.price}}</span>
@@ -47,10 +42,16 @@
         <input type="submit" value="Add to Cart" class="cart-btn">
       </form>
     </div>
-
+  
+    <div>
+      <div class="review-rating">
+        <span>Average Product Review:   {{review}}</span>
+      </div>
+    </div>
+  
       <!-- Product Review -->
       {% block content %}
-
+  
       <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
@@ -69,9 +70,10 @@
         </p>
         {{ form.submit(class_="btn btn-black") }}
       </form>
-     
+    
       {% endblock %}
-
+  
   </div>
-
-</main>
+  
+ </main>
+ 
