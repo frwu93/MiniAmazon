@@ -44,6 +44,7 @@ CREATE TABLE Cart (
     buyer_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL,
+    saved BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (buyer_id) REFERENCES Users(id),
     FOREIGN KEY (product_id) REFERENCES Products(id),
     PRIMARY KEY (buyer_id, product_id)

@@ -35,16 +35,17 @@ def product(id):
     print("HALLELUHAH")
     print(quantity)
     print(type(quantity))
-    if quantity is not None and int(quantity) <= Product.get(id).quantity: 
-        success = Cart.add_to_cart(current_user.id, id, quantity)
-        if success:
-            return redirect(url_for('index.added_to_cart', id=id))
+    if quantity is not None:
+        if int(quantity) <= Product.get(id).quantity: 
+            success = Cart.add_to_cart(current_user.id, id, quantity)
+            if success:
+                return redirect(url_for('index.added_to_cart', id=id))
+            else:
+                flash('Could not add to cart. Check to see if you already have this item in your cart.')
+                return render_template('product.html',
+                    product=product)
         else:
-            flash('Could not add to cart. Check to see if you already have this item in your cart.')
-            return render_template('product.html',
-                product=product)
-    else:
-        flash('This item is out of stock! Please wait until the seller restocks before purchasing.')
+            flash('This item is out of stock! Please wait until the seller restocks before purchasing.')
 
           
 
