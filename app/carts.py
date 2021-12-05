@@ -39,6 +39,11 @@ def deleteItem(buyer_id, product_id):
     deleted = Cart.delete_item(buyer_id, product_id)
     return redirect(url_for('carts.cart'))
 
+@bp.route('/cart/move-to-cart/<int:buyer_id>-<int:product_id>')
+def moveSavedItemToCart(buyer_id, product_id):
+    Cart.toggle_saved(buyer_id, product_id)
+    return redirect(url_for('carts.cart'))
+
 def calculate_payment(cart_items):
     subtotal = Cart.get_subtotal(cart_items)
     tax = 0.03*subtotal

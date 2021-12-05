@@ -59,6 +59,8 @@ def checkout_success():
     order_id = Order.add_order(current_user.id, payment["total"])
     Order.add_to_history(order_id, cart_items)
     User.updateBalanceWithdrawal(current_user.id, payment["total"])
+    for item in cart_items:
+        User.updateBalanceDeposit(item.seller_id, item.price * item.quantity)
     Product.decrease_purchased_quantity(cart_items)
     Cart.clear_user_cart(current_user.id)
     return render_template('order_success.html', title='Order Success', user = User.get(current_user.id), order_id = order_id, cart_items = cart_items, payment = payment)
