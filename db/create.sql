@@ -81,6 +81,13 @@ CREATE TABLE Order_History (
     PRIMARY KEY (product_id, order_id)
 );
 
+CREATE TABLE Balance_History (
+    uid INT NOT NULL,
+    amount FLOAT NOT NULL,
+    balance_type VARCHAR(255) NOT NULL,
+    cur_balance FLOAT NOT NULL,
+    time_initiated timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+);
 
 CREATE TABLE Coupons (
     coupon_code VARCHAR(10) NOT NULL,

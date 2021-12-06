@@ -24,9 +24,9 @@
                             <div class="tabs">
                                 <a href="{{ url_for('users.profile') }}">Account Details</a>
                                 <hr>
-                                <a href="{{ url_for('users.paymentHistory') }}">Payment Info</a>
+                                <a href="{{ url_for('users.paymentHistory') }}">Balance Info</a>
                                 <hr>
-                                <a href="">Purchase History</a>
+                                <a href="">Order History</a>
                                 <hr>
                                 <a href="{{ url_for('users.reviews') }}">Reviews</a>
                                 <hr>
@@ -38,7 +38,7 @@
             </div>
             <div class="col-md-8 mt-1">
                 <div class="card mb-3 content">
-                    <h1 class="m-3 pt-3">Your Purchase History</h1>
+                    <h1 class="m-3 pt-3">Your Order History</h1>
                     <div class="card-body">
                         <table class='table table-hover table-bordered container'>
                             <thead class="thead-dark">
@@ -48,9 +48,8 @@
                                     <th scope="col">Product Name</th>
                                     <th scope="col">Price</th>
                                     <th scope="col">Quantity</th>
-                                    <th scope="col">Fullfillment Status</th>
-
                                     <th scope="col">Total Cost</th> 
+                                    <th scope="col">Fullfillment Status</th>
                                     <th scope="col">Order Link</th> 
                                 </tr>
                             </thead>
@@ -62,13 +61,13 @@
                                     <td>{{item.product_name}}</td>
                                     <td>${{item.price}}</td>
                                     <td>{{item.quantity}}</td>
-                                    <td>{{item.fulfillment_status}}</td>
                                     <td>${{item.order_cost}}</td>
+                                    <td>{{item.fulfillment_status}}</td>
                                     <td>{{item.order_link}}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
-                        </div>
+                        </table>
                     </div>  
                 </div>
             </div>

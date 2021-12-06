@@ -63,6 +63,11 @@ def verify_transaction(coupon = None):
             flash(f'You don\'t have enough in your balance to complete this purchase!')
             return redirect(url_for('orders.checkout'))
         #successful transaction
+        curBalance = float(User.get(current_user.id).balance)
+        print("HIIIIIII")
+        for item in cart_items:
+            curBalance -= float(item.price) * float(item.quantity)
+            User.add_purchase(current_user.id, float(item.price) * float(item.quantity), datetime.datetime.now(), curBalance, item.product_name, item.quantity)
         return redirect(url_for('orders.checkout_success', coupon = code))   
     else:
         redirect(url_for('index.index'))
