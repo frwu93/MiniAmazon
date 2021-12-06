@@ -13,8 +13,8 @@ class Order:
     def add_order(buyer_id, cost):
         try:
             rows = app.db.execute('''
-            INSERT INTO Orders(buyer_id, total_cost)
-            VALUES(:buyer_id, :cost)
+            INSERT INTO Orders(buyer_id)
+            VALUES(:buyer_id)
             RETURNING order_id
             ''',
                     buyer_id = buyer_id,

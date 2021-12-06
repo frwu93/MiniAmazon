@@ -92,6 +92,23 @@ ORDER BY id
             return None
 
     @staticmethod
+    def change_price(id, price):
+        try: 
+            app.db.execute('''
+    UPDATE Products
+    SET price=:price
+    WHERE id = :id
+    RETURNING id
+    ''',
+                                id=id,
+                                price=price)
+            return id
+        except Exception  as e:
+            print(e)
+            print("Could not change quantity: ", id)
+            return None
+
+    @staticmethod
     def decrease_purchased_quantity(purchased_items):
         try: 
             for item in purchased_items:
