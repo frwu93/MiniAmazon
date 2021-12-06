@@ -88,3 +88,9 @@ def product(id):
 def added_to_cart(id):
     product = Product.get(id)
     return render_template('added_to_cart.html', product=product)
+
+
+@bp.route('/products')
+def products():
+    return render_template('products.html')
+
