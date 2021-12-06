@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="profile.css">
+</head>
+
+<body>
+    <div>
+        <div class="row">
+            <div class="col-md-3 mt-1">
+                <div class="card text-center sidebar">
+                    <div class="card-body">
+                        <img src="https://users.cs.duke.edu/~junyang/media/portrait.jpg" class="rounded-circle"
+                            width="150">
+                        <div class="mt-3">
+                            <h3>{{user.firstname}} {{user.lastname}}</h3>
+                            <p>Account ID: {{user.id}}</p>
+                            <hr>
+                            <div class="tabs">
+                                <a href="">Account Details</a>
+                                <hr>
+                                <a href="{{ url_for('users.publicUserProducts', id=user.id) }}">Their Products</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 mt-1">
+                <div class="card mb-3 content">
+                    <h1 class="m-3 pt-3">About</h1>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5>First Name</h5>
+                            </div>
+                            <div class="col-md-9 text-secondary">
+                                {{user.firstname}} 
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5>Last Name</h5>
+                            </div>
+                            <div class="col-md-9 text-secondary">
+                                {{user.lastname}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5>Email</h5>
+                            </div>
+                            <div class="col-md-9 text-secondary">
+                                {{user.email}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+
+
+{% endblock %}
