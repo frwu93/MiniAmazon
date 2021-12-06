@@ -29,11 +29,12 @@ CREATE TABLE Products (
     FOREIGN KEY (seller_id) REFERENCES Sellers(id),
     CHECK (category in ('Clothing', 'Accessories', 'Books','Entertainment', 'Electronics', 'Home', 'Pet Supplies', 'Food', 'Beauty', 'Toys', 'Sports', 'Outdoors', 'Automotives', 'Other'))
 );
-//TODO
+
 CREATE TABLE Seller_Rating (
     seller_id INT NOT NULL,
     buyer_id INT NOT NULL,
     rating INT NOT NULL,
+    description VARCHAR(511),
     time_reviewed timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     CHECK(rating in (0, 1, 2, 3, 4, 5)),
     FOREIGN KEY (seller_id) REFERENCES Sellers(id),
