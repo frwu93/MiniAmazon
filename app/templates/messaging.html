@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+<h2>Have Any Feedback or Questions?</h2>
+
+<body>
+    <form action = "feedback.html">
+        <div> 
+            <label for="name"> Name </label>
+            <input name="name" type = "text", required>
+        </div>
+        <div> 
+            <label for = "email"> Email </label>
+            <input type="email" name = "email", required>
+        </div>
+        <div> 
+            <label for = "feedback"> Feedback </label>
+            <textarea rows="3", cols="25", name="feedback", type="text", required> </textarea>
+        </div>
+        <button> Submit </button>
+    </form>
+<body> 
+
+
+
+{% endblock %}
