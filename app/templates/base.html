@@ -11,7 +11,6 @@
     body {
         font-family: "Lato", sans-serif;
     }
-
     .main-head {
         height: 150px;
         background: #FFF;
@@ -54,6 +53,7 @@
           Hello {{current_user.firstname}}! 
           <a href="{{ url_for('users.profile') }}" type="button" class="btn btn-light">Profile</a>
           <a href="{{ url_for('carts.cart') }}" type="button" class="btn btn-light">Cart</a>
+          <a href="{{ url_for('index.index') }}" type="button" class="btn btn-light">Home</a>
           <a href="{{ url_for('inventory.inventory') }}" type="button" class="btn btn-light">Seller view</a>
           <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
         {% else %}

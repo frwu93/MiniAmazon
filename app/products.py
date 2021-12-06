@@ -1,20 +1,19 @@
 from flask import render_template
 from flask_login import current_user
-import datetime
 from flask import render_template, redirect, url_for, flash, request
 
+import datetime
+
 from .models.product import Product
-from .models.purchase import Purchase
-from .models.cart import Cart
 
 from flask import Blueprint
-bp = Blueprint('index', __name__)
+bp = Blueprint('products', __name__)
 
 
 @bp.route('/')
-def index():
+def products():
     # get all available products for sale:
-    products = Product.get_all(True)
+    allproducts = Product.get_all(True)
     # find the products current user has bought:
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid_since(
@@ -22,12 +21,12 @@ def index():
 
     else:
         purchases = None
-    # render the page by adding information to the index.html file
-    return render_template('index.html',
-                           avail_products=products,
+    # render the page by adding information to the products.html file
+    return render_template('products.html',
+                           avail_products=allproducts,
                            purchase_history=purchases)
 
-@bp.route('/product/<int:id>')
+@bp.route('/products/product/<int:id>')
 def product(id):
     # get all available products for sale:
     product = Product.get(id)
@@ -36,7 +35,7 @@ def product(id):
     if quantity: 
         success = Cart.add_to_cart(current_user.id, id, quantity)
         if success:
-            return redirect(url_for('index.added_to_cart', id=id))
+            return redirect(url_for('products.added_to_cart', id=id))
         else:
             flash('Could not add to cart. Check to see if you already have this item in your cart.')
             return render_template('product.html',
@@ -48,18 +47,7 @@ def product(id):
         return render_template('product.html',
                         product=product)
     else:
-        return render_template('index.html',
-                           avail_products=products,
+        return render_template('products.html',
+                           avail_products=allproducts,
                            purchase_history=purchases)
-
-
-@bp.route('/product/addedToCart/<int:id>')
-def added_to_cart(id):
-    product = Product.get(id)
-    return render_template('added_to_cart.html', product=product)
-
-
-@bp.route('/products')
-def products():
-    return render_template('products.html')
 

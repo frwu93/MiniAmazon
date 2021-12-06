@@ -1,7 +1,22 @@
 <head>
   <link rel="stylesheet" href="../static/css/product.css">
+  <link rel="stylesheet" href="../static/css/navbar.css">
 </head>
-<a href="{{ url_for('index.index') }}" type="button" class="btn btn-dark">Home</a>
+
+  {% if current_user.is_authenticated %}
+  <ul>
+    <li><a href="{{ url_for('users.profile') }}">Profile</a></li>
+    <li><a href="{{ url_for('carts.cart') }}">Cart</a></li>
+    <li><a href="{{ url_for('index.index') }}">Home</a></li>
+    <li><a href="{{ url_for('inventory.inventory')}}">Seller View</a></li>
+    <li><a href="{{ url_for('users.logout') }}">About</a></li>
+  </ul>
+  {% else %}
+  <ul>
+    <li><a href="{{ url_for('index.index') }}">Home</li>
+    <li><a href="{{ url_for('users.login') }}">Log in</a></li>
+  </ul>
+  {% endif %}
 
 <p>
   {% with messages = get_flashed_messages() %}
@@ -14,17 +29,17 @@
   {% endif %}
   {% endwith %}
 </p>
+
 <main class="container">
- 
-  <!-- Left Column / Headphones Image -->
+
+  <!-- Left Column / Image -->
   <div class="left-column">
     <img data-image="red" class="active"  src="{{product.imageLink}}" alt="">
   </div>
  
- 
   <!-- Right Column -->
   <div class="right-column">
- 
+   
     <!-- Product Description -->
     <div class="product-description">
       <span>{{product.category}}</span>
@@ -33,7 +48,6 @@
       <p>{% if product.quantity <= 10 %} Only {{product.quantity}} left in stock{% else %}{% endif %}</p>
     </div>
 
- 
     <!-- Product Pricing -->
     <div class="product-price">
       <span>${{product.price}}</span>
@@ -49,6 +63,5 @@
     </div>
 
   </div>
-
-
+  
 </main>
