@@ -151,35 +151,52 @@ def settings():
     return render_template('profile_subpages/settings.html', title='Settings', user=user)
 
 ### ADDING THE REVIEW FORMS TO THE PAGE---NEED to create the forms first
-class UpdateForm(FlaskForm):
-    #rating = IntegerField(_l('Product Rating'), validators=[DataRequired(), NumberRange(min=1, max=5, message="Please enter and integer between 1 and 5")])
-    rating = SelectField(_l('Product Rating'), validators = [DataRequired()], choices=ratingChoices)    
-    description = StringField(_l('Description'), validators=[DataRequired()])
-    submit = SubmitField(_l('Update Review'))
+class UpdateForms(FlaskForm):
+    rating1 = SelectField(_l('Product Rating'), validators = [DataRequired()], choices=ratingChoices)    
+    submit1 = SubmitField(_l('Submit Review'))
 
-class DeleteForm(FlaskForm):
-    submit = SubmitField(_l('Delete Review'))
+class DeleteForms(FlaskForm):
+    submit2 = SubmitField(_l('Delete Review'))
+
+class LeaveForms(FlaskForm):
+    rating3 = SelectField(_l('Product Rating'), validators = [DataRequired()], choices=ratingChoices)    
+    submit3 = SubmitField(_l('Submit Review'))
+
+
 
 @bp.route('/user/<int:id>', methods=['GET', 'POST'])
 def publicUser(id):
-    form = UpdateForm()
-    form2=DeleteForm()
+    form = UpdateForms()
+    form2=DeleteForms()
+    form3=LeaveForms()
     current_user_review=Review.current_Seller_Review(current_user.id, id)
     reviews=Review.get_Seller_Reviews(id)
     user = User.get(id)
+    getAvg=Review.get_avgSeller(id)
+    numReview=Review.get_NumberSeller(id)
 
-    if form.validate_on_submit():
-        #Review.update_Review(current_user.id, id, form.rating.data, datetime.datetime.now() , form.description.data)
+    if form.submit1.data and form.validate_on_submit:
+        print(id, current_user.id, form.rating1.data, datetime.datetime.now())
+        Review.update_SellerReview(id, current_user.id, form.rating1.data, datetime.datetime.now())
         return render_template('public_user.html', title='Public User', user=user, form = form, 
-        form2 =form2, current_user_review = current_user_review, reviews= reviews)
+        form2 = form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview , form3=form3)
 
-    if form2.validate_on_submit():
-        #Review.delete_Review(current_user.id, id)
+    if form3.submit3.data and form3.validate_on_submit:
+        print("3")
+        print((id, current_user.id, form3.rating3.data, datetime.datetime.now()))
+        Review.submitSellerReview(id, current_user.id, form3.rating3.data, datetime.datetime.now())
         return render_template('public_user.html', title='Public User', user=user, form = form, 
-        form2 =form2, current_user_review = current_user_review, reviews= reviews)
+        form2 =form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview , form3=form3)
 
+    if form2.submit2.data and form2.validate_on_submit():
+        print("2")
+        Review.delete_SellerReview(id, current_user.id)
+        return render_template('public_user.html', title='Public User', user=user, form = form, 
+        form2 =form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview , form3=form3)
+
+    print("4")
     return render_template('public_user.html', title='Public User', user=user, form = form, 
-    form2 =form2, current_user_review = current_user_review, reviews= reviews)
+    form2 =form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview, form3=form3 )
 
 @bp.route('/user/<int:id>/products', methods=['GET', 'POST'])
 def publicUserProducts(id):

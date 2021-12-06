@@ -22,7 +22,7 @@ WHERE id = :id
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
-SELECT Orders.order_id, buyer_id, Order_History.product_id, Products.name, time_ordered
+SELECT Orders.order_id, buyer_id, Order_History.product_id, Products.name, time_ordered, Products.seller_id
 FROM Orders, Order_History, Products
 WHERE buyer_id = :uid
 AND Orders.order_id = Order_History.order_id
