@@ -31,11 +31,13 @@ class ProductForm(FlaskForm):
     categories = ['Automotives', 'Accessories', 'Books', 'Beauty', 'Clothing', 'Entertainment', 'Electronics', 'Food', 'Home', 'Outdoors', 'Pet Supplies', 'Sports', 'Toys', 'Other']
     productName = StringField(_l('Product Name'), validators=[DataRequired()])
     quantity = IntegerField(_l('Quantity'), validators=[DataRequired(), NumberRange(min=1, message="Quantity must be at least 1")])
+    #quantity = SelectField(_l('Quantity'), validators = [DataRequired()], choices=[(1,"Group1"),(2,"Group2")])    
     description = StringField(_l('Description'), validators=[DataRequired()])
     imageLink = StringField(_l('Image Link'), validators=[DataRequired()])
     category = SelectField(u'Category', choices = categories, validators = [Required()])
     price = DecimalField(_l('List Price'), validators=[DataRequired(), NumberRange(min=0, message="Price must be nonnegative")])
     submit = SubmitField(_l('List Item'))
+
 
 
 @bp.route('/inventory')

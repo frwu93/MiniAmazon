@@ -1,11 +1,9 @@
 <head>
   <link rel="stylesheet" href="../static/css/product.css">
-</head>
-
- 
-<a href="{{ url_for('index.index') }}" type="button" class="btn btn-dark">Home</a>
-
-<p>
+ </head>
+ <a href="{{ url_for('index.index') }}" type="button" class="btn btn-dark">Home</a>
+  
+ <p>
   {% with messages = get_flashed_messages() %}
   {% if messages %}
   <ul>
@@ -15,18 +13,14 @@
   </ul>
   {% endif %}
   {% endwith %}
-</p>
-<main class="container">
- 
+ </p>
+ <main class="container">
   <!-- Left Column / Headphones Image -->
   <div class="left-column">
     <img data-image="red" class="active"  src="{{product.imageLink}}" alt="">
   </div>
- 
- 
   <!-- Right Column -->
   <div class="right-column">
- 
     <!-- Product Description -->
     <div class="product-description">
       <span>{{product.category}}</span>
@@ -35,8 +29,7 @@
       <p>{% if product.quantity == 0 %} OUT OF STOCK {% elif product.quantity <= 10%} Only {{product.quantity}} left in stock {% else %} {% endif %}</p>
 
     </div>
-
- 
+  
     <!-- Product Pricing -->
     <div class="product-price">
       <span>${{product.price}}</span>
@@ -49,9 +42,48 @@
         <br><br>
         <input type="submit" value="Add to Cart" class="cart-btn">
       </form>
+    <div class="product-addcart">
+        <a type="button" class="cart-btn" href="{{ url_for('carts.addToSaved', buyer_id = current_user.id, product_id=product.id) }}" style = "float: left">Save For Later</a>
+        </div>
     </div>
+    <br><br><br><br>
+    <div>
+      <div class="review-rating">
+        <span>Average Product Review:   {{review}}</span>
+      </div>
+    </div>
+  
+      <!-- Product Review -->
+      {% block content %}
+  
+      <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+          {{ form.rating.label }}<br/>
+          {{ form.rating(size=1) }}<br/>
+          {% for error in form.rating.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        </p>
+        <p>
+          {{ form.description.label }}<br/>
+          {{ form.description(size=96) }}<br/>
+          {% for error in form.description.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        </p>
+        {{ form.submit(class_="btn btn-black") }}
+      </form>
+    
+      {% endblock %}
 
+      <div> 
+        <a href="{{ url_for('review.review_page', id=product.id) }}">See All Reviews For This Product</a> 
+      </div>
+  
   </div>
+  <!-- Adding a link to see all reviews -->
+  
 
-
-</main>
+ </main>
+ 
