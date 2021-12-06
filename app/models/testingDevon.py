@@ -167,7 +167,35 @@ WHERE product_id = :product_id AND buyer_id=:buyer_id
            print(e)
            print("Could not delete value")
            return None
+   
+   
+   
+   @staticmethod
+   def get_Seller_Reviews(seller_id):
+       rows = app.db.execute('''
+SELECT *
+FROM Seller_Rating
+WHERE seller_id = :seller_id 
+''', seller_id=seller_id
+                             )
+       if rows is not None and len(rows)>=1:
+           #print("hello", rows)
+           return rows[0]
+       return None
 
+
+   @staticmethod
+   def current_Seller_Review(buyer_id, seller_id):
+       rows = app.db.execute('''
+SELECT *
+FROM Seller_Rating
+WHERE seller_id = :seller_id AND buyer_id=:buyer_id
+''', seller_id=seller_id, buyer_id=buyer_id
+                             )
+       if rows is not None and len(rows)>=1:
+           #print("hello", rows)
+           return rows[0]
+       return None
 
        
                             

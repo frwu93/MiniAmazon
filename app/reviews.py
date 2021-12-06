@@ -58,3 +58,26 @@ def review_page(id):
         
     return render_template('reviews.html', title='Review', numReview = numReview, getAvg = getAvg, product= product, reviews=reviews, 
     current_user_review=current_user_review, form = form, form2=form2)
+
+### TAKING CARE OF SELLER BELOWS FROM HERE BELOW
+@bp.route('/reviews/<int:id>')
+def seller_reviews(id):
+    form = UpdateForm()
+    form2=DeleteForm()
+    current_user_review=Review.current_Seller_Review(current_user.id, id)
+    reviews=Review.get_Seller_Reviews(id)
+
+    #NEED TO UPDATE REVIEW FUNCTION SO IT DOES UPDATE
+    #also need a place to INSERT Seller Reviews
+    if form.validate_on_submit():
+        #Review.update_Review(current_user.id, id, form.rating.data, datetime.datetime.now() , form.description.data)
+        return render_template('sellerReviews.html', title='Seller Review', reviews=reviews, current_user_review=current_user_review, form = form,
+        form2 =form2)
+
+    if form2.validate_on_submit():
+        #Review.delete_Review(current_user.id, id)
+        return render_template('sellerReviews.html', title='Seller Review', reviews=reviews, current_user_review=current_user_review, form = form,
+        form2 =form2)
+
+    return render_template('sellerReviews.html', title='Seller Review', reviews=reviews, current_user_review=current_user_review, form = form,
+        form2 =form2)

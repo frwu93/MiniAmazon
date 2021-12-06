@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+ 
+
+<div id="reviews" class="row mt-2">
+    <div class="col-12">
+    <h1>Reviews</h1>
+    </div>
+    <div class="card-columns">
+        {% for review in reviews %}
+        <div class="card p-3">
+            <blockquote class="blockquote mb-0 card-body">
+                <p>{{ review.description}}</p>
+                <footer class="blockquote-footer">
+                    <small class="text-muted">
+                        <cite title="User">Buyer # {{ review.buyer_id }}</cite> gave this seller {{ review.rating }} <cite> stars </cite>
+                    </small>
+                </footer>
+            </blockquote>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<div class="col">
+    {% if current_user_review %}
+    <h1>My Current Review</h1>
+        <div class="card">
+            <blockquote class="blockquote mb-0 card-body">
+                <p>{{ current_user_review.description}}</p>
+                <footer class="blockquote-footer">
+                    <small class="text-muted">
+                        <cite title="User"></cite> My current review: {{ current_user_review.rating }}
+                    </small>
+                </footer>
+                <form action="" method="post" novalidate>
+                    {{ form2.hidden_tag() }}
+                    {{ form2.submit(class_="btn btn-black") }}
+                </form>
+            </blockquote>
+        </div>
+        
+</div>
+
+ <!-- Product Review -->
+
+  
+ <form action="" method="post" novalidate>
+   {{ form.hidden_tag() }}
+   <p>
+     {{ form.rating.label }}<br/>
+     {{ form.rating(size=1) }}<br/>
+     {% for error in form.rating.errors %}
+     <span style="color: red;">[{{ error }}]</span>
+     {% endfor %}
+   </p>
+   <p>
+     {{ form.description.label }}<br/>
+     {{ form.description(size=96) }}<br/>
+     {% for error in form.description.errors %}
+     <span style="color: red;">[{{ error }}]</span>
+     {% endfor %}
+   </p>
+   {{ form.submit(class_="btn btn-black") }}
+ </form>
+
+ {% endif %}
+
+
+
+{% endblock %}
