@@ -19,8 +19,8 @@ CREATE TABLE Sellers (
 CREATE TABLE Products (
     id SERIAL PRIMARY KEY,
     seller_id INT NOT NULL,
-    name VARCHAR(255) UNIQUE NOT NULL,
-    description VARCHAR(255),
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(1023),
     imageLink VARCHAR(511),
     category VARCHAR NOT NULL,
     price FLOAT NOT NULL,
@@ -34,6 +34,7 @@ CREATE TABLE Seller_Rating (
     seller_id INT NOT NULL,
     buyer_id INT NOT NULL,
     rating INT NOT NULL,
+    description VARCHAR(511),
     time_reviewed timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     CHECK(rating in (0, 1, 2, 3, 4, 5)),
     FOREIGN KEY (seller_id) REFERENCES Sellers(id),
