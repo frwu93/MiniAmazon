@@ -12,11 +12,14 @@ from .models.Purchase_History import Purchase_History
 from .models.Balance_History import Balance_History
 from.models.Public_User_Products import Public_User_Products
 import datetime
+from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField, SelectField
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
 
 
 from flask import Blueprint
 bp = Blueprint('users', __name__)
 
+ratingChoices=[(1,1), (2,2), (3,3), (4,4), (5,5)]
 
 class LoginForm(FlaskForm):
     email = StringField(_l('Email'), validators=[DataRequired(), Email()])
@@ -147,10 +150,36 @@ def settings():
     user = User.get(current_user.id)
     return render_template('profile_subpages/settings.html', title='Settings', user=user)
 
+### ADDING THE REVIEW FORMS TO THE PAGE---NEED to create the forms first
+class UpdateForm(FlaskForm):
+    #rating = IntegerField(_l('Product Rating'), validators=[DataRequired(), NumberRange(min=1, max=5, message="Please enter and integer between 1 and 5")])
+    rating = SelectField(_l('Product Rating'), validators = [DataRequired()], choices=ratingChoices)    
+    description = StringField(_l('Description'), validators=[DataRequired()])
+    submit = SubmitField(_l('Update Review'))
+
+class DeleteForm(FlaskForm):
+    submit = SubmitField(_l('Delete Review'))
+
 @bp.route('/user/<int:id>', methods=['GET', 'POST'])
 def publicUser(id):
+    form = UpdateForm()
+    form2=DeleteForm()
+    current_user_review=Review.current_Seller_Review(current_user.id, id)
+    reviews=Review.get_Seller_Reviews(id)
     user = User.get(id)
-    return render_template('public_user.html', title='Public User', user=user)
+
+    if form.validate_on_submit():
+        #Review.update_Review(current_user.id, id, form.rating.data, datetime.datetime.now() , form.description.data)
+        return render_template('public_user.html', title='Public User', user=user, form = form, 
+        form2 =form2, current_user_review = current_user_review, reviews= reviews)
+
+    if form2.validate_on_submit():
+        #Review.delete_Review(current_user.id, id)
+        return render_template('public_user.html', title='Public User', user=user, form = form, 
+        form2 =form2, current_user_review = current_user_review, reviews= reviews)
+
+    return render_template('public_user.html', title='Public User', user=user, form = form, 
+    form2 =form2, current_user_review = current_user_review, reviews= reviews)
 
 @bp.route('/user/<int:id>/products', methods=['GET', 'POST'])
 def publicUserProducts(id):
