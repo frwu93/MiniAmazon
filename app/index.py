@@ -64,14 +64,14 @@ def product(id):
         if quantity:
             if int(quantity) > Product.get(id).quantity: 
                 flash('This item is out of stock! Please wait until the seller restocks before purchasing.')
-                return render_template('product.html', form=form ,
+                return render_template('product.html', form = form,
                     product=product)
             success = Cart.add_to_cart(current_user.id, id, quantity)
             if success:
                 return redirect(url_for('index.added_to_cart', id=id))
             else:
                 flash('Could not add to cart. Check to see if you already have this item in your cart.')
-                return render_template('product.html', form=form , 
+                return render_template('product.html', form = form,
                     product=product)
 
         # find the products current user has bought:

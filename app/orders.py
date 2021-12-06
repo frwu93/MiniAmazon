@@ -82,6 +82,7 @@ def checkout_success(coupon = None):
     print(coupon)
     coupon = Coupon.find_coupon(coupon)
     payment = calculate_payment(cart_items, coupon)
+    print(payment['total'])
     order_id = Order.add_order(current_user.id, payment["total"])
     Order.add_to_history(order_id, cart_items)
     User.updateBalanceWithdrawal(current_user.id, payment["total"])
