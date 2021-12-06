@@ -25,6 +25,7 @@
     <div class="product-description">
       <span>{{product.category}}</span>
       <h1>{{product.name}}</h1>
+      <p>Listed by <a href="{{ url_for('users.publicUser', id=product.seller_id) }}">{{product.seller_name}}</a></p>
       <p>{{product.description}}</p>
       <p>{% if product.quantity == 0 %} OUT OF STOCK {% elif product.quantity <= 10%} Only {{product.quantity}} left in stock {% else %} {% endif %}</p>
 
