@@ -61,15 +61,17 @@ WHERE buyer_id = :buyer_id AND product_id = :product_id
            return None
 
    @staticmethod
-   def submitSellerReview(seller_id, buyer_id, rating, time_reviewed):
+   def submitSellerReview(seller_id, buyer_id, rating, description, time_reviewed):
+       print(description)
        try:
            rows = app.db.execute("""
-               INSERT INTO Seller_Rating(seller_id,buyer_id, rating, time_reviewed)
-               VALUES(:seller_id, :buyer_id, :rating, :time_reviewed)
+               INSERT INTO Seller_Rating(seller_id,buyer_id, rating, description, time_reviewed)
+               VALUES(:seller_id, :buyer_id, :rating, :description, :time_reviewed)
                """,
                                  seller_id=seller_id,
                                  buyer_id=buyer_id,
                                  rating=int(rating),
+                                 description=description,
                                  time_reviewed=time_reviewed)
       
            print("backend reg; inserted into db")
@@ -205,12 +207,12 @@ WHERE product_id = :product_id AND buyer_id=:buyer_id
            print("Could not update value")
            return None
    @staticmethod
-   def update_SellerReview(seller_id, buyer_id, rating, time_reviewed):
+   def update_SellerReview(seller_id, buyer_id, rating, description, time_reviewed):
        try:
            app.db.execute('''
            UPDATE Seller_Rating 
-           SET seller_id = :seller_id, buyer_id = :buyer_id, rating = :rating, time_reviewed = :time_reviewed
-           WHERE seller_id = :seller_id AND buyer_id = :buyer_id''', seller_id=seller_id, buyer_id=buyer_id, rating = int(rating), time_reviewed = time_reviewed)
+           SET seller_id = :seller_id, buyer_id = :buyer_id, rating = :rating, description = :description, time_reviewed = :time_reviewed
+           WHERE seller_id = :seller_id AND buyer_id = :buyer_id''', seller_id=seller_id, buyer_id=buyer_id, rating = int(rating), description = description , time_reviewed = time_reviewed)
 
        except Exception as e:
            print(e)

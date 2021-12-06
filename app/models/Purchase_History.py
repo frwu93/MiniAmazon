@@ -23,3 +23,15 @@ class Purchase_History:
             """,
                               id=id)
         return [Purchase_History(*row) for row in rows]
+
+
+    @staticmethod
+    def get_all_Sellers(id):
+        rows = app.db.execute("""
+            SELECT DISTINCT(Products.seller_id)
+            FROM Order_History, Orders, Products
+            WHERE Orders.buyer_id = :id AND Order_History.order_id = Orders.order_id AND Order_History.product_id = Products.id
+            """,
+                              id=id)
+        if rows is not None:
+            return [row[0] for row in rows]

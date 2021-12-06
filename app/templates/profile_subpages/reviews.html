@@ -45,6 +45,7 @@
                                 {% for sellerreview in sellerReviews %}
                                 <div class="card p-3">
                                     <blockquote class="blockquote mb-0 card-body">
+                                        <p>{{ sellerreview.description}}</p>
                                         <footer class="blockquote-footer">
                                             <small class="text-muted">
                                                 <cite title="User"> </cite> You were rated {{ sellerreview.rating }} <cite> stars on  {{ sellerreview.time_reviewed }}</cite>
