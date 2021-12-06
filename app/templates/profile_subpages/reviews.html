@@ -52,6 +52,19 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3 text-secondary">
+                                {% for review in reviews %}
+                                <div class="card p-3">
+                                    <blockquote class="blockquote mb-0 card-body">
+                                        <p>{{ review.description}}</p>
+                                        <footer class="blockquote-footer">
+                                            <small class="text-muted">
+                                                <cite title="User"> </cite> You rated this product {{ review.rating }} <cite> stars on  {{ review.time_reviewed }}</cite>
+                                            </small>
+                                        </footer>
+                                    </blockquote>
+                                    <a href="{{ url_for('review.review_page', id=review.product_id) }}">View Product Review</a> 
+                                </div>
+                                {% endfor %}
                                 <h5></h5>
                             </div>
                         </div>

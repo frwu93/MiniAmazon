@@ -108,6 +108,19 @@ ORDER BY rating DESC
                              )
        return rows if rows is not None else None
 
+   @staticmethod
+   def get_UserReviews(buyer_id):
+       rows = app.db.execute('''
+SELECT *
+FROM Product_Rating
+WHERE buyer_id = :buyer_id
+ORDER BY time_reviewed DESC
+''', buyer_id=buyer_id
+                             )
+    
+       return rows if rows is not None else None
+           
+
 
 
    @staticmethod
