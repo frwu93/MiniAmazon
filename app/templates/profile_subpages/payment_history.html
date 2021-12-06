@@ -24,9 +24,9 @@
                             <div class="tabs">
                                 <a href="{{ url_for('users.profile') }}">Account Details</a>
                                 <hr>
-                                <a href="">Payment Info</a>
+                                <a href="">Balance Info</a>
                                 <hr>
-                                <a href="{{ url_for('users.purchaseHistory') }}">Purchase History</a>
+                                <a href="{{ url_for('users.purchaseHistory') }}">Order History</a>
                                 <hr>
                                 <a href="{{ url_for('users.reviews') }}">Reviews</a>
                                 <hr>
@@ -105,13 +105,28 @@
                     </div>  
                 </div>
                 <div class="card mb-3 content">
-                    <h1 class="m-3">Balance History</h1>
+                    <h2 class="m-3">Balance History</h2>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3 text-secondary">
-                                <h5>Insert Table Here</h5>
-                            </div>
-                        </div>
+                        <table class='table table-hover table-bordered container'>
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Running Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in balance_history%}
+                                <tr>
+                                    <th scope="row">{{item.date}}</th>
+                                    <td>{{item.description}}</td>
+                                    <td>{{item.amount}}</td>
+                                    <td>{{item.current_balance}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

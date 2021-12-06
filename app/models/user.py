@@ -1,18 +1,20 @@
 from flask_login import UserMixin
 from flask import current_app as app
 from werkzeug.security import generate_password_hash, check_password_hash
+import datetime
 
 from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, id, email, firstname, lastname, address, balance):
+    def __init__(self, password, id, email, firstname, lastname, address, balance):
         self.id = id
         self.email = email
         self.firstname = firstname
         self.lastname = lastname
         self.address = address
         self.balance = '{:.2f}'.format(balance)
+        self.password = password
 
     @staticmethod
     def get_by_auth(email, password):
@@ -28,7 +30,7 @@ WHERE email = :email
             # incorrect password
             return None
         else:
-            return User(*(rows[0][1:]))
+            return User(*(rows[0][0:]))
 
     @staticmethod
     def email_exists(email):
@@ -74,7 +76,7 @@ WHERE email = :email
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-SELECT id, email, firstname, lastname, address, balance
+SELECT password, id, email, firstname, lastname, address, balance
 FROM Users
 WHERE id = :id
 """,
@@ -138,6 +140,23 @@ newName=newName)
             return None
 
     @staticmethod
+    def updatePassword(id, newPassword):
+        newPassword = generate_password_hash(newPassword)
+        try:
+            rows = app.db.execute("""
+                UPDATE Users
+                SET password=:newPassword
+                WHERE id = :id
+                RETURNING id
+                """,
+                id=id,
+                newPassword=newPassword)
+            return id
+        except Exception as e:
+            print(e)
+            return None
+
+    @staticmethod
     def updateBalanceDeposit(id, deposit):
         try:
             rows = app.db.execute("""
@@ -152,6 +171,24 @@ newName=newName)
         except Exception as e:
             print(e)
             return None
+
+    @staticmethod
+    def add_deposit(user_id, amount, time_initiated, cur_balance):
+        try:
+            rows = app.db.execute('''
+            INSERT INTO Balance_History(uid, amount, balance_type, cur_balance, time_initiated)
+            VALUES(:user_id, :amount, 'D', :cur_balance, :time_initiated)
+            RETURNING uid
+            ''',
+                    user_id = user_id,
+                    amount = amount,
+                    time_initiated = time_initiated,
+                    cur_balance = cur_balance)
+            user_id = rows[0][0]
+            return user_id
+        except Exception as e:
+            print(e)
+            print("Deposit Failed")
 
     @staticmethod
     def updateBalanceWithdrawal(id, withdrawal):
@@ -169,4 +206,41 @@ newName=newName)
             print(e)
             return None
 
+    @staticmethod
+    def add_withdrawal(user_id, amount, time_initiated, cur_balance):
+        try:
+            rows = app.db.execute('''
+            INSERT INTO Balance_History(uid, amount, balance_type, cur_balance, time_initiated)
+            VALUES(:user_id, -1 * :amount, 'W', :cur_balance, :time_initiated)
+            RETURNING uid
+            ''',
+                    user_id = user_id,
+                    amount = amount,
+                    time_initiated = time_initiated,
+                    cur_balance = cur_balance)
+            user_id = rows[0][0]
+            return user_id
+        except Exception as e:
+            print(e)
+            print("Withdrawal Failed")
+
+    @staticmethod
+    def add_purchase(user_id, amount, time_initiated, cur_balance, product_name, quantity):
+        try:
+            rows = app.db.execute('''
+            INSERT INTO Balance_History(uid, amount, balance_type, cur_balance, time_initiated)
+            VALUES(:user_id, :amount, CONCAT('Purchased ', :product_name, ': x', CAST(:quantity AS varchar)), :cur_balance, :time_initiated)
+            RETURNING uid
+            ''',
+                    user_id = user_id,
+                    amount = amount,
+                    time_initiated = time_initiated,
+                    cur_balance = cur_balance,
+                    product_name = product_name,
+                    quantity = quantity)
+            user_id = rows[0][0]
+            return user_id
+        except Exception as e:
+            print(e)
+            print("Purchase Failed")
 
