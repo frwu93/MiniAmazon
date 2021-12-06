@@ -42,6 +42,7 @@ def index():
                            avail_products=products,
                            purchase_history=purchases)
 
+
 @bp.route('/product/<int:id>', methods = ["GET", "POST"])
 def product(id):
     # get all available products for sale:

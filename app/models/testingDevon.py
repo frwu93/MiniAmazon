@@ -81,8 +81,87 @@ FROM Product_Rating
 WHERE product_id = :product_id
 ''', product_id=product_id
                              )
-       return round((rows[0][0]), 2) if rows is not None else None
- 
+       if rows[0][0] is not None:
+           return round((rows[0][0]), 2)
+       return None
+
+
+   @staticmethod
+   def get_Number(product_id):
+       rows = app.db.execute('''
+SELECT COUNT(rating)
+FROM Product_Rating
+WHERE product_id = :product_id
+''', product_id=product_id
+                             )
+       return rows[0][0] if rows is not None else None
+
+    
+   @staticmethod
+   def get_Reviews(product_id):
+       rows = app.db.execute('''
+SELECT *
+FROM Product_Rating
+WHERE product_id = :product_id
+ORDER BY rating DESC
+''', product_id=product_id
+                             )
+       return rows if rows is not None else None
+
+
+
+   @staticmethod
+   def current_user_review(buyer_id, product_id):
+       rows = app.db.execute('''
+SELECT *
+FROM Product_Rating
+WHERE product_id = :product_id AND buyer_id=:buyer_id
+''', product_id=product_id, buyer_id=buyer_id
+                             )
+       if rows is not None and len(rows)>=1:
+           #print("hello", rows)
+           return rows[0]
+       return None
+
+
+
+
+
+
+
+
+   @staticmethod
+   def update_Review( buyer_id, product_id, rating, time_reviewed, description):
+       try:
+           app.db.execute('''
+           UPDATE Product_Rating 
+           SET buyer_id = :buyer_id, product_id = :product_id, rating = :rating, time_reviewed = :time_reviewed, description = :description 
+           WHERE product_id = :product_id AND buyer_id = :buyer_id''', buyer_id=buyer_id, product_id=product_id, rating = int(rating), time_reviewed = time_reviewed, description = description)
+
+       except Exception as e:
+           print(e)
+           print("Could not update value")
+           return None
+
+   @staticmethod
+   def delete_Review(buyer_id, product_id):
+       try:
+           app.db.execute('''
+           DELETE FROM Product_Rating 
+           WHERE product_id = :product_id AND buyer_id = :buyer_id''', buyer_id=buyer_id, product_id=product_id)
+
+       except Exception as e:
+           print(e)
+           print("Could not delete value")
+           return None
+
+
+       
+                            
+        
+       
+
+
  
 ratingChoices=[(1,1), (2,2), (3,3), (4,4), (5,5)]
 class ReviewForm(FlaskForm):

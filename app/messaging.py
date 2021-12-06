@@ -11,10 +11,10 @@ from flask import render_template, redirect, url_for, flash, request
 from flask import Blueprint
 bp = Blueprint('messaging', __name__)
 
-@bp.route('/messages', methods=['GET'])
+@bp.route('/reviews', methods=['GET'])
 def messages():
-    print("go to messages")
-    return render_template('messaging.html', title='Message')
+    print("go to reviews")
+    return render_template('reviews.html', title='Review')
 
 @bp.route('/feedback.html', methods=['GET'])
 def feedback():
