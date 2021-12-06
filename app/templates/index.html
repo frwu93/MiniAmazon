@@ -3,11 +3,63 @@
 {% block content %}
 <head>
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+  <link rel="stylesheet" href="ratings.css">
 </head>
-<br><br>
 
+<br><br>
 <h2>Products for sale:</h2>
 
+<form action="{{ url_for('filter.filter') }}" method="post">
+  <label for="categories">Category:</label>
+
+  <select name="categories" id="categories">
+    <option value="All">All</option>
+    <option value="Accessories">Accessories</option>
+    <option value="Autmotives">Automotives</option>
+    <option value="Books">Books</option>
+    <option value="Beauty">Beauty</option>
+    <option value="Clothing">Clothing</option>
+    <option value="Electronics">Electronics</option>
+    <option value="Entertainment">Entertainment</option>
+    <option value="Food">Food</option>
+    <option value="Home">Home</option>
+    <option value="Outdoors">Outdoors</option>
+    <option value="Other">Other</option>
+    <option value="Pet Supplies">Pet Supplies</option>
+    <option value="Sports">Sports</option>
+    <option value="Toys">Toys</option>
+  </select>
+  <br>
+  <label for="rating">Rating:</label>
+  <select name="rating" id="rating">
+    <option value="0">Any</option>
+    <option value="1">1+</option>
+    <option value="2">2+</option>
+    <option value="3">3+</option>
+    <option value="4">4+</option>
+    <option value="5">5</option>
+  </select>
+  <br>
+  <label for="minPrice">min price:</label>
+  <input type="float" id="minPrice" name="minPrice" min="0">
+
+  <label for="maxPrice">max price:</label>
+  <input type="float" id="maxPrice" name="maxPrice" min="minPrice">
+
+  <br>
+  <input type="submit" value="Filter">
+</form>
+<p>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li style="color: red;">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+ </p>
 <table class='table table-hover table-bordered container' id="table1">
   <thead class="thead-dark">
     <tr>

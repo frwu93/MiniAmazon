@@ -10,15 +10,15 @@ class Order:
         self.quantities = quantities
 
     @staticmethod
-    def add_order(buyer_id, cost):
+    def add_order(buyer_id, total_cost):
         try:
             rows = app.db.execute('''
-            INSERT INTO Orders(buyer_id)
-            VALUES(:buyer_id)
+            INSERT INTO Orders(buyer_id, total_cost)
+            VALUES(:buyer_id, :total_cost)
             RETURNING order_id
             ''',
                     buyer_id = buyer_id,
-                    cost = cost)
+                    total_cost = total_cost)
             order_id = rows[0][0]
             return order_id
         except Exception as e:
