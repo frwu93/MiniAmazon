@@ -19,8 +19,8 @@ CREATE TABLE Sellers (
 CREATE TABLE Products (
     id SERIAL PRIMARY KEY,
     seller_id INT NOT NULL,
-    name VARCHAR(255) UNIQUE NOT NULL,
-    description VARCHAR(255),
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(1023),
     imageLink VARCHAR(511),
     category VARCHAR NOT NULL,
     price FLOAT NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE Products (
     FOREIGN KEY (seller_id) REFERENCES Sellers(id),
     CHECK (category in ('Clothing', 'Accessories', 'Books','Entertainment', 'Electronics', 'Home', 'Pet Supplies', 'Food', 'Beauty', 'Toys', 'Sports', 'Outdoors', 'Automotives', 'Other'))
 );
-
+//TODO
 CREATE TABLE Seller_Rating (
     seller_id INT NOT NULL,
     buyer_id INT NOT NULL,
