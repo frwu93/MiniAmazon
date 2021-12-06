@@ -45,11 +45,13 @@
     <div class="product-addcart">
       <form>
         <label for="quantity">Quantity:</label><br>
-        <input type="number" id="quantity" name="quantity">
+        <input type="number" id="quantity" name="quantity" min = 1 max = {{product.quantity}}>
         <br><br>
         <input type="submit" value="Add to Cart" class="cart-btn">
       </form>
-    </div>
+      <div class="product-addcart">
+        <a type="button" class="cart-btn" href="{{ url_for('carts.addToSaved', buyer_id = current_user.id, product_id=product.id) }}" style = "float: left">Save For Later</a>
+        </div>
 
   </div>
 

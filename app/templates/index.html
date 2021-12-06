@@ -41,7 +41,7 @@
     {% for purchase in purchase_history%}
       <tr>
         <th scope="row">{{purchase.id}}</th>
-        <td>{{purchase.pid}}</td>
+        <td>{{purchase.product_name}}</td>
         <td>{{purchase.time_purchased}}</td>
       </tr>
     {% endfor %}
