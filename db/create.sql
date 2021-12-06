@@ -21,12 +21,13 @@ CREATE TABLE Products (
     seller_id INT NOT NULL,
     name VARCHAR(255) UNIQUE NOT NULL,
     description VARCHAR(255),
-    imageLink VARCHAR(255),
+    imageLink VARCHAR(511),
     category VARCHAR NOT NULL,
     price FLOAT NOT NULL,
     available BOOLEAN DEFAULT TRUE,
     quantity INT NOT NULL,
-    FOREIGN KEY (seller_id) REFERENCES Sellers(id)
+    FOREIGN KEY (seller_id) REFERENCES Sellers(id),
+    CHECK (category in ('Clothing', 'Accessories', 'Books','Entertainment', 'Electronics', 'Home', 'Pet Supplies', 'Food', 'Beauty', 'Toys', 'Sports', 'Outdoors', 'Automotives', 'Other'))
 );
 
 CREATE TABLE Seller_Rating (
@@ -44,6 +45,7 @@ CREATE TABLE Cart (
     buyer_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL,
+    saved BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (buyer_id) REFERENCES Users(id),
     FOREIGN KEY (product_id) REFERENCES Products(id),
     PRIMARY KEY (buyer_id, product_id)
@@ -64,6 +66,7 @@ CREATE TABLE Product_Rating (
 CREATE TABLE Orders(
     order_id SERIAL PRIMARY KEY,
     buyer_id INT NOT NULL,
+    total_cost FLOAT NOT NULL,
     FOREIGN KEY (buyer_id) REFERENCES Users(id),
     time_ordered timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
 );
@@ -78,3 +81,32 @@ CREATE TABLE Order_History (
     fulfilled BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (product_id, order_id)
 );
+
+CREATE TABLE Balance_History (
+    uid INT NOT NULL,
+    amount FLOAT NOT NULL,
+    balance_type VARCHAR(255) NOT NULL,
+    cur_balance FLOAT NOT NULL,
+    time_initiated timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+);
+
+CREATE TABLE Coupons (
+    coupon_code VARCHAR(10) NOT NULL,
+    percent_off INT NOT NULL,
+    start_date timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    end_date timestamp without time zone NOT NULL,
+    PRIMARY KEY (coupon_code),
+    CHECK (percent_off > 0 AND percent_off <= 100)
+);
+
+CREATE TABLE Product_Coupons (
+    coupon VARCHAR(10) NOT NULL,
+    product_id INT NOT NULL,
+    PRIMARY KEY (coupon),
+    FOREIGN KEY (coupon) REFERENCES Coupons(coupon_code),
+    FOREIGN KEY (product_id) REFERENCES Products(id)
+);
+
+
+
+

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="settings.css">
+</head>
+
+<body>
+    <div>
+        <div class="row">
+            <div class="col-md-3 mt-1">
+                <div class="card text-center sidebar">
+                    <div class="card-body">
+                        <img src="https://users.cs.duke.edu/~junyang/media/portrait.jpg" class="rounded-circle"
+                            width="150">
+                        <div class="mt-3">
+                            <h3>{{user.firstname}} {{user.lastname}}</h3>
+                            <p>Account ID: {{user.id}}</p>
+                            <hr>
+                            <div class="tabs">
+                                <a href="{{ url_for('users.profile') }}">Account Details</a>
+                                <hr>
+                                <a href="{{ url_for('users.paymentHistory') }}">Balance Info</a>
+                                <hr>
+                                <a href="{{ url_for('users.purchaseHistory') }}">Order History</a>
+                                <hr>
+                                <a href="{{ url_for('users.reviews') }}">Reviews</a>
+                                <hr>
+                                <a href="">Settings</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 mt-1">
+                <div class="card mb-3 content">
+                    <h1 class="m-3 pt-3">Settings</h1>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5></h5>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+
+
+{% endblock %}

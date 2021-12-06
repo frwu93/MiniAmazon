@@ -1,8 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
+<head>
+  <link rel="icon" type="image/png" href="http://www.yogihosting.com/wp-content/themes/yogi-yogihosting/Images/favicon.ico">
+  <meta charset="utf-8" />
 
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
 <br><br>
+<a href="{{ url_for('inventory.analytics') }}" type="button" class="btn btn-dark">Analytics</a>
 <a href="{{ url_for('inventory.sellItem') }}" type="button" class="btn btn-dark">Sell a product</a>
 <br><br>
 <h2>Your products for sale:</h2>
@@ -21,19 +32,76 @@
       <tr id={{product.id}}>
         <th scope="row">{{product.id}}</th>
         <td>{{product.name}}</td>
-        <td>
+        <td data-order="{{product.quantity}}">
           {{product.quantity}} 
-          <button type="button" class="btn btn-dark" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{product.id}}" data-id={{product.id}}>
+          <button type="button" class="btn btn-dark" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{product.id}}" data-id={{product.id}}> 
+            Change
+          </button>
+        </td>
+        <td data-order="{{product.price}}">
+          ${{product.price}}
+          <button type="button" class="btn btn-dark" style="float: right" data-toggle="modal" data-target="#exampleModalPrice{{product.id}}">
             Change
           </button>
           
-          <!-- <a href="{{ url_for('inventory.changeQuantity', id=product.id, quantity=10) }}" type="button" class="btn btn-dark" onclick="return confirm('Are you sure?')" style="float: right">Change Quantity</a></td> -->
-        <td>{{product.price}}</td>
+        </td>
         <td><a href="{{ url_for('inventory.deleteItem', id=product.id) }}" type="button" class="btn btn-dark" onclick="return confirm('Are you sure?')">Remove listing</a>
         </td>
         <!--<td><button type="button" onclick='productDelete(this);'>Remove</button></td> -->
       </tr>
-      
+
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModalPrice{{product.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Enter New Price</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <label for="newPrice">New Price: </label>
+              <input class="price" type="number" min="1" step="1" id="newPrice{{product.id}}" name="newPrice"
+                oninput="validity.valid||(valtmlue='');">
+              <button type="button" onclick='passNewPrice("{{product.id}}");'>Change Price</button>
+              <script>
+                function passNewPrice(id){
+                    var inputVal = document.getElementById("newPrice"+id).value;
+                    alert(id);
+                    if(isNaN(inputVal)) alert("Not a numnber");
+                    var value = parseFloat(inputVal);
+                    if (value <= 0){ 
+                      alert("Price must be positive");
+                      var baseUrl = window.location.href;
+                      window.location.href = baseUrl;
+                    }
+                    else{
+                    // Selecting the input element and get its value 
+                      var baseUrl = window.location.href;
+                      alert(inputVal);
+                      var url = baseUrl.concat("/", "changePrice", "/", id, "-", inputVal);
+                      alert(url);
+                      // Displaying the value
+                      //var link = "Stupd";
+                      window.location.href = url;
+                    }
+                }
+              </script>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
       <div class="modal fade" id="exampleModal{{product.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -44,7 +112,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <label for="newQuantity">New Quantity: {{product.id}}</label>
+              <label for="newQuantity">New Quantity: </label>
                 <input class="quantity" type="number" min="1" step="1" id="newQuantity{{product.id}}" name="newQuantity"
                   oninput="validity.valid||(valtmlue='');">
 
@@ -79,6 +147,8 @@
           </div>
         </div>
       </div>
+
+
       
     {% endfor %}
   </tbody>
@@ -94,11 +164,19 @@
 </table>
 
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+  
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+</script>
 
 <br><br>
 {% if current_user.is_authenticated %}
 <h2>Your recent sales:</h2>
-<table class='table table-hover table-bordered container'>
+<table class='table table-hover table-bordered container' id = 'myTable2'>
   <thead class="thead-dark">
     <script type="text/javascript">  
       function selects(){  
@@ -144,6 +222,11 @@
     </form>
   </tbody>
 </table>
+<script>
+  $(document).ready(function () {
+      $('#myTable2').DataTable();
+  });
+</script>
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
 {% endif %}

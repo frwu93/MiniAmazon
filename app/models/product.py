@@ -1,4 +1,12 @@
 from flask import current_app as app
+from flask import Flask
+from flask import Flask, render_template, flash, request, redirect, url_for
+from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import date
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 
 
 class Product:
@@ -83,6 +91,41 @@ ORDER BY id
             print("Could not change quantity: ", id)
             return None
 
+    @staticmethod
+    def change_price(id, price):
+        try: 
+            app.db.execute('''
+    UPDATE Products
+    SET price=:price
+    WHERE id = :id
+    RETURNING id
+    ''',
+                                id=id,
+                                price=price)
+            return id
+        except Exception  as e:
+            print(e)
+            print("Could not change quantity: ", id)
+            return None
+
+    @staticmethod
+    def decrease_purchased_quantity(purchased_items):
+        try: 
+            for item in purchased_items:
+                id = item.product_id
+                amount = item.quantity
+                rows = app.db.execute('''
+                    UPDATE Products
+                    SET quantity= quantity - :amount
+                    WHERE id = :id
+                    ''',
+                                id=id,
+                                amount=amount)
+            return id
+        except Exception  as e:
+            print(e)
+            print("Decreasing purchased items failed")
+
 
     @staticmethod
     def new_listing(seller_id, name, quantity, description, imageLink, category, price):
@@ -108,5 +151,10 @@ ORDER BY id
             # reporting needed
             print("not added")
             return None
+
+
+
+
+
 
 

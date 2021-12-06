@@ -4,7 +4,47 @@
 
 <br><br>
 {% if current_user.is_authenticated %}
-<h1>YOUR ORDER WENT THRU GANGGG</h1>
+<h1>Your order has been processed!</h1>
+<p>An email confirmation has been sent to {{user.email}}.</p>
+<p>Your order number is {{order_id}}.</p>
+<br><br>
+<h2>Your Order Summary</h2>
+<table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Product ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Seller</th>
+        <th scope="col">Price</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Total</th>   
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart_items%}
+      <tr>
+        <th scope="row">{{item.product_id}}</th>
+        <td>{{item.product_name}}</td>
+        <td>{{item.seller}}</td>
+        <td>${{item.price}}</td>
+        <td>{{item.quantity}}</td>
+        <td>${{item.total_cost}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h5 align="right">Subtotal: ${{'{:.2f}'.format(payment["subtotal"])}}</h5>
+  <p align="right">
+    Tax: ${{'{:.2f}'.format(payment["tax"])}}
+  </p> 
+  {% if coupon  %}
+  <p align="right">Coupon code {{coupon.code}} has been applied!</p>
+  <p align="right">You saved {{coupon.percent_off}}% {% if coupon.product_id%} (${{coupon.amount_saved}}) on {{coupon.product_name}}! {% else %} (${{payment['saved']}}) on your order!{% endif %}</p>
+  {% endif %}
+  <h3 align="right">Total: ${{'{:.2f}'.format(payment["total"])}}</h3>
+
+
 
 {% endif %}
 

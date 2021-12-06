@@ -2,9 +2,10 @@ from flask import current_app as app
 
 
 class Cart:
-    def __init__(self, product_id, product_name, firstname, lastname, price, quantity):
+    def __init__(self, product_id, product_name, seller_id, firstname, lastname, price, quantity):
         self.product_id = product_id
         self.product_name = product_name
+        self.seller_id = seller_id
         self.seller = firstname + " " + lastname
         self.price = price
         self.quantity = quantity
@@ -13,10 +14,23 @@ class Cart:
     @staticmethod
     def get_cart_products_by_uid(buyer_id):
         rows = app.db.execute('''
-        SELECT Products.id, Products.name, Users.firstname, Users.lastname, price, Cart.quantity
+        SELECT Products.id, Products.name, Products.seller_id, Users.firstname, Users.lastname, price, Cart.quantity
         FROM Cart, Products, Users
         WHERE Cart.buyer_id = :buyer_id AND Cart.product_id = Products.id AND 
-        Users.id = seller_id
+        Users.id = seller_id AND
+        Cart.saved = FALSE
+        ''',
+                              buyer_id=buyer_id)
+        return [Cart(*row) for row in rows]
+
+    @staticmethod
+    def get_saved_products_by_uid(buyer_id):
+        rows = app.db.execute('''
+        SELECT Products.id, Products.name, Products.seller_id, Users.firstname, Users.lastname, price, Cart.quantity
+        FROM Cart, Products, Users
+        WHERE Cart.buyer_id = :buyer_id AND Cart.product_id = Products.id AND 
+        Users.id = seller_id AND
+        Cart.saved = TRUE
         ''',
                               buyer_id=buyer_id)
         return [Cart(*row) for row in rows]
@@ -28,7 +42,7 @@ class Cart:
         total = 0
         for product in cart:
             total += float(product.total_cost)
-        return '{:.2f}'.format(total)
+        return total
     
     @staticmethod
     def change_quantity(buyer_id, product_id, quantity):
@@ -66,8 +80,8 @@ class Cart:
     def add_to_cart(buyer_id, product_id, quantity):
         try:
             rows = app.db.execute('''
-            INSERT INTO Cart(buyer_id, product_id, quantity)
-            VALUES(:buyer_id, :product_id, :quantity)
+            INSERT INTO Cart(buyer_id, product_id, quantity, saved)
+            VALUES(:buyer_id, :product_id, :quantity, FALSE)
             RETURNING buyer_id, product_id
             ''',
                     buyer_id = buyer_id,
@@ -77,6 +91,73 @@ class Cart:
             return buyer_id
         except Exception as e:
             print(e)
-            print("Adding to Orders Failed")
+            print("Adding to Cart Failed")
             return None
+
+    @staticmethod
+    def add_to_saved(buyer_id, product_id):
+        try:
+            rows = app.db.execute('''
+            INSERT INTO Cart(buyer_id, product_id, quantity, saved)
+            VALUES(:buyer_id, :product_id, :quantity, TRUE)
+            RETURNING buyer_id, product_id
+            ''',
+                    buyer_id = buyer_id,
+                    product_id = product_id,
+                    quantity = 1)
+            buyer_id = rows[0][0]
+            return buyer_id
+        except Exception as e:
+            print(e)
+            print("Adding to Saved Failed")
+            return None
+    
+    @staticmethod
+    def clear_user_cart(buyer_id):
+        try:
+            rows = app.db.execute('''
+            DELETE FROM Cart
+            WHERE buyer_id = :buyer_id
+            AND saved = FALSE
+            ''',
+                    buyer_id = buyer_id)
+        except Exception as e:
+            print(e)
+            print("Clearing Cart failed")
+
+    @staticmethod
+    def toggle_saved(buyer_id, product_id):
+        try:
+            rows = app.db.execute('''
+            UPDATE Cart
+            SET saved = 
+                CASE WHEN 
+                    saved = TRUE THEN FALSE
+                    ELSE TRUE 
+                END
+            WHERE buyer_id = :buyer_id AND product_id = :product_id
+            ''',
+                    buyer_id = buyer_id,
+                    product_id = product_id)
+        except Exception as e:
+            print(e)
+            print("Toggling saved failed")
+    
+    @staticmethod
+    def contains_item(buyer_id, product_id):
+        try:
+            rows = app.db.execute('''
+            SELECT 
+            FROM Cart
+            WHERE buyer_id = :buyer_id 
+            AND product_id = :product_id
+            AND saved = FALSE
+            ''',
+                    buyer_id = buyer_id,
+                    product_id = product_id)
+            return len(rows) > 0
+        except Exception as e:
+            print(e)
+            print("can't find item")
+
     

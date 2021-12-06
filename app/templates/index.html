@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+<head>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+</head>
 <br><br>
 <h2>Products for sale:</h2>
-<table class='table table-hover table-bordered container'>
+
+<table class='table table-hover table-bordered container' id="table1">
   <thead class="thead-dark">
     <tr>
       <th scope="col">Product Name</th>
@@ -35,6 +38,14 @@
 <div class="center">
   <a href= "{{ url_for('index.products') }}" type= "button" class="btn btn-dark">View All Products</a>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+  
+<script>
+    $(document).ready(function () {
+        $('#table1').DataTable();
+    });
+</script>
 
 <br><br>
 {% if current_user.is_authenticated %}
@@ -51,7 +62,7 @@
     {% for purchase in purchase_history%}
       <tr>
         <th scope="row">{{purchase.id}}</th>
-        <td>{{purchase.pid}}</td>
+        <td>{{purchase.product_name}}</td>
         <td>{{purchase.time_purchased}}</td>
       </tr>
     {% endfor %}

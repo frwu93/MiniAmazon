@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="payment.css">
+</head>
+
+<body>
+    <div>
+        <div class="row">
+            <div class="col-md-3 mt-1">
+                <div class="card text-center sidebar">
+                    <div class="card-body">
+                        <img src="https://users.cs.duke.edu/~junyang/media/portrait.jpg" class="rounded-circle"
+                            width="150">
+                        <div class="mt-3">
+                            <h3>{{user.firstname}} {{user.lastname}}</h3>
+                            <p>Account ID: {{user.id}}</p>
+                            <hr>
+                            <div class="tabs">
+                                <a href="{{ url_for('users.profile') }}">Account Details</a>
+                                <hr>
+                                <a href="">Balance Info</a>
+                                <hr>
+                                <a href="{{ url_for('users.purchaseHistory') }}">Order History</a>
+                                <hr>
+                                <a href="{{ url_for('users.reviews') }}">Reviews</a>
+                                <hr>
+                                <a href="{{ url_for('users.settings') }}">Settings</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 mt-1">
+                <div class="card mb-3 content">
+                    <h1 class="m-3 pt-3">Balance</h1>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5>Current Balance</h5>
+                            </div>
+                            <div class="col-md-9 text-secondary">
+                                ${{user.balance}} 
+                                <button type="button" class="btn btn-dark" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalWithdraw">
+                                    Withdraw
+                                </button>
+                                <button type="button" class="btn btn-dark" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalDeposit">
+                                    Deposit
+                                </button>
+                            </div>
+                            <div class="modal fade" id="exampleModalDeposit" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Deposit</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+                                                <label for="deposit">Desired Deposit: </label>
+                                                <input type="number" id="deposit" name="deposit" step="0.01" min="0" max="1000000">
+                                                <input type="submit" value="Submit">
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="exampleModalWithdraw" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Withdraw</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+                                                <label for="withdraw">Desired Withdrawal: </label>
+                                                <input type="number" id="withdraw" name="withdraw" step="0.01" min="0" max="{{user.balance}}">
+                                                <input type="submit" value="Submit">
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+                <div class="card mb-3 content">
+                    <h2 class="m-3">Balance History</h2>
+                    <div class="card-body">
+                        <table class='table table-hover table-bordered container'>
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Running Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in balance_history%}
+                                <tr>
+                                    <th scope="row">{{item.date}}</th>
+                                    <td>{{item.description}}</td>
+                                    <td>{{item.amount}}</td>
+                                    <td>{{item.current_balance}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+
+
+{% endblock %}

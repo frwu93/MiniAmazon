@@ -5,6 +5,17 @@
 <br><br>
 {% if current_user.is_authenticated %}
 <h2>Your Cart:</h2>
+<p>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li style="color: red;">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+</p>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
@@ -13,7 +24,7 @@
       <th scope="col">Seller</th>
       <th scope="col">Price</th>
       <th scope="col">Quantity</th>
-
+      <th scope="col">Save For Later</th>  
       <th scope="col">Delete Item</th>  
       <th scope="col">Total</th>   
     </tr>
@@ -27,6 +38,7 @@
         <td>${{item.price}}</td>
         <td>{{item.quantity}}
         <button type="button" style = "float: right", class="btn btn-dark" data-toggle="modal" data-target="#quantityChange{{item.product_id}}">Change Quantity</button> </td>
+        <td><a href="{{ url_for('carts.moveSavedItemToCart', buyer_id = current_user.id, product_id=item.product_id) }}" type="button" class="btn btn-dark" style = "float: left">Save For Later</a>
         <td><a href="{{ url_for('carts.deleteItem', buyer_id = current_user.id, product_id=item.product_id) }}" type="button" class="btn btn-dark" onclick="return confirm('Are you sure?')" style = "float: left">Delete Item</a>
         <td>${{item.total_cost}}</td>
       </tr>
@@ -84,8 +96,45 @@
   </tbody>
 </table>
 
-<p align="right">Total Cost: {{subtotal}}</p>
+<h5 align="right">Subtotal: ${{'{:.2f}'.format(payment["subtotal"])}}</h5>
+<p align="right">
+    Tax: ${{'{:.2f}'.format(payment["tax"])}}
+</p> 
+<h3 align="right">Total: ${{'{:.2f}'.format(payment["total"])}}</h3>
 <a href="{{ url_for('orders.checkout')}}" type = "button" class="btn btn-dark" style = "float:right"> Check Out </a>
+
+<!-- SAVED FOR LATER -->
+
+<h2>Saved For Later:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Seller</th>
+      <th scope="col">Price</th>
+      <th scope="col">Move to Cart</th>  
+      <th scope="col">Total</th>   
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in saved_items%}
+      <tr>
+        <th scope="row">{{item.product_id}}</th>
+        <td>{{item.product_name}}</td>
+        <td>{{item.seller}}</td>
+        <td>${{item.price}}</td>
+        <td><a href="{{ url_for('carts.moveSavedItemToCart', buyer_id = current_user.id, product_id=item.product_id) }}" type="button" class="btn btn-dark"style = "float: left">Move to Cart</a>
+        <td>${{item.total_cost}}</td>
+      </tr>
+    
+
+  
+  {% endfor %}
+  </tbody>
+</table>
+
+
 
 {% endif %}
 

@@ -7,6 +7,10 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from flask_babel import _, lazy_gettext as _l
 
 from .models.user import User
+from.models.testingDevon import Review
+from .models.Purchase_History import Purchase_History
+from .models.Balance_History import Balance_History
+import datetime
 
 
 from flask import Blueprint
@@ -69,16 +73,21 @@ class RegistrationForm(FlaskForm):
         
 @bp.route('/profile')
 def profile():
-    #efef
     firstname = request.args.get('firstname')
     lastname = request.args.get('lastname')
     email = request.args.get('email')
+    address = request.args.get('address')
+    password = request.args.get('password')
     if firstname:
         id = User.updateFirstName(current_user.id, firstname)
     if lastname:
         id = User.updateLastName(current_user.id, lastname)
     if email:
         id = User.updateEmail(current_user.id, email)
+    if address:
+        id = User.updateAddress(current_user.id, address)
+    if password:
+        id = User.updatePassword(current_user.id, password)
     
     user = User.get(current_user.id)
     return render_template('profile.html', title='Profile', user=user)
@@ -101,6 +110,41 @@ def register():
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
+@bp.route('/paymentHistory', methods=['GET', 'POST'])
+def paymentHistory():
+    deposit = request.args.get('deposit')
+    withdraw = request.args.get('withdraw')
+    if deposit:
+        id = User.updateBalanceDeposit(current_user.id, deposit)
+        curBalance = User.get(current_user.id).balance
+        User.add_deposit(current_user.id, deposit, datetime.datetime.now(), curBalance)
+        return redirect(url_for('users.paymentHistory'))
+    if withdraw:
+        id = User.updateBalanceWithdrawal(current_user.id, withdraw)
+        curBalance = User.get(current_user.id).balance
+        User.add_withdrawal(current_user.id, withdraw, datetime.datetime.now(), curBalance)
+        return redirect(url_for('users.paymentHistory'))
+    
+    balance_history = Balance_History.get_balance_history_by_uid(current_user.id)
+    user = User.get(current_user.id)
+    return render_template('profile_subpages/payment_history.html', title='Payment', balance_history=balance_history, user=user)
+
+@bp.route('/purchaseHistory', methods=['GET', 'POST'])
+def purchaseHistory():
+    purchase_history = Purchase_History.get_purchase_history_by_uid(current_user.id)
+    user = User.get(current_user.id)
+    return render_template('profile_subpages/purchase_history.html', title='Purchase', purchase_history=purchase_history, user=user)
+
+@bp.route('/reviews', methods=['GET', 'POST'])
+def reviews():
+    user = User.get(current_user.id)
+    reviews =  Review.get_UserReviews(current_user.id)
+    return render_template('profile_subpages/reviews.html', title='Reviews', user=user, reviews=reviews)
+
+@bp.route('/settings', methods=['GET', 'POST'])
+def settings():
+    user = User.get(current_user.id)
+    return render_template('profile_subpages/settings.html', title='Settings', user=user)
 
 @bp.route('/logout')
 def logout():
