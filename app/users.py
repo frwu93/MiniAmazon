@@ -8,6 +8,8 @@ from flask_babel import _, lazy_gettext as _l
 
 from .models.user import User
 from .models.Purchase_History import Purchase_History
+from .models.Balance_History import Balance_History
+import datetime
 
 
 from flask import Blueprint
@@ -70,11 +72,11 @@ class RegistrationForm(FlaskForm):
         
 @bp.route('/profile')
 def profile():
-    #efef
     firstname = request.args.get('firstname')
     lastname = request.args.get('lastname')
     email = request.args.get('email')
     address = request.args.get('address')
+    password = request.args.get('password')
     if firstname:
         id = User.updateFirstName(current_user.id, firstname)
     if lastname:
@@ -83,6 +85,8 @@ def profile():
         id = User.updateEmail(current_user.id, email)
     if address:
         id = User.updateAddress(current_user.id, address)
+    if password:
+        id = User.updatePassword(current_user.id, password)
     
     user = User.get(current_user.id)
     return render_template('profile.html', title='Profile', user=user)
@@ -111,11 +115,18 @@ def paymentHistory():
     withdraw = request.args.get('withdraw')
     if deposit:
         id = User.updateBalanceDeposit(current_user.id, deposit)
+        curBalance = User.get(current_user.id).balance
+        User.add_deposit(current_user.id, deposit, datetime.datetime.now(), curBalance)
+        return redirect(url_for('users.paymentHistory'))
     if withdraw:
         id = User.updateBalanceWithdrawal(current_user.id, withdraw)
-
+        curBalance = User.get(current_user.id).balance
+        User.add_withdrawal(current_user.id, withdraw, datetime.datetime.now(), curBalance)
+        return redirect(url_for('users.paymentHistory'))
+    
+    balance_history = Balance_History.get_balance_history_by_uid(current_user.id)
     user = User.get(current_user.id)
-    return render_template('profile_subpages/payment_history.html', title='Payment', user=user)
+    return render_template('profile_subpages/payment_history.html', title='Payment', balance_history=balance_history, user=user)
 
 @bp.route('/purchaseHistory', methods=['GET', 'POST'])
 def purchaseHistory():
