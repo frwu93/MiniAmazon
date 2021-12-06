@@ -67,6 +67,7 @@
                         </div>
                     </div>
                     <div class="col">
+                        {% if myself %}
                         {% if current_user_review %}
                         <h1 class="m-3 pt-3">My Current Review</h1>
                             <div class="card">
@@ -115,6 +116,7 @@
                         {{ form3.submit3(class_="btn btn-black") }}
                       </form>
                     </div>
+                     {% endif %}
                      {% endif %}
                 </div>
             </div>

@@ -257,6 +257,17 @@ WHERE seller_id = :seller_id
            return rows[0]
        return None
 
+   @staticmethod
+   def get_SellerReviews(seller_id):
+       rows = app.db.execute('''
+SELECT *
+FROM Seller_Rating
+WHERE seller_id = :seller_id
+ORDER BY time_reviewed DESC
+''', seller_id=seller_id
+                             )
+    
+       return rows if rows is not None else None
 
    @staticmethod
    def current_Seller_Review(buyer_id, seller_id):

@@ -42,6 +42,18 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
+                                {% for sellerreview in sellerReviews %}
+                                <div class="card p-3">
+                                    <blockquote class="blockquote mb-0 card-body">
+                                        <footer class="blockquote-footer">
+                                            <small class="text-muted">
+                                                <cite title="User"> </cite> You were rated {{ sellerreview.rating }} <cite> stars on  {{ sellerreview.time_reviewed }}</cite>
+                                            </small>
+                                        </footer>
+                                    </blockquote>
+                                    <a href="{{ url_for('users.publicUser', id=sellerreview.seller_id) }}">See Full Rating Profile</a> 
+                                </div>
+                                {% endfor %}
                                 <h5></h5>
                             </div>
                         </div>

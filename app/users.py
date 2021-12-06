@@ -143,7 +143,8 @@ def purchaseHistory():
 def reviews():
     user = User.get(current_user.id)
     reviews =  Review.get_UserReviews(current_user.id)
-    return render_template('profile_subpages/reviews.html', title='Reviews', user=user, reviews=reviews)
+    sellerReviews=Review.get_SellerReviews(current_user.id)
+    return render_template('profile_subpages/reviews.html', title='Reviews', user=user, reviews=reviews, sellerReviews=sellerReviews)
 
 @bp.route('/settings', methods=['GET', 'POST'])
 def settings():
@@ -174,29 +175,32 @@ def publicUser(id):
     user = User.get(id)
     getAvg=Review.get_avgSeller(id)
     numReview=Review.get_NumberSeller(id)
+    myself = True
+    if (current_user.id==id):
+        myself=False
 
     if form.submit1.data and form.validate_on_submit:
         print(id, current_user.id, form.rating1.data, datetime.datetime.now())
         Review.update_SellerReview(id, current_user.id, form.rating1.data, datetime.datetime.now())
         return render_template('public_user.html', title='Public User', user=user, form = form, 
-        form2 = form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview , form3=form3)
+        form2 = form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview , form3=form3, myself=myself)
 
     if form3.submit3.data and form3.validate_on_submit:
         print("3")
         print((id, current_user.id, form3.rating3.data, datetime.datetime.now()))
         Review.submitSellerReview(id, current_user.id, form3.rating3.data, datetime.datetime.now())
         return render_template('public_user.html', title='Public User', user=user, form = form, 
-        form2 =form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview , form3=form3)
+        form2 =form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview , form3=form3, myself=myself)
 
     if form2.submit2.data and form2.validate_on_submit():
         print("2")
         Review.delete_SellerReview(id, current_user.id)
         return render_template('public_user.html', title='Public User', user=user, form = form, 
-        form2 =form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview , form3=form3)
+        form2 =form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview , form3=form3, myself=myself)
 
     print("4")
     return render_template('public_user.html', title='Public User', user=user, form = form, 
-    form2 =form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview, form3=form3 )
+    form2 =form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview, form3=form3 , myself=myself)
 
 @bp.route('/user/<int:id>/products', methods=['GET', 'POST'])
 def publicUserProducts(id):
@@ -209,3 +213,5 @@ def logout():
     logout_user()
     return redirect(url_for('index.index'))
 
+#<a href="{{ url_for('users.publicUser, id=selllerreview.seller_id) }}">View My Seller Page</a>
+# <cite title="User"> </cite> You were rated {{ sellerreview.rating }} <cite> stars on  {{ sellerreview.time_reviewed }}</cite>
