@@ -45,7 +45,7 @@
     <div class="product-addcart">
       <form>
         <label for="quantity">Quantity:</label><br>
-        <input type="number" id="quantity" name="quantity">
+        <input type="number" id="quantity" name="quantity" min="1" max={{product.quantity}}>
         <br><br>
         <input type="submit" value="Add to Cart" class="cart-btn">
       </form>

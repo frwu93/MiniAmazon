@@ -21,12 +21,13 @@ CREATE TABLE Products (
     seller_id INT NOT NULL,
     name VARCHAR(255) UNIQUE NOT NULL,
     description VARCHAR(255),
-    imageLink VARCHAR(255),
+    imageLink VARCHAR(511),
     category VARCHAR NOT NULL,
     price FLOAT NOT NULL,
     available BOOLEAN DEFAULT TRUE,
     quantity INT NOT NULL,
-    FOREIGN KEY (seller_id) REFERENCES Sellers(id)
+    FOREIGN KEY (seller_id) REFERENCES Sellers(id),
+    CHECK (category in ('Clothing', 'Accessories', 'Books','Entertainment', 'Electronics', 'Home', 'Pet Supplies', 'Food', 'Beauty', 'Toys', 'Sports', 'Outdoors', 'Automotives', 'Other'))
 );
 
 CREATE TABLE Seller_Rating (
@@ -64,7 +65,6 @@ CREATE TABLE Product_Rating (
 CREATE TABLE Orders(
     order_id SERIAL PRIMARY KEY,
     buyer_id INT NOT NULL,
-    total_cost FLOAT NOT NULL,
     FOREIGN KEY (buyer_id) REFERENCES Users(id),
     time_ordered timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
 );
