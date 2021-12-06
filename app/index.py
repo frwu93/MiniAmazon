@@ -50,29 +50,24 @@ def product(id):
     form = ReviewForm()
     product = Product.get(id)
     quantity = request.args.get('quantity')
-    print("HALLELUHAH")
-    print(request.form.keys())
-    print(type(quantity))
-    review = Review.get_avg(id)
+    review=Review.get_avg(id)
+    print(review)
     if review==None:
         review=0
     if form.validate_on_submit():
         datetime.time
         Review.submitReview(current_user.id, id, form.rating.data, datetime.datetime.now() , form.description.data)     
         return render_template('product.html', product=product, review=review, form = form)
-    else:
-        if quantity:
-            if int(quantity) > Product.get(id).quantity: 
-                flash('This item is out of stock! Please wait until the seller restocks before purchasing.')
-                return render_template('product.html', form=form ,
-                    product=product)
+    else: 
+        if quantity: 
             success = Cart.add_to_cart(current_user.id, id, quantity)
             if success:
                 return redirect(url_for('index.added_to_cart', id=id))
             else:
                 flash('Could not add to cart. Check to see if you already have this item in your cart.')
-                return render_template('product.html', form=form , 
-                    product=product)
+                return render_template('product.html',
+                    product=product, review=review, form = form)
+                
 
         # find the products current user has bought:
         if product:
@@ -88,9 +83,3 @@ def product(id):
 def added_to_cart(id):
     product = Product.get(id)
     return render_template('added_to_cart.html', product=product)
-
-
-@bp.route('/products')
-def products():
-    return render_template('products.html')
-
