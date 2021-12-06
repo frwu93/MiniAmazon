@@ -161,7 +161,7 @@ newName=newName)
         try:
             rows = app.db.execute("""
                 UPDATE Users
-                SET balance=balance + :deposit
+                SET balance=balance + ROUND(:deposit,2)
                 WHERE id = :id
                 RETURNING id
                 """,
@@ -195,7 +195,7 @@ newName=newName)
         try:
             rows = app.db.execute("""
                 UPDATE Users
-                SET balance=balance - :withdrawal
+                SET balance=balance - ROUND(:withdrawal,2)
                 WHERE id = :id
                 RETURNING id
                 """,

@@ -7,6 +7,7 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from flask_babel import _, lazy_gettext as _l
 
 from .models.user import User
+from.models.testingDevon import Review
 from .models.Purchase_History import Purchase_History
 from .models.Balance_History import Balance_History
 import datetime
@@ -137,7 +138,8 @@ def purchaseHistory():
 @bp.route('/reviews', methods=['GET', 'POST'])
 def reviews():
     user = User.get(current_user.id)
-    return render_template('profile_subpages/reviews.html', title='Reviews', user=user)
+    reviews =  Review.get_UserReviews(current_user.id)
+    return render_template('profile_subpages/reviews.html', title='Reviews', user=user, reviews=reviews)
 
 @bp.route('/settings', methods=['GET', 'POST'])
 def settings():

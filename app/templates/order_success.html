@@ -38,6 +38,10 @@
   <p align="right">
     Tax: ${{'{:.2f}'.format(payment["tax"])}}
   </p> 
+  {% if coupon  %}
+  <p align="right">Coupon code {{coupon.code}} has been applied!</p>
+  <p align="right">You saved {{coupon.percent_off}}% {% if coupon.product_id%} (${{coupon.amount_saved}}) on {{coupon.product_name}}! {% else %} (${{payment['saved']}}) on your order!{% endif %}</p>
+  {% endif %}
   <h3 align="right">Total: ${{'{:.2f}'.format(payment["total"])}}</h3>
 
 

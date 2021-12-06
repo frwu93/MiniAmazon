@@ -44,6 +44,7 @@ CREATE TABLE Cart (
     buyer_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL,
+    saved BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (buyer_id) REFERENCES Users(id),
     FOREIGN KEY (product_id) REFERENCES Products(id),
     PRIMARY KEY (buyer_id, product_id)
@@ -87,3 +88,24 @@ CREATE TABLE Balance_History (
     cur_balance FLOAT NOT NULL,
     time_initiated timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
 );
+
+CREATE TABLE Coupons (
+    coupon_code VARCHAR(10) NOT NULL,
+    percent_off INT NOT NULL,
+    start_date timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    end_date timestamp without time zone NOT NULL,
+    PRIMARY KEY (coupon_code),
+    CHECK (percent_off > 0 AND percent_off <= 100)
+);
+
+CREATE TABLE Product_Coupons (
+    coupon VARCHAR(10) NOT NULL,
+    product_id INT NOT NULL,
+    PRIMARY KEY (coupon),
+    FOREIGN KEY (coupon) REFERENCES Coupons(coupon_code),
+    FOREIGN KEY (product_id) REFERENCES Products(id)
+);
+
+
+
+
