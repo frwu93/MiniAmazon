@@ -7,4 +7,4 @@
 \COPY Orders (buyer_id, total_cost, time_ordered) FROM 'data/Orders.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY Order_History FROM 'data/Order_History.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY Coupons FROM 'data/Coupons.csv' WITH DELIMITER ',' NULL '' CSV
-\COPY ProductCoupons FROM 'data/Product_Coupons.csv' WITH DELIMITER ',' NULL '' CSV
+\COPY Product_Coupons FROM 'data/Product_Coupons.csv' WITH DELIMITER ',' NULL '' CSV

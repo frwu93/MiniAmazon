@@ -142,5 +142,22 @@ class Cart:
         except Exception as e:
             print(e)
             print("Toggling saved failed")
+    
+    @staticmethod
+    def contains_item(buyer_id, product_id):
+        try:
+            rows = app.db.execute('''
+            SELECT 
+            FROM Cart
+            WHERE buyer_id = :buyer_id 
+            AND product_id = :product_id
+            AND saved = FALSE
+            ''',
+                    buyer_id = buyer_id,
+                    product_id = product_id)
+            return len(rows) > 0
+        except Exception as e:
+            print(e)
+            print("can't find item")
 
     

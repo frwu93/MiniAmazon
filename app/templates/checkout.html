@@ -4,13 +4,13 @@
 
 <br><br>
 {% if current_user.is_authenticated %}
-<h2>Checkout ( 
+<h2>Checkout  
     {% if cart_items|length > 1 %}
-    {{cart_items|length}} items
+    ({{cart_items|length}} items)
     {% else %}
-     {{cart_items|length}} item
+     ({{cart_items|length}} item)
     {% endif %}
-    )</h2>
+    </h2>
 <p>
   {% with messages = get_flashed_messages() %}
   {% if messages %}
@@ -27,12 +27,11 @@
 <p>{{user.address}}</p> 
 <br><br>
 <h3>Payment Method:</h3>
-<p>Balance: ${{user.balance}}</p>
-<form>
+<h5>Balance: ${{user.balance}}</h5>
+<form action = "{{ url_for('orders.apply_coupon')}}" method = "post">
   <label for="coupon-code">Got a coupon? Apply it here:</label><br>
   <input type="text" id="coupon" name="coupon"><br>
   <input type="submit" value="Apply Coupon Code">
-
 </form>
 <br><br> 
 <h3>Review Items:</h3>
@@ -118,8 +117,13 @@
 <p align="right">
     Tax: ${{'{:.2f}'.format(payment["tax"])}}
 </p> 
+{% if coupon  %}
+<p align="right">Coupon code {{coupon.code}} has been applied!</p>
+<p align="right">You saved {{coupon.percent_off}}% {% if coupon.product_id%} (${{coupon.amount_saved}}) on {{coupon.product_name}}! {% else %} (${{payment['saved']}}) on your order!{% endif %}</p>
+{% endif %}
+
 <h3 align="right">Total: ${{'{:.2f}'.format(payment["total"])}}</h3>
-<a href="{{ url_for('orders.verify_transaction') }}" type="button" class="btn btn-dark" onclick="return confirm('Are you sure?')" style = "float: right">Place Your Order</a>
+<a href="{{ url_for('orders.verify_transaction', coupon = coupon.code) }}" type="button" class="btn btn-dark" onclick="return confirm('Are you sure?')" style = "float: right">Place Your Order</a>
 {% endif %}
 
 {% endblock %}

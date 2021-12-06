@@ -84,10 +84,14 @@ CREATE TABLE Order_History (
 
 CREATE TABLE Coupons (
     coupon_code VARCHAR(10) NOT NULL,
-    PRIMARY KEY (coupon_code)
+    percent_off INT NOT NULL,
+    start_date timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    end_date timestamp without time zone NOT NULL,
+    PRIMARY KEY (coupon_code),
+    CHECK (percent_off > 0 AND percent_off <= 100)
 );
 
-CREATE TABLE ProductCoupons (
+CREATE TABLE Product_Coupons (
     coupon VARCHAR(10) NOT NULL,
     product_id INT NOT NULL,
     PRIMARY KEY (coupon),

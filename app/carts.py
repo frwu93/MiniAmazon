@@ -55,11 +55,16 @@ def addToSaved(buyer_id, product_id):
     Cart.add_to_saved(buyer_id, product_id)
     return redirect(url_for('carts.cart'))
 
-def calculate_payment(cart_items):
+def calculate_payment(cart_items, coupon = None):
     subtotal = Cart.get_subtotal(cart_items)
+    saved = 0
+    if coupon is not None:
+        subtotal *= (1 - coupon.percent_off/100)
+        saved = Cart.get_subtotal(cart_items) - subtotal 
+        print(saved)
     tax = 0.03*subtotal
     total = subtotal + tax
-    payment = {"subtotal": subtotal, "tax": tax,  "total":total}
+    payment = {"subtotal": subtotal, "tax": tax,  "total":total, "saved":saved}
     return payment
 
 
