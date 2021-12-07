@@ -14,6 +14,8 @@ class Product:
     def __init__(self, id, seller_id, name, description, imageLink, category, price, available, quantity):
         self.id = id
         self.seller_id = seller_id
+        sellerName = self.get_seller_name(self.seller_id)
+        self.seller_name = sellerName[0] + " " + sellerName[1]
         self.name = name
         self.description = description
         self.imageLink = imageLink
@@ -24,7 +26,17 @@ class Product:
         if Review.get_avg(id):
             self.rating = Review.get_avg(id)
         else:
-            self.rating = "No rating"
+            self.rating = "N/A"
+
+    @staticmethod
+    def get_seller_name(id):
+        rows = app.db.execute('''
+SELECT firstname, lastname
+FROM Users
+WHERE id = :id
+''',
+                              id=id)
+        return rows[0]
 
     @staticmethod
     def get(id):

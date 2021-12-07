@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br><br>
+<h2>All Products</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in avail_products %}
+      <tr>
+        <td><a href="{{ url_for('products.product', id=product.id) }}">{{product.name}}</a></td>
+        <td>{{product.price}}</td>
+        <td>{{product.quantity}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -25,6 +25,7 @@
     <div class="product-description">
       <span>{{product.category}}</span>
       <h1>{{product.name}}</h1>
+      <p>Listed by <a href="{{ url_for('users.publicUser', id=product.seller_id) }}">{{product.seller_name}}</a></p>
       <p>{{product.description}}</p>
       <p>{% if product.quantity == 0 %} OUT OF STOCK {% elif product.quantity <= 10%} Only {{product.quantity}} left in stock {% else %} {% endif %}</p>
 
@@ -87,3 +88,20 @@
 
  </main>
  
+
+  <!--
+   {% if current_user.is_authenticated %}
+  <ul>
+    <li><a href="{{ url_for('users.profile') }}">Profile</a></li>
+    <li><a href="{{ url_for('carts.cart') }}">Cart</a></li>
+    <li><a href="{{ url_for('index.index') }}">Home</a></li>
+    <li><a href="{{ url_for('inventory.inventory')}}">Seller View</a></li>
+    <li><a href="{{ url_for('users.logout') }}">About</a></li>
+  </ul>
+  {% else %}
+  <ul>
+    <li><a href="{{ url_for('index.index') }}">Home</li>
+    <li><a href="{{ url_for('users.login') }}">Log in</a></li>
+  </ul>
+  {% endif %}
+-->

@@ -119,7 +119,7 @@ def analytics():
     #axis.set_yticks(np.arange(np.min(totalSold), np.max(totalSold), round(int((np.max(totalSold) - np.min(totalSold))/10)/10)*10))
     axis.set_ylabel("total products sold")
     
-    axis.plot(data.keys(), totalSold, "ro-")
+    axis.plot(data.keys(), totalSold)
 
     axis.tick_params(axis='x', labelrotation = -45)
     fig.tight_layout()

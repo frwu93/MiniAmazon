@@ -211,7 +211,7 @@ newName=newName)
         try:
             rows = app.db.execute('''
             INSERT INTO Balance_History(uid, amount, balance_type, cur_balance, time_initiated)
-            VALUES(:user_id, -1 * :amount, 'W', :cur_balance, :time_initiated)
+            VALUES(:user_id, -1.0 * CAST(:amount AS FLOAT), 'W', :cur_balance, :time_initiated)
             RETURNING uid
             ''',
                     user_id = user_id,

@@ -8,6 +8,7 @@ from .models.purchase import Purchase
 from .models.cart import Cart
 from .models.testingDevon import Review
 from .models.fulfill import Fulfill
+from flask import current_app as app
 
 
 from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField, SelectField
@@ -29,7 +30,7 @@ class ReviewForm(FlaskForm):
 @bp.route('/')
 def index(): 
     # get all available products for sale:
-    products = Product.get_all(True)
+    #products = Product.get_all(True)
     # find the products current user has bought:
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid_since(
@@ -39,7 +40,6 @@ def index():
         purchases = None
     # render the page by adding information to the index.html file
     return render_template('index.html',
-                           avail_products=products,
                            purchase_history=purchases)
 
 
@@ -64,14 +64,14 @@ def product(id):
         if quantity:
             if int(quantity) > Product.get(id).quantity: 
                 flash('This item is out of stock! Please wait until the seller restocks before purchasing.')
-                return render_template('product.html',
+                return render_template('product.html', form = form,
                     product=product)
             success = Cart.add_to_cart(current_user.id, id, quantity)
             if success:
                 return redirect(url_for('index.added_to_cart', id=id))
             else:
                 flash('Could not add to cart. Check to see if you already have this item in your cart.')
-                return render_template('product.html',
+                return render_template('product.html', form = form,
                     product=product)
 
         # find the products current user has bought:
@@ -88,3 +88,31 @@ def product(id):
 def added_to_cart(id):
     product = Product.get(id)
     return render_template('added_to_cart.html', product=product)
+
+
+@bp.route('/products')
+def products():
+    return render_template('products.html')
+
+@bp.route('/api/data')
+def data():
+    # get all available products for sale:
+    available = True
+    products = app.db.execute('''
+SELECT *
+FROM Products
+WHERE available = :available
+''',
+                              available=available)
+    
+
+    myjson={}
+    myjson["data"] = []
+    for product in products:
+        print(product.name)
+        myjson["data"].append([product.id, product.name, product.price, product.quantity])
+    print(myjson)
+    return(myjson)
+    #return {
+        #'data': [{'name': product.name, 'price': product.price, 'quantity': product.quantity} for product in products]
+    #}
