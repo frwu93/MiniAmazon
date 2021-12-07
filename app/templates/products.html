@@ -96,8 +96,8 @@
                 // `data` option, which defaults to the column being worked with, in
                 // this case `data: 0`.
                 "render": function ( data, type, row ) {
-                  var baseUrl = window.location.href;
-                  var url = baseUrl.concat("product", "/", row[0])
+                  var baseUrl = window.location.origin;
+                  var url = baseUrl.concat("/product", "/", row[0])
                   return '<a href=' + url +'>' + data +'</a>';
                     //return data +' ('+ row[0]+')';
                 },
