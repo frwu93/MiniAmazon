@@ -28,6 +28,7 @@ class Product:
         else:
             self.rating = 0
 
+    #get seller name
     @staticmethod
     def get_seller_name(id):
         rows = app.db.execute('''
@@ -38,6 +39,7 @@ WHERE id = :id
                               id=id)
         return rows[0]
 
+    #get seller name
     @staticmethod
     def get_seller_name(id):
         rows = app.db.execute('''
@@ -60,6 +62,19 @@ WHERE id = :id
 
     @staticmethod
     def filter(category, rating, min, max, available=True):
+        
+        """[Product filter method]
+        Args:
+            category ([str]): [category of item]
+            rating ([int]): [rating of item]
+            min
+            max
+            available (bool, optional): Defaults to True.
+        Returns:
+            product row(s) of table
+        """
+
+
         if rating != 0:
             if category != "All":
                 rows = app.db.execute('''
@@ -139,6 +154,10 @@ ORDER BY id
 
     @staticmethod
     def get_all_by_seller(id, available=True):
+
+        """[Gets all products by the seller]
+        """
+
         rows = app.db.execute('''
 SELECT *
 FROM Products
@@ -204,6 +223,11 @@ ORDER BY id
     
     @staticmethod
     def editInfo(id, name, description, imageLink, category):
+
+        """ Function to edit product info
+            (product description, producct name, product image link, product category)
+        """
+
         try: 
             app.db.execute('''
     UPDATE Products
@@ -299,6 +323,10 @@ ORDER BY sum DESC NULLS LAST LIMIT 6;
 
     @staticmethod
     def get_top_rated(available=True):
+
+        """ Gets top rated product
+        """
+
         rows = app.db.execute('''
 SELECT products.id, name, price, imageLink, avg(rating) 
 FROM (products left join product_rating on products.id=product_rating.product_id) 
