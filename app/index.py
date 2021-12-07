@@ -9,6 +9,7 @@ from .models.cart import Cart
 from .models.Purchase_History import Purchase_History
 from .models.testingDevon import Review
 from .models.fulfill import Fulfill
+from .models.user import User
 from flask import current_app as app
 
 from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField, SelectField
@@ -44,6 +45,12 @@ def index():
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid_since(
             current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
+        print(current_user.isSeller)
+
     else:
         purchases = None
     # render the page by adding information to the index.html file
@@ -55,6 +62,11 @@ def index():
 @bp.route('/product/<int:id>', methods = ["GET", "POST"])
 def product(id):
     # get all available products for sale:
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     print(id)
     form = ReviewForm()
     product = Product.get(id)
@@ -109,6 +121,11 @@ def added_to_cart(id):
 
 @bp.route('/products')
 def products():
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     return render_template('products.html')
 
 @bp.route('/products/edit/<int:id>', methods=['GET', 'POST'])
@@ -142,7 +159,6 @@ group by products.id ORDER BY avg DESC NULLS LAST
     myjson={}
     myjson["data"] = []
     for product in products:
-        print(product.name)
         if product.avg:
             rating = float(round(product.avg, 2))
         else:

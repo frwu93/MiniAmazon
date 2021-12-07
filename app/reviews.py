@@ -9,6 +9,7 @@ from .models.cart import Cart
 from .models.testingDevon import Review
 from .models.product import Product
 from .models.fulfill import Fulfill
+from .models.user import User
 
 
 from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField, SelectField
@@ -45,6 +46,11 @@ def review_page(id):
     numReview=Review.get_Number(id)
     product=Product.get(id)
     reviews=Review.get_Reviews(id)
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     current_user_review = Review.current_user_review(current_user.id ,id)
     if form.submit.data and form.validate_on_submit():
         Review.update_Review(current_user.id, id, form.rating.data, datetime.datetime.now() , form.description.data)
@@ -65,7 +71,11 @@ def seller_reviews(id):
     form2=DeleteForm()
     current_user_review=Review.current_Seller_Review(current_user.id, id)
     reviews=Review.get_Seller_Reviews(id)
-
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     #NEED TO UPDATE REVIEW FUNCTION SO IT DOES UPDATE
     #also need a place to INSERT Seller Reviews
     if form.submit.data and form.validate_on_submit():

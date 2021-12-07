@@ -34,7 +34,11 @@ def filter():
     print(request.form['minPrice'])
     print(request.form['maxPrice'])
 
-
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     category = request.form['categories']
     rating = request.form['rating']
     if request.form['minPrice']:
@@ -62,6 +66,11 @@ def filter():
 
 @bp.route('/filter/result/<string:category>/<int:rating>/<float:min>/<float:max>/')
 def filterResults(category, rating, min, max): 
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     products = Product.filter(category, rating, min, max, True)
     
     #for product in products:
