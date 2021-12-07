@@ -1,2 +1,3 @@
 dropdb amazon; createdb amazon; psql amazon -af create.sql
 psql amazon -af load.sql
+psql amazon -af load_large.sql

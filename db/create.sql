@@ -19,8 +19,8 @@ CREATE TABLE Sellers (
 CREATE TABLE Products (
     id SERIAL PRIMARY KEY,
     seller_id INT NOT NULL,
-    name VARCHAR(255) UNIQUE NOT NULL,
-    description VARCHAR(255),
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(1023),
     imageLink VARCHAR(511),
     category VARCHAR NOT NULL,
     price FLOAT NOT NULL,
