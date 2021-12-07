@@ -48,13 +48,12 @@ def review_page(id):
     current_user_review = Review.current_user_review(current_user.id ,id)
     if form.submit.data and form.validate_on_submit():
         Review.update_Review(current_user.id, id, form.rating.data, datetime.datetime.now() , form.description.data)
-        return render_template('reviews.html', title='Review', numReview = numReview, getAvg = getAvg, product= product, reviews=reviews, current_user_review=current_user_review, form = form,
-        form2 =form2)
+        return redirect(url_for('review.review_page', id=id))
 
     if form2.submit1.data and form2.validate_on_submit():
         Review.delete_Review(current_user.id, id)
-        return render_template('reviews.html', title='Review', numReview = numReview, getAvg = getAvg, product= product, reviews=reviews, current_user_review=current_user_review, form = form,
-        form2 =form2)
+        return redirect(url_for('review.review_page', id=id))
+
         
     return render_template('reviews.html', title='Review', numReview = numReview, getAvg = getAvg, product= product, reviews=reviews, 
     current_user_review=current_user_review, form = form, form2=form2)

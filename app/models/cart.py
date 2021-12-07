@@ -9,7 +9,7 @@ class Cart:
         self.seller = firstname + " " + lastname
         self.price = price
         self.quantity = quantity
-        self.total_cost = '{:.2f}'.format(price*quantity)
+        self.order_cost = '{:.2f}'.format(price*quantity)
 
     @staticmethod
     def get_cart_products_by_uid(buyer_id):
@@ -41,7 +41,7 @@ class Cart:
     def get_subtotal(cart : list) -> float:
         total = 0
         for product in cart:
-            total += float(product.total_cost)
+            total += float(product.order_cost)
         return total
     
     @staticmethod

@@ -39,18 +39,22 @@ def filter():
     rating = request.form['rating']
     if request.form['minPrice']:
         minP = request.form['minPrice']
+        print(minP)
+        print("Big whoops")
     else:
         print("No min")
         minP = 0
-    
+    minP = int(minP)
     if request.form['maxPrice']:
         maxP = request.form['maxPrice']
     else:
         maxP = 10000000000
-    
+    maxP = int(maxP)
+
     if(minP > maxP):
+        print("Not good")
         flash('Min price must be less than max price!')
-        return redirect(url_for('index.index'))
+        return redirect(url_for('index.products'))
 
     print(minP)
     return redirect(url_for('filter.filterResults', category=category, rating=rating, min=minP, max=maxP))
@@ -62,11 +66,8 @@ def filterResults(category, rating, min, max):
     
     #for product in products:
      #   product.rating = Review.get_avg(product.id)
-    if products:
-        return render_template('filter.html', avail_products = products)
-    else:
-        return redirect(url_for('index.index'))
 
+    return render_template('filter.html', avail_products = products)
 
 
 

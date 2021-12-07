@@ -29,9 +29,10 @@
     <div class="product-description">
       <div class ="p-category">{{product.category}}</div>
       <div class ="p-name">{{product.name}}</div>
-      {% if product.seller_id == current_user.id %} <a href="{{ url_for('index.productEdit', id=product.id) }}">edit</a> {% endif %}
       <p>Listed by <a href="{{ url_for('users.publicUser', id=product.seller_id) }}">{{product.seller_name}}</a></p>
-      <div class ="p-description">{{product.description}}</div>
+      <div class ="p-description">{{product.description}}
+        {% if product.seller_id == current_user.id %} <a href="{{ url_for('index.productEdit', id=product.id) }}">edit {% endif %}
+      </div>
       <div class ="p-stock">{% if product.quantity == 0 %} OUT OF STOCK {% elif product.quantity <= 10%} Only {{product.quantity}} left in stock {% else %} Quantity: {{product.quantity}} {% endif %}</div>
     </div>
   
@@ -51,14 +52,9 @@
       <div class="review-rating">Average Product Review:   {{review}}</span>
       </div>
     </div>
-    <br>
+  
       <!-- Product Review -->
-      
-      {% if myBool %}
-      {% if myreview %} Your review: {{myreview.description}}
-      <br>
-      Rating: {{myreview.rating}}
-      {% else %}  
+  
       <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
@@ -77,20 +73,13 @@
         </p>
         {{ form.submit(class_="btn btn-black") }}
       </form>
-    {% endif %}
 
-
-      {% endif %}
-    
-      <br><br>
       <div> 
         <a href="{{ url_for('review.review_page', id=product.id) }}">See All Reviews For This Product</a> 
       </div>
-
   </div>
   <!-- Adding a link to see all reviews -->
 
  </main>
- {% endblock %}
  
-
+ {% endblock %}

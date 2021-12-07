@@ -8,7 +8,8 @@ CREATE TABLE Users (
     firstname VARCHAR(255) NOT NULL,
     lastname VARCHAR(255) NOT NULL,
     address VARCHAR(255) NOT NULL,
-    balance FLOAT NOT NULL
+    balance FLOAT NOT NULL,
+    imageLink VARCHAR(511) DEFAULT 'https://cloud.clarius.com/static/images/user_default.png'
 );
 
 CREATE TABLE Sellers (
@@ -69,7 +70,8 @@ CREATE TABLE Orders(
     buyer_id INT NOT NULL,
     total_cost FLOAT NOT NULL,
     FOREIGN KEY (buyer_id) REFERENCES Users(id),
-    time_ordered timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+    time_ordered timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    coupon_used VARCHAR(10)
 );
 
 CREATE TABLE Order_History (
