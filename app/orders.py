@@ -127,7 +127,7 @@ def checkout_success(coupon = None):
     Order.add_to_history(order_id, cart_items)
     User.updateBalanceWithdrawal(current_user.id, payment["total"])
     for item in cart_items:
-        individualCost = calculate_payment([item], coupon)['total']
+        individualCost = calculate_payment([item], coupon)['subtotal']
         curBalance = float(User.get(item.seller_id).balance) + individualCost
         User.updateBalanceDeposit(item.seller_id, item.price * item.quantity)
         User.add_sold(item.seller_id, individualCost, datetime.datetime.now(), curBalance, item.product_name, item.quantity)

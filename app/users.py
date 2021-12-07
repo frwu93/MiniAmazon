@@ -37,6 +37,11 @@ class LoginForm(FlaskForm):
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
+    """[summary]
+    Attempts to login user into the site
+    Returns:
+        render_template: redirects to the next page if successful, otherwise remains on login
+    """
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
     form = LoginForm()
@@ -66,16 +71,27 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField(_l('Register'))
 
     def validate_email(self, email):
-        print(email.data)
+        """[summary]
+        Checks to see if the email is already in use
+        Args:
+            email (String): the email the user attempts to register with
+
+        Raises:
+            ValidationError: will be returned if email already in use
+        """
         if User.email_exists(email.data):
             raise ValidationError(_('Already a user with this email.'))
 
     def validate_on_submit(self):
+        """[summary]
+        Checks to see if email is already use when user submits registration
+        Returns:
+            boolean: whether email is used or not
+        """
         try:           
-            print(self.email.data)
             self.validate_email(self.email)        
         except:
-            print("This email already has an account registered!") #change to flash later
+            flash("This email already has an account registered!")
             return False
 
             
@@ -84,6 +100,11 @@ class RegistrationForm(FlaskForm):
         
 @bp.route('/profile')
 def profile():
+    """[summary]
+    Route when user goes to their profile page
+    Returns:
+        render_template: redirects user to the profile page
+    """
     firstname = request.args.get('firstname')
     lastname = request.args.get('lastname')
     email = request.args.get('email')
@@ -113,6 +134,12 @@ def profile():
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
+    """[summary]
+    Attempts to register user
+    Returns:
+        redirect: redirects to login page if successful registration
+        render_template: reamins on register page if unsuccessful registration
+    """
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
     form = RegistrationForm()
@@ -123,13 +150,17 @@ def register():
                          form.lastname.data,
                          form.address.data):
             flash('Congratulations, you are now a registered user!')
-            print('Congratulations, you are now a registered user!')
 
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
 @bp.route('/paymentHistory', methods=['GET', 'POST'])
 def paymentHistory():
+    """[summary]
+    Route when user goes to their payment/balance page
+    Returns:
+        render_template: renders the balance/payment html page
+    """
     deposit = request.args.get('deposit')
     withdraw = request.args.get('withdraw')
     profilepic = request.args.get('profilepic')
@@ -156,6 +187,11 @@ def paymentHistory():
 
 @bp.route('/purchaseHistory', methods=['GET', 'POST'])
 def purchaseHistory():
+    """[summary]
+    Route when user goes to their purchase history page
+    Returns:
+        render_template: renders the purchase history html page
+    """
     profilepic = request.args.get('profilepic')
     if profilepic:
         id = User.updateProfilePic(current_user.id, profilepic)
@@ -170,6 +206,11 @@ def purchaseHistory():
 
 @bp.route('/reviews', methods=['GET', 'POST'])
 def reviews():
+    """[summary]
+    Route when user goes to their reviews page
+    Returns:
+        render_template: renders the reviews html page
+    """
     profilepic = request.args.get('profilepic')
     if profilepic:
         id = User.updateProfilePic(current_user.id, profilepic)
@@ -185,6 +226,11 @@ def reviews():
 
 @bp.route('/settings', methods=['GET', 'POST'])
 def settings():
+    """[summary]
+    Route when user goes to their settings page
+    Returns:
+        render_template: renders the setttings html page
+    """
     profilepic = request.args.get('profilepic')
     if profilepic:
         id = User.updateProfilePic(current_user.id, profilepic)
@@ -199,6 +245,14 @@ def settings():
 
 @bp.route('/settings/newSeller/<int:id>')
 def add_user_to_seller(id):
+    """[summary]
+    This function adds the user to the seller table when they register for it in settigns
+    Args:
+        id (integer): the id of the user who want's to become a seller
+
+    Returns:
+        redirect: link back to the user's settings page
+    """
     User.updateSellers(id)
     return redirect(url_for('users.settings'))
 
@@ -219,6 +273,14 @@ class LeaveForms(FlaskForm):
 
 @bp.route('/user/<int:id>', methods=['GET', 'POST'])
 def publicUser(id):
+    """[summary]
+    Route to each user's public view page
+    Args:
+        id (integer): id of the user we want to see
+
+    Returns:
+        render_template: renders the public user view html page
+    """
     form = UpdateForms()
     form2=DeleteForms()
     form3=LeaveForms()
@@ -237,33 +299,34 @@ def publicUser(id):
             current_user.isSeller = False
     ##boolean for whether or not you have bought an item from the seller 
     lst = Purchase_History.get_all_Sellers(current_user.id)
-    print(lst)
-    print("yo")
     myBool = False
     if id in lst:
         myBool=True
 
     if form.submit1.data and form.validate_on_submit:
-        print(id, current_user.id, form.rating1.data, datetime.datetime.now())
         Review.update_SellerReview(id, current_user.id, form.rating1.data, form.description1.data, datetime.datetime.now())
         return redirect(url_for('users.publicUser', id=id))
     if form3.submit3.data and form3.validate_on_submit:
-        print("3")
-        print((id, current_user.id, form3.rating3.data, datetime.datetime.now()))
         Review.submitSellerReview(id, current_user.id, form3.rating3.data, form3.description3.data, datetime.datetime.now())
         return redirect(url_for('users.publicUser', id=id))
 
     if form2.submit2.data and form2.validate_on_submit():
-        print("2")
         Review.delete_SellerReview(id, current_user.id)
         return redirect(url_for('users.publicUser', id=id))
 
-    print("4")
     return render_template('public_user.html', title='Public User', user=user, form = form, 
     form2 =form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview, form3=form3 , myself=myself, myBool=myBool)
 
 @bp.route('/user/<int:id>/products', methods=['GET', 'POST'])
 def publicUserProducts(id):
+    """[summary]
+    Route to the public user view's product page
+    Args:
+        id (integer): the id of the seller
+
+    Returns:
+        render_template: renders the public user view products html page
+    """
     public_user_products = Public_User_Products.get_public_user_products_by_uid(id)
     user = User.get(id)
     if current_user.is_authenticated:
@@ -275,7 +338,14 @@ def publicUserProducts(id):
 
 @bp.route('/user/order/<int:order_id>', methods=['GET', 'POST'])
 def order_confirmation(order_id):
-    print("HERE BRO")
+    """[summary]
+    Route to the order confirmation page for each order in the purchase history profile page
+    Args:
+        order_id (integer): id of the order we are viewing
+
+    Returns:
+        render_template: renders the order_confirmation html page
+    """
     purchased_items = Purchase_History.get_purchase_history_by_order_id(order_id)
     coupon_code = Order.get_coupon(order_id)
     coupon = Coupon.find_coupon(coupon_code)
@@ -289,6 +359,11 @@ def order_confirmation(order_id):
 
 @bp.route('/logout')
 def logout():
+    """[summary]
+    Route to logout the user
+    Returns:
+        redirect: redirects back to the home page when user is not logged in
+    """
     logout_user()
     return redirect(url_for('index.index'))
 
