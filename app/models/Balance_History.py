@@ -13,7 +13,10 @@ class Balance_History:
                 self.amount = "+ $" + str('{:.2f}'.format(amount))
         else:
             self.description = balance_type
-            self.amount = "- $" + str('{:.2f}'.format(amount))
+            if balance_type[0:4] == "Sold":
+                self.amount = "+ $" + str('{:.2f}'.format(amount))
+            else:
+                self.amount = "- $" + str('{:.2f}'.format(amount))
         self.current_balance = "$" + str('{:.2f}'.format(balance))
 
     @staticmethod

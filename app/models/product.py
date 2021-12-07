@@ -26,7 +26,7 @@ class Product:
         if Review.get_avg(id):
             self.rating = Review.get_avg(id)
         else:
-            self.rating = "N/A"
+            self.rating = 0
 
     @staticmethod
     def get_seller_name(id):
@@ -75,8 +75,6 @@ WHERE id = :id
                                     category=category,
                                     min=min,
                                     max=max)
-                for row in rows:
-                    print(row[0])
                 return [Product(*row) for row in rows if (Review.get_avg(row[0]) and Review.get_avg(row[0]) >= rating)]
             else:
                 rows = app.db.execute('''
@@ -203,6 +201,43 @@ ORDER BY id
             print(e)
             print("Could not change quantity: ", id)
             return None
+    
+    @staticmethod
+    def editInfo(id, name, description, imageLink, category):
+        try: 
+            app.db.execute('''
+    UPDATE Products
+    SET name = :name, description = :description, imageLink = :imageLink, category = :category
+    WHERE id = :id
+    RETURNING id
+    ''',
+                                id=id,
+                                  name=name,
+                                  description=description,
+                                  imageLink=imageLink,
+                                  category=category)
+            return id
+        except Exception  as e:
+            print(e)
+            print("Could not change quantity: ", id)
+            return None
+
+    @staticmethod
+    def change_description(id, description):
+        try: 
+            app.db.execute('''
+    UPDATE Products
+    SET description=:description
+    WHERE id = :id
+    RETURNING id
+    ''',
+                                id=id,
+                                description=description)
+            return id
+        except Exception  as e:
+            print(e)
+            print("Could not change description: ", id)
+            return None
 
     @staticmethod
     def decrease_purchased_quantity(purchased_items):
@@ -248,6 +283,31 @@ ORDER BY id
             print("not added")
             return None
 
+    @staticmethod
+    def get_best_selling(available=True):
+        rows = app.db.execute('''
+SELECT id, name, products.price, imageLink, SUM(order_history.quantity) 
+FROM (PRODUCTS left join order_history on products.id=order_history.product_id) 
+WHERE available = :available
+GROUP BY id 
+ORDER BY sum DESC NULLS LAST LIMIT 7;
+''',
+                              available=available)
+        
+        return [row for row in rows]
+
+
+    @staticmethod
+    def get_top_rated(available=True):
+        rows = app.db.execute('''
+SELECT products.id, name, price, imageLink, avg(rating) 
+FROM (products left join product_rating on products.id=product_rating.product_id) 
+WHERE available = :available
+group by products.id ORDER BY avg DESC NULLS LAST LIMIT 7;
+''',
+                              available=available)
+        
+        return [row for row in rows]
 
 
 

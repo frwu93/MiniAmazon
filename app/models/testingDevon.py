@@ -34,7 +34,10 @@ FROM Product_Rating
 WHERE buyer_id = :buyer_id AND product_id = :product_id
 ''',
                              buyer_id=buyer_id, product_id = product_id)
-       return (*(rows[0]), *(rows[1]) )if rows is not None else None
+       if rows:  
+            return Review(*(rows[0]))
+       else:
+            return None
  
  
    @staticmethod

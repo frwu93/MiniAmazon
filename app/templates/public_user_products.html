@@ -4,10 +4,19 @@
 
 <html>
 
-<head>
-    <link rel="stylesheet" type="text/css" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="profile.css">
-</head>
+    <head>
+        <link rel="stylesheet" type="text/css" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="profile.css">
+        <link rel="icon" type="image/png" href="http://www.yogihosting.com/wp-content/themes/yogi-yogihosting/Images/favicon.ico">
+        <meta charset="utf-8" />
+      
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+      
+      
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+      <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+    </head>
 
 <body>
     <div>
@@ -15,7 +24,7 @@
             <div class="col-md-3 mt-1">
                 <div class="card text-center sidebar">
                     <div class="card-body">
-                        <img src="https://users.cs.duke.edu/~junyang/media/portrait.jpg" class="rounded-circle"
+                        <img src="{{user.imageLink}}" class="rounded-circle"
                             width="150">
                         <div class="mt-3">
                             <h3>{{user.firstname}} {{user.lastname}}</h3>
@@ -34,7 +43,7 @@
                 <div class="card mb-3 content">
                     <h1 class="m-3 pt-3">{{user.firstname}} {{user.lastname}}'s Products</h1>
                     <div class="card-body">
-                        <table class='table table-hover table-bordered container'>
+                        <table class='table table-hover table-bordered container', id = 'table1'>
                             <thead class="thead-dark">
                               <tr>
                                 <th scope="col">Product Name</th>
@@ -59,6 +68,14 @@
     </div>
 
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+  
+<script>
+    $(document).ready(function () {
+        $('#table1').DataTable();
+    });
+</script>
 
 </html>
 
