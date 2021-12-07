@@ -110,7 +110,7 @@ WHERE available = :available
     myjson["data"] = []
     for product in products:
         print(product.name)
-        myjson["data"].append([product.id, product.name, product.price, product.quantity])
+        myjson["data"].append([product.id, product.name, product.price, product.imagelink])
     print(myjson)
     return(myjson)
     #return {

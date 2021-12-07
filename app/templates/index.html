@@ -65,7 +65,7 @@
       <th scope="col">Product id</th>
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
-      <th scope="col">Quantity</th>
+      <th scope="col">Image</th>
     </tr>
   </thead>
 </table>
@@ -101,6 +101,16 @@
                     //return data +' ('+ row[0]+')';
                 },
                 "targets": 1
+            },
+            {
+                // The `data` parameter refers to the data for the cell (defined by the
+                // `data` option, which defaults to the column being worked with, in
+                // this case `data: 0`.
+                "render": function ( data, type, row ) {
+
+                  return '<img src="' + row[3]+'" style="height:100px;width:100px;"/>';
+                },
+                "targets": 3
             },
             { "visible": false,  "targets": [ 0 ] }
         ]
