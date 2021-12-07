@@ -244,3 +244,23 @@ newName=newName)
             print(e)
             print("Purchase Failed")
 
+    @staticmethod
+    def add_sold(user_id, amount, time_initiated, cur_balance, product_name, quantity):
+        try:
+            rows = app.db.execute('''
+            INSERT INTO Balance_History(uid, amount, balance_type, cur_balance, time_initiated)
+            VALUES(:user_id, :amount, CONCAT('Sold ', :product_name, ': x', CAST(:quantity AS varchar)), :cur_balance, :time_initiated)
+            RETURNING uid
+            ''',
+                    user_id = user_id,
+                    amount = amount,
+                    time_initiated = time_initiated,
+                    cur_balance = cur_balance,
+                    product_name = product_name,
+                    quantity = quantity)
+            user_id = rows[0][0]
+            return user_id
+        except Exception as e:
+            print(e)
+            print("Purchase Failed")
+
