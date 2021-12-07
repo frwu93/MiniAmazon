@@ -8,18 +8,10 @@
     <link rel="stylesheet" type="text/css" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="reviews.css">
 </head>
-<style>
-    .divScroll {
-    overflow:auto;
-    height:500px;
-    width:1000px;
-    }
-</style>
-
 <body>
     <div>
-        <div class="row">
-            <div class="col-md-3 mt-1">
+        <div class="r-main">
+            <div class="r-side">
                 <div class="card text-center sidebar">
                     <div class="card-body">
                         <img src="{{user.imageLink}}" class="rounded-circle"
@@ -71,51 +63,35 @@
                     </div>
                 </div>
             </div>
-           
-            
-                <div class = "col-md-3 mt-1">
-                    <div class = "divScroll">
-                        <div class="col-md-8 mt-1">
-                            <div class="card mb-3 content">
-              
-                                <h1 class="m-3 pt-3">Your Reviews</h1>
-                                <div class="card-body">
-                                    <div class="row">
-                                        {% for sellerreview in sellerReviews %}
-                                            <div class="card p-3">
-                                                <blockquote class="blockquote mb-0 card-body">
-                                                <p>{{ sellerreview.description}}</p>
-                                                <footer class="blockquote-footer">
-                                                 <small class="text-muted">
+            <div class="reviews-main">
+                <div class="review-title">Your Reviews</div>
+                <div class ="review-container">
+                    <div class="review-content">
+                        {% for sellerreview in sellerReviews %}
+                            <div class="card p-3">
+                                <blockquote class="blockquote mb-0 card-body">
+                                    <p>{{ sellerreview.description}}</p>
+                                        <footer class="blockquote-footer">
+                                            <small class="text-muted">
                                                 <cite title="User"> </cite> You were rated {{ sellerreview.rating }} <cite> stars on  {{ sellerreview.time_reviewed }}</cite>
-                                                    </small>
-                                                </footer>
-                                                </blockquote>
-                                                <a href="{{ url_for('users.publicUser', id=sellerreview.seller_id) }}">See Full Rating Profile</a> 
-                                            </div>
-                                            {% endfor %}
-                                    </div>
-                                </div>
-                                
-                                <h5></h5>
+                                            </small>
+                                        </footer>
+                                </blockquote>
+                                    <a href="{{ url_for('users.publicUser', id=sellerreview.seller_id) }}">See Full Rating Profile</a> 
                             </div>
-                        </div>
+                        {% endfor %}
                     </div>
-                
-                <div class="col-md-3 mt-1">
-                    <div class = "divScroll">
-                        <div class = "col-md-8 mt-1">
-                            <div class="card mb-3 content">
-                    
-                                <h1 class="m-3 pt-3">You Reviewed</h1>
-                                <div class="card-body">
-                                    <div class="row">
-                                        {% for review in reviews %}
-                                            <div class="card p-3">
-                                                <blockquote class="blockquote mb-0 card-body">
-                                                <p>{{ review.description}}</p>
-                                                <footer class="blockquote-footer">
-                                                <small class="text-muted">
+                </div>
+                <div class="line"></div>
+                <div class="review-title">You Reviewed</div>
+                <div class ="review-container">
+                    <div class="review-content">
+                        {% for review in reviews %}
+                                <div class="card p-3">
+                                    <blockquote class="blockquote mb-0 card-body">
+                                        <p>{{ review.description}}</p>
+                                        <footer class="blockquote-footer">
+                                            <small class="text-muted">
                                                 <cite title="User"> </cite> You rated this product {{ review.rating }} <cite> stars on  {{ review.time_reviewed }}</cite>
                                                 </small>
                                                 </footer>
@@ -138,16 +114,8 @@
                                             {% endfor %}
                                     </div>
                                 </div>
-                            
-                                <h5></h5>
-                            </div>
                         </div>
-                 
-
-
-                    </div>
                 </div>
-            
         </div>
     </div>
         

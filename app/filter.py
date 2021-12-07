@@ -26,6 +26,8 @@ class FilterForm(FlaskForm):
     minStars = DecimalField(_l('List Price'), validators=[NumberRange(min=0, max=5, message="Price must be nonnegative")])
     submit = SubmitField(_l('List Item'))
 
+
+#Get filter query, do not approve if min > max
 @bp.route('/filter', methods=['POST'])
 def filter(): 
     # get all available products for sale:
@@ -34,15 +36,16 @@ def filter():
     print(request.form['minPrice'])
     print(request.form['maxPrice'])
 
-
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     category = request.form['categories']
     rating = request.form['rating']
     if request.form['minPrice']:
         minP = request.form['minPrice']
-        print(minP)
-        print("Big whoops")
     else:
-        print("No min")
         minP = 0
     minP = int(minP)
     if request.form['maxPrice']:
@@ -52,21 +55,21 @@ def filter():
     maxP = int(maxP)
 
     if(minP > maxP):
-        print("Not good")
         flash('Min price must be less than max price!')
         return redirect(url_for('index.products'))
 
-    print(minP)
     return redirect(url_for('filter.filterResults', category=category, rating=rating, min=minP, max=maxP))
 
-
+#Applies filters and displays items that fit
 @bp.route('/filter/result/<string:category>/<int:rating>/<float:min>/<float:max>/')
 def filterResults(category, rating, min, max): 
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     products = Product.filter(category, rating, min, max, True)
     
-    #for product in products:
-     #   product.rating = Review.get_avg(product.id)
-
     return render_template('filter.html', avail_products = products)
 
 
