@@ -161,7 +161,10 @@ def reviews():
     user = User.get(current_user.id)
     reviews =  Review.get_UserReviews(current_user.id)
     sellerReviews=Review.get_SellerReviews(current_user.id)
-    return render_template('profile_subpages/reviews.html', title='Reviews', user=user, reviews=reviews, sellerReviews=sellerReviews)
+    reviews4seller=Review.get_buyer_review_for_sellers(current_user.id)
+    print(reviews4seller)
+    print("hi")
+    return render_template('profile_subpages/reviews.html', title='Reviews', user=user, reviews=reviews, sellerReviews=sellerReviews, reviews4seller=reviews4seller)
 
 @bp.route('/settings', methods=['GET', 'POST'])
 def settings():
