@@ -40,7 +40,7 @@
         <button type="button" style = "float: right", class="btn btn-dark" data-toggle="modal" data-target="#quantityChange{{item.product_id}}">Change Quantity</button> </td>
         <td><a href="{{ url_for('carts.moveSavedItemToCart', buyer_id = current_user.id, product_id=item.product_id) }}" type="button" class="btn btn-dark" style = "float: left">Save For Later</a>
         <td><a href="{{ url_for('carts.deleteItem', buyer_id = current_user.id, product_id=item.product_id) }}" type="button" class="btn btn-dark" onclick="return confirm('Are you sure?')" style = "float: left">Delete Item</a>
-        <td>${{item.total_cost}}</td>
+        <td>${{item.order_cost}}</td>
       </tr>
     
 
@@ -122,7 +122,7 @@
         <td>{{item.seller}}</td>
         <td>${{item.price}}</td>
         <td><a href="{{ url_for('carts.moveSavedItemToCart', buyer_id = current_user.id, product_id=item.product_id) }}" type="button" class="btn btn-dark"style = "float: left">Move to Cart</a>
-        <td>${{item.total_cost}}</td>
+        <td>${{item.order_cost}}</td>
       </tr>
     
 
