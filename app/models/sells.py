@@ -8,6 +8,8 @@ class Sells:
         self.price = price
         self.available = available
 
+
+    #Find a product's seller by seller_id
     @staticmethod
     def get_by_pid(product_id):
         rows = app.db.execute('''

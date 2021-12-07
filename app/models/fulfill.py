@@ -15,6 +15,8 @@ class Fulfill:
         else:
             self.fulfilled = "Not Fulfilled"
 
+
+    #Get all orders from some seller
     @staticmethod
     def get_all_by_uid_since(seller_id, since):
         rows = app.db.execute('''
@@ -32,6 +34,7 @@ ORDER BY time_ordered DESC, order_id
                               since=since)
         return [Fulfill(*row) for row in rows]
     
+    #Get all orders from some seller in reverse order
     @staticmethod
     def get_all_by_uid_since_reverseOrder(seller_id, since):
         rows = app.db.execute('''
@@ -49,6 +52,8 @@ ORDER BY time_ordered
                               since=since)
         return [Fulfill(*row) for row in rows]
     
+
+    #Fulfill an order
     @staticmethod
     def fulfill(order_id, product_id):
         try: 
