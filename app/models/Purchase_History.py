@@ -2,23 +2,23 @@ from flask import current_app as app
 
 
 class Purchase_History:
-    def __init__(self, order_id, time_ordered, product_name, seller_name, firstname, lastname, price, quantity, fulfillment_status):
+    def __init__(self, order_id, time_ordered, product_name, product_id, seller_id, firstname, lastname, price, quantity, fulfillment_status):
         self.order_id = order_id
         self.time_ordered = time_ordered
         self.product_name = product_name
-        self.seller_name = seller_name
+        self.product_id = product_id
+        self.seller_id = seller_id
         self.seller = firstname + " " + lastname
         self.price = price
         self.quantity = quantity
         self.fulfillment_status = fulfillment_status
         self.order_cost = '{:.2f}'.format(price*quantity)
         self.order_link = "<Link>"
-        self.seller_id = seller_id
 
     @staticmethod
     def get_purchase_history_by_uid(id):
         rows = app.db.execute("""
-            SELECT Order_History.order_id, Orders.time_ordered, Products.name, Products.seller_id, Users.firstname, Users.lastname, Order_History.price, Order_History.quantity, Order_History.fulfilled
+            SELECT Order_History.order_id, Orders.time_ordered, Products.name, product_id, Products.seller_id, Users.firstname, Users.lastname, Order_History.price, Order_History.quantity, Order_History.fulfilled
             FROM Order_History, Orders, Products, Users
             WHERE Orders.buyer_id = :id 
             AND Order_History.order_id = Orders.order_id 
@@ -33,7 +33,7 @@ class Purchase_History:
     @staticmethod
     def get_purchase_history_by_order_id(id):
         rows = app.db.execute("""
-            SELECT Order_History.order_id, Orders.time_ordered, Products.name, Products.seller_id, Users.firstname, Users.lastname, Order_History.price, Order_History.quantity, Order_History.fulfilled
+            SELECT Order_History.order_id, Orders.time_ordered, Products.name,product_id, Products.seller_id, Users.firstname, Users.lastname, Order_History.price, Order_History.quantity, Order_History.fulfilled
             FROM Order_History, Orders, Products, Users
             WHERE Orders.order_id = :id 
             AND Order_History.order_id = Orders.order_id 
