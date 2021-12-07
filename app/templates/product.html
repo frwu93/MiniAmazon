@@ -56,7 +56,7 @@
   
       <!-- Product Review -->
       {% block content %}
-  
+      {% if myBool %}
       <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
@@ -75,7 +75,7 @@
         </p>
         {{ form.submit(class_="btn btn-black") }}
       </form>
-    
+    {% endif %}
       {% endblock %}
 
       <div> 

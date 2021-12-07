@@ -35,3 +35,15 @@ class Purchase_History:
                               id=id)
         if rows is not None:
             return [row[0] for row in rows]
+
+
+    @staticmethod
+    def get_product_names(id):
+        rows = app.db.execute("""
+            SELECT DISTINCT(Products.name)
+            FROM Order_History, Orders, Products
+            WHERE Orders.buyer_id = :id AND Order_History.order_id = Orders.order_id AND Order_History.product_id = Products.id
+            """,
+                              id=id)
+        if rows is not None:
+            return [row[0] for row in rows]
