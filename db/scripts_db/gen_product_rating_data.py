@@ -21,7 +21,7 @@ for i in range(1,len(users)-1):
     buyer_id = i
     print(i)
     for i in range(5):
-        product_id = products.iloc[fake.random_int(min=0, max=len(products)-1),0]
+        product_id = fake.random_int(min=1, max=len(products)-1)
         rating = random.randint(0,5)
         time_reviewed = gen_datetime().strftime("%m-%d-%Y %H:%M:%S")
         description = fake.paragraph(nb_sentences=3)
