@@ -10,7 +10,6 @@ from .models.testingDevon import Review
 from .models.fulfill import Fulfill
 from flask import current_app as app
 
-
 from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
 from flask_wtf import FlaskForm
@@ -36,14 +35,12 @@ def index():
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid_since(
             current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
-
     else:
         purchases = None
     # render the page by adding information to the index.html file
     return render_template('index3.html',
                            purchase_history=purchases ,
                            avail_products= products)
-
 
 @bp.route('/product/<int:id>', methods = ["GET", "POST"])
 def product(id):
@@ -75,7 +72,6 @@ def product(id):
                 flash('Could not add to cart. Check to see if you already have this item in your cart.')
                 return render_template('product.html', form = form,
                     product=product)
-
         # find the products current user has bought:
         if product:
             return render_template('product.html',
