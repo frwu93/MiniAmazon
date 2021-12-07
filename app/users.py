@@ -11,7 +11,12 @@ from.models.testingDevon import Review
 from .models.Purchase_History import Purchase_History
 from .models.Balance_History import Balance_History
 from.models.Public_User_Products import Public_User_Products
+from .models.order import Order
+from .models.coupon import Coupon
+
+
 import datetime
+from .carts import calculate_payment
 from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
 
@@ -216,6 +221,15 @@ def publicUserProducts(id):
     public_user_products = Public_User_Products.get_public_user_products_by_uid(id)
     user = User.get(id)
     return render_template('public_user_products.html', title='Public User Products', public_user_products=public_user_products, user=user)
+
+@bp.route('/user/order/<int:order_id>', methods=['GET', 'POST'])
+def order_confirmation(order_id):
+    print("HERE BRO")
+    purchased_items = Purchase_History.get_purchase_history_by_order_id(order_id)
+    coupon_code = Order.get_coupon(order_id)
+    coupon = Coupon.find_coupon(coupon_code)
+    payment = calculate_payment(purchased_items, coupon)
+    return render_template('order_success.html', title='Order Success', user = User.get(current_user.id), order_id = order_id, cart_items = purchased_items, payment = payment, coupon = coupon)
 
 @bp.route('/logout')
 def logout():
