@@ -65,7 +65,6 @@
           <script>
             function passNewQuantity(buyer_id, product_id){
                 var inputVal = document.getElementById("newQuantity"+product_id).value;
-                alert(product_id);
                 if(isNaN(inputVal)) alert("Not a numnber");
                 var value = parseInt(inputVal);
                 if (value < 1 || !Number.isInteger(value)){ 
@@ -76,9 +75,7 @@
                 else{
                 // Selecting the input element and get its value 
                   var baseUrl = window.location.href;
-                  alert(inputVal);
                   var url = baseUrl.concat("/", "changeQuantity", "/", buyer_id, "-", product_id, "-", inputVal,"-", 0);
-                  alert(url);
                   // Displaying the value
                   //var link = "Stupd";
                   window.location.href = url;

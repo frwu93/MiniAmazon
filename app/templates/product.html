@@ -29,8 +29,9 @@
     <div class="product-description">
       <div class ="p-category">{{product.category}}</div>
       <div class ="p-name">{{product.name}}</div>
+      <p>Listed by <a href="{{ url_for('users.publicUser', id=product.seller_id) }}">{{product.seller_name}}</a></p>
       <div class ="p-description">{{product.description}}</div>
-      <div class ="p-stock">{% if product.quantity == 0 %} OUT OF STOCK {% elif product.quantity <= 10%} Only {{product.quantity}} left in stock {% else %} {% endif %}</div>
+      <div class ="p-stock">{% if product.quantity == 0 %} OUT OF STOCK {% elif product.quantity <= 10%} Only {{product.quantity}} left in stock {% else %} Quantity: {{product.quantity}} {% endif %}</div>
     </div>
   
     <!-- Product Pricing -->

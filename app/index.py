@@ -8,6 +8,7 @@ from .models.purchase import Purchase
 from .models.cart import Cart
 from .models.testingDevon import Review
 from .models.fulfill import Fulfill
+from flask import current_app as app
 
 
 from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField, SelectField
@@ -30,6 +31,7 @@ class ReviewForm(FlaskForm):
 def index(): 
     # get all available products for sale:
     products = Product.get_all(True)
+    products = products[1:13]
     # find the products current user has bought:
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid_since(
@@ -38,9 +40,9 @@ def index():
     else:
         purchases = None
     # render the page by adding information to the index.html file
-    return render_template('index.html',
-                           avail_products=products,
-                           purchase_history=purchases)
+    return render_template('index3.html',
+                           purchase_history=purchases ,
+                           avail_products= products)
 
 
 @bp.route('/product/<int:id>', methods = ["GET", "POST"])
@@ -94,3 +96,25 @@ def added_to_cart(id):
 def products():
     return render_template('products.html')
 
+@bp.route('/api/data')
+def data():
+    # get all available products for sale:
+    available = True
+    products = app.db.execute('''
+SELECT *
+FROM Products
+WHERE available = :available
+''',
+                              available=available)
+    
+
+    myjson={}
+    myjson["data"] = []
+    for product in products:
+        print(product.name)
+        myjson["data"].append([product.id, product.name, product.price, product.imagelink])
+    print(myjson)
+    return(myjson)
+    #return {
+        #'data': [{'name': product.name, 'price': product.price, 'quantity': product.quantity} for product in products]
+    #}

@@ -8,11 +8,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 
+from .testingDevon import Review
 
 class Product:
     def __init__(self, id, seller_id, name, description, imageLink, category, price, available, quantity):
         self.id = id
         self.seller_id = seller_id
+        sellerName = self.get_seller_name(self.seller_id)
+        self.seller_name = sellerName[0] + " " + sellerName[1]
         self.name = name
         self.description = description
         self.imageLink = imageLink
@@ -20,6 +23,30 @@ class Product:
         self.price = '{:.2f}'.format(price)
         self.available = available
         self.quantity = quantity
+        if Review.get_avg(id):
+            self.rating = Review.get_avg(id)
+        else:
+            self.rating = "N/A"
+
+    @staticmethod
+    def get_seller_name(id):
+        rows = app.db.execute('''
+SELECT firstname, lastname
+FROM Users
+WHERE id = :id
+''',
+                              id=id)
+        return rows[0]
+
+    @staticmethod
+    def get_seller_name(id):
+        rows = app.db.execute('''
+SELECT firstname, lastname
+FROM Users
+WHERE id = :id
+''',
+                              id=id)
+        return rows[0]
 
     @staticmethod
     def get(id):
@@ -30,6 +57,75 @@ WHERE id = :id
 ''',
                               id=id)
         return Product(*(rows[0])) if rows is not None else None
+
+    @staticmethod
+    def filter(category, rating, min, max, available=True):
+        if rating != 0:
+            if category != "All":
+                rows = app.db.execute('''
+        SELECT *
+        FROM Products
+        WHERE available = :available
+        AND category = :category
+        AND price <= :max
+        AND price >= :min
+        ORDER BY id
+        ''',
+                                    available=available,
+                                    category=category,
+                                    min=min,
+                                    max=max)
+                for row in rows:
+                    print(row[0])
+                return [Product(*row) for row in rows if (Review.get_avg(row[0]) and Review.get_avg(row[0]) >= rating)]
+            else:
+                rows = app.db.execute('''
+        SELECT *
+        FROM Products
+        WHERE available = :available
+        AND price <= :max
+        AND price >= :min
+        ORDER BY id
+        ''',
+                                    available=available,
+                                    min=min,
+                                    max=max)
+                for row in rows:
+                    print(row[0])
+                return [Product(*row) for row in rows if (Review.get_avg(row[0]) and Review.get_avg(row[0]) >= rating)]
+        else:
+            if category != "All":
+                rows = app.db.execute('''
+        SELECT *
+        FROM Products
+        WHERE available = :available
+        AND category = :category
+        AND price <= :max
+        AND price >= :min
+        ORDER BY id
+        ''',
+                                    available=available,
+                                    category=category,
+                                    min=min,
+                                    max=max)
+                for row in rows:
+                    print(row[0])
+                return [Product(*row) for row in rows]
+            else:
+                rows = app.db.execute('''
+        SELECT *
+        FROM Products
+        WHERE available = :available
+        AND price <= :max
+        AND price >= :min
+        ORDER BY id
+        ''',
+                                    available=available,
+                                    min=min,
+                                    max=max)
+                for row in rows:
+                    print(row[0])
+                return [Product(*row) for row in rows]
 
     @staticmethod
     def get_all(available=True):

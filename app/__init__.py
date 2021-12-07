@@ -36,4 +36,7 @@ def create_app():
     from .orders import bp as orders_bp
     app.register_blueprint(orders_bp)
 
+    from .filter import bp as filter_bp
+    app.register_blueprint(filter_bp)
+
     return app
