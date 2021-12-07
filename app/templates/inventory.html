@@ -31,7 +31,7 @@
     {% for product in avail_products%}
       <tr id={{product.id}}>
         <th scope="row">{{product.id}}</th>
-        <td>{{product.name}}</td>
+        <td><a href="{{ url_for('index.product', id=product.id) }}">{{product.name}}</a></td>
         <td data-order="{{product.quantity}}">
           {{product.quantity}} 
           <button type="button" class="btn btn-dark" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{product.id}}" data-id={{product.id}}> 

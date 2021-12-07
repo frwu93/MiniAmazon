@@ -1,28 +1,36 @@
-ul {
+.sidenav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
     background-color: #000000;
   }
-li {
+.sidenav li {
     float: left;
 }
-li a {
+.sidenav li a {
     display: block;
-    color: #d9d9d9;
+    color: #ffff;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
 }
-li a:hover {
+.sidenav li a:hover {
     background-color: #333333;
 }
-input[type=text] {
+.sidenav input[type=text] {
     float: right;
     padding: 6px;
     border: none;
     margin-top: 8px;
     margin-right: 16px;
     font-size: 17px;
+}
+
+.welcome-msg{
+    display: block;
+    color: #0483D7;
+    text-align: center;
+    padding: 14px 16px;
+
 }

@@ -1,8 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+
 <head>
-  <link rel="stylesheet" href="../static/css/product.css">
- </head>
- <a href="{{ url_for('index.index') }}" type="button" class="btn btn-dark">Home</a>
-  
+  <link rel="stylesheet" href="../static/css/products.css">
+</head>
+
  <p>
   {% with messages = get_flashed_messages() %}
   {% if messages %}
@@ -14,48 +17,41 @@
   {% endif %}
   {% endwith %}
  </p>
- <main class="container">
+ 
+ <main class="product-container">
   <!-- Left Column / Headphones Image -->
   <div class="left-column">
-    <img data-image="red" class="active"  src="{{product.imageLink}}" alt="">
+    <img src="{{product.imageLink}}" alt="">
   </div>
   <!-- Right Column -->
   <div class="right-column">
     <!-- Product Description -->
     <div class="product-description">
-      <span>{{product.category}}</span>
-      <h1>{{product.name}}</h1>
+      <div class ="p-category">{{product.category}}</div>
+      <div class ="p-name">{{product.name}}</div>
       <p>Listed by <a href="{{ url_for('users.publicUser', id=product.seller_id) }}">{{product.seller_name}}</a></p>
-      <p>{{product.description}}</p>
-      <p>{% if product.quantity == 0 %} OUT OF STOCK {% elif product.quantity <= 10%} Only {{product.quantity}} left in stock {% else %} Quantity: {{product.quantity}} {% endif %}</p>
-
+      <div class ="p-description">{{product.description}}</div>
+      <div class ="p-stock">{% if product.quantity == 0 %} OUT OF STOCK {% elif product.quantity <= 10%} Only {{product.quantity}} left in stock {% else %} Quantity: {{product.quantity}} {% endif %}</div>
     </div>
   
     <!-- Product Pricing -->
-    <div class="product-price">
-      <span>${{product.price}}</span>
-    </div>
+    <div class="p-price"> ${{product.price}}</div>
     <br><br>
-    <div class="product-addcart">
+    <div class="p-addcart">
       <form>
-        <label for="quantity">Quantity:</label><br>
-        <input type="number" id="quantity" name="quantity" min="1" max={{product.quantity}}>
-        <br><br>
-        <input type="submit" value="Add to Cart" class="cart-btn">
-      </form>
-    <div class="product-addcart">
-        <a type="button" class="cart-btn" href="{{ url_for('carts.addToSaved', buyer_id = current_user.id, product_id=product.id) }}" style = "float: left">Save For Later</a>
-        </div>
+        <div class="p-quantity" for="quantity">Quantity:</div>
+        <input class="p-input" type="number" id="quantity" name="quantity" min="1" max={{product.quantity}}>
+        <input class="cart-btn" type="submit" value="Add to Cart">
+        <a  class= "cart-btn" href="{{ url_for('carts.addToSaved', buyer_id = current_user.id, product_id=product.id) }}" style = "float: left">Save For Later</a>
+      </form>   
     </div>
     <br><br><br><br>
     <div>
-      <div class="review-rating">
-        <span>Average Product Review:   {{review}}</span>
+      <div class="review-rating">Average Product Review:   {{review}}</span>
       </div>
     </div>
   
       <!-- Product Review -->
-      {% block content %}
   
       <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
@@ -75,33 +71,20 @@
         </p>
         {{ form.submit(class_="btn btn-black") }}
       </form>
-    
-      {% endblock %}
 
       <div> 
         <a href="{{ url_for('review.review_page', id=product.id) }}">See All Reviews For This Product</a> 
       </div>
+<<<<<<< HEAD
   
+
+      
+
+=======
+>>>>>>> 81fb51889005191fe1542f07c9e5d5cbddb7dbfe
   </div>
   <!-- Adding a link to see all reviews -->
-  
 
  </main>
  
-
-  <!--
-   {% if current_user.is_authenticated %}
-  <ul>
-    <li><a href="{{ url_for('users.profile') }}">Profile</a></li>
-    <li><a href="{{ url_for('carts.cart') }}">Cart</a></li>
-    <li><a href="{{ url_for('index.index') }}">Home</a></li>
-    <li><a href="{{ url_for('inventory.inventory')}}">Seller View</a></li>
-    <li><a href="{{ url_for('users.logout') }}">About</a></li>
-  </ul>
-  {% else %}
-  <ul>
-    <li><a href="{{ url_for('index.index') }}">Home</li>
-    <li><a href="{{ url_for('users.login') }}">Log in</a></li>
-  </ul>
-  {% endif %}
--->
+ {% endblock %}

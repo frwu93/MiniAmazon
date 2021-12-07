@@ -61,7 +61,7 @@ CREATE TABLE Product_Rating (
     rating INT NOT NULL,
     CHECK(rating in (0, 1, 2, 3, 4, 5)),
     time_reviewed timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
-    description VARCHAR(255), 
+    description VARCHAR(2555), 
     PRIMARY KEY (buyer_id, product_id)
 );
 
@@ -70,7 +70,8 @@ CREATE TABLE Orders(
     buyer_id INT NOT NULL,
     total_cost FLOAT NOT NULL,
     FOREIGN KEY (buyer_id) REFERENCES Users(id),
-    time_ordered timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+    time_ordered timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    coupon_used VARCHAR(10)
 );
 
 CREATE TABLE Order_History (

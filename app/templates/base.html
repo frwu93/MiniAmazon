@@ -7,6 +7,9 @@
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/example.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/products.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/product.css') }}">
   <style>
     body {
         font-family: "Lato", sans-serif;
@@ -14,13 +17,6 @@
     .main-head {
         height: 150px;
         background: #FFF;
-    }
-
-    .sidenav {
-        height: 100%;
-        background-color: #000;
-        overflow-x: hidden;
-        padding-top: 20px;
     }
 
     .main {
@@ -43,21 +39,24 @@
     }
   </style>
 </head>
-
 <body>
   <div class="sidenav">
     {% block msg %}
-      <h1 style="color:aliceblue"><a href = "{{ url_for('index.index')}}" style="color: whitesmoke; text-decoration: none" >Welcome to CompSci 316 Mini Amazon!</a></h1>
-      <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
+    <div>
         {% if current_user.is_authenticated %}
-          Hello {{current_user.firstname}}! 
-          <a href="{{ url_for('users.profile') }}" type="button" class="btn btn-light">Profile</a>
-          <a href="{{ url_for('carts.cart') }}" type="button" class="btn btn-light">Cart</a>
-          <a href="{{ url_for('index.index') }}" type="button" class="btn btn-light">Home</a>
-          <a href="{{ url_for('inventory.inventory') }}" type="button" class="btn btn-light">Seller view</a>
-          <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
+        <ul class= "bar">
+          <li><a href="{{ url_for('index.index') }}">Home</a></li>
+          <li><a href="{{ url_for('carts.cart') }}">Cart</a></li>
+          <li><a href="{{ url_for('inventory.inventory')}}">Seller View</a></li>
+          <li><a href="{{ url_for('users.profile') }}">Profile</a></li>
+          <li><a href="{{ url_for('users.logout') }}">Log Out</a></li>
+          <li class= "welcome-msg"> Hello {{current_user.firstname}}! </li>
+        </ul>
         {% else %}
-          <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
+        <ul class= "bar">
+          <li><a href="{{ url_for('index.index') }}">Home</a></li>
+          <li><a href="{{ url_for('users.login') }}">Log in</a></li>
+        </ul>
         {% endif %}
       </div>
     {% endblock %}
@@ -68,3 +67,4 @@
 </body>
 
 </html>
+

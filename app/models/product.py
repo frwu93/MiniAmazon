@@ -205,6 +205,23 @@ ORDER BY id
             return None
 
     @staticmethod
+    def change_description(id, description):
+        try: 
+            app.db.execute('''
+    UPDATE Products
+    SET description=:description
+    WHERE id = :id
+    RETURNING id
+    ''',
+                                id=id,
+                                description=description)
+            return id
+        except Exception  as e:
+            print(e)
+            print("Could not change description: ", id)
+            return None
+
+    @staticmethod
     def decrease_purchased_quantity(purchased_items):
         try: 
             for item in purchased_items:
