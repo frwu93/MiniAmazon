@@ -31,14 +31,13 @@ class Purchase_History:
     
 
     @staticmethod
-    def get_purchase_history_by_order_id(id):
+    def get_all_Sellers(id):
         rows = app.db.execute("""
-            SELECT Order_History.order_id, Orders.time_ordered, Products.name,product_id, Products.seller_id, Users.firstname, Users.lastname, Order_History.price, Order_History.quantity, Order_History.fulfilled
-            FROM Order_History, Orders, Products, Users
-            WHERE Orders.order_id = :id 
-            AND Order_History.order_id = Orders.order_id 
-            AND Order_History.product_id = Products.id
-            AND Users.id = seller_id
+            SELECT DISTINCT(Products.seller_id)
+            FROM Order_History, Orders, Products
+            WHERE Orders.buyer_id = :id AND Order_History.order_id = Orders.order_id AND Order_History.product_id = Products.id
             """,
                               id=id)
-        return [Purchase_History(*row) for row in rows]
+        if rows is not None:
+            return [row[0] for row in rows]
+
