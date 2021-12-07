@@ -19,6 +19,8 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.dates import AutoDateFormatter, AutoDateLocator
+
 from collections import Counter
 
 
@@ -47,11 +49,12 @@ def inventory():
     products = Product.get_all_by_seller(current_user.id, True)
     args = request.args
     for i in args.keys():
-        print(i, " whoops")
-        mylist = i.split("-")
-        order_id = mylist[1]
-        product_id = mylist[2]
-        Fulfill.fulfill(order_id, product_id)
+        if i.startswith("fulfill"):
+            print(i, " whoops")
+            mylist = i.split("-")
+            order_id = mylist[1]
+            product_id = mylist[2]
+            Fulfill.fulfill(order_id, product_id)
         
     # find the products current user has bought:
     if current_user.is_authenticated:
@@ -86,11 +89,17 @@ def analytics():
     data = {}
     numberSold = {}
     for item in fulfill:
-        year, month = item.time_ordered.year, item.time_ordered.month
-        month = str(year) + "/" + str(month)
-        if month not in data.keys():
-            data[month] = 0
-        data[month] += item.quantity
+        #year, month = item.time_ordered.year, item.time_ordered.month
+        #month = str(year) + "/" + str(month)
+        #if month not in data.keys():
+        #    data[month] = 0
+        #data[month] += item.quantity
+
+        date = item.time_ordered.date()
+        if date not in data.keys():
+            data[date] = 0
+        data[date] += item.quantity
+
 
         product = item.name
         quantity = item.quantity
@@ -107,10 +116,14 @@ def analytics():
     axis = fig.add_subplot(1, 1, 1)
     axis.set_title("Total products sold over time")
     axis.set_xlabel("date")
-    axis.set_yticks(np.arange(np.min(totalSold), np.max(totalSold), round(int((np.max(totalSold) - np.min(totalSold))/10)/10)*10))
+    #axis.set_yticks(np.arange(np.min(totalSold), np.max(totalSold), round(int((np.max(totalSold) - np.min(totalSold))/10)/10)*10))
     axis.set_ylabel("total products sold")
+    
+    axis.plot(data.keys(), totalSold)
 
-    axis.plot(data.keys(), totalSold, "ro-")
+    axis.tick_params(axis='x', labelrotation = -45)
+    fig.tight_layout()
+
 
     pngImage = io.BytesIO()
     FigureCanvas(fig).print_png(pngImage)
