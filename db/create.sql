@@ -8,7 +8,8 @@ CREATE TABLE Users (
     firstname VARCHAR(255) NOT NULL,
     lastname VARCHAR(255) NOT NULL,
     address VARCHAR(255) NOT NULL,
-    balance FLOAT NOT NULL
+    balance FLOAT NOT NULL,
+    imageLink VARCHAR(511) DEFAULT 'https://cloud.clarius.com/static/images/user_default.png'
 );
 
 CREATE TABLE Sellers (

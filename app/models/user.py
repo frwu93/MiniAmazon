@@ -7,7 +7,7 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, password, id, email, firstname, lastname, address, balance):
+    def __init__(self, password, id, email, firstname, lastname, address, balance, imageLink):
         self.id = id
         self.email = email
         self.firstname = firstname
@@ -15,11 +15,12 @@ class User(UserMixin):
         self.address = address
         self.balance = '{:.2f}'.format(balance)
         self.password = password
+        self.imageLink = imageLink
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname, address, balance
+SELECT password, id, email, firstname, lastname, address, balance, imageLink
 FROM Users
 WHERE email = :email
 """,
@@ -57,13 +58,6 @@ WHERE email = :email
                                   address = address)
             id = rows[0][0]
             print("backend reg; inserted into db")
-            rows3 = app.db.execute("""
-                INSERT INTO Sellers(id)
-                VALUES(:id)
-                RETURNING id
-                """,
-                id = id)
-            print("added to sellers")
             return User.get(id)
         except Exception as e:
             print(e)
@@ -76,7 +70,7 @@ WHERE email = :email
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname, address, balance
+SELECT password, id, email, firstname, lastname, address, balance, imageLink
 FROM Users
 WHERE id = :id
 """,
@@ -225,6 +219,18 @@ newName=newName)
             print("Withdrawal Failed")
 
     @staticmethod
+    def updateProfilePic(id, imageLink):
+        rows = app.db.execute("""
+UPDATE Users
+SET imageLink=:imageLink
+WHERE id = :id
+RETURNING id
+""",
+id=id,
+imageLink=imageLink)
+        return id
+
+    @staticmethod
     def add_purchase(user_id, amount, time_initiated, cur_balance, product_name, quantity):
         try:
             rows = app.db.execute('''
@@ -264,3 +270,32 @@ newName=newName)
             print(e)
             print("Purchase Failed")
 
+    @staticmethod
+    def isSeller(id):
+        try:
+            rows = app.db.execute("""
+                SELECT * FROM Sellers
+                WHERE id=:id
+                """,
+                id=id)
+            if len(rows) == 0:
+                return False
+            else:
+                return True
+        except Exception as e:
+            print(e)
+            return None
+
+    @staticmethod
+    def updateSellers(id):
+        try:
+            rows = app.db.execute('''
+            INSERT INTO Sellers(id)
+            VALUES(:id)
+            RETURNING id
+            ''',
+                    id = id)
+            return id
+        except Exception as e:
+            print(e)
+            print("Seller Registration Failed")
