@@ -225,6 +225,8 @@ def reviews():
             current_user.isSeller = True
         else:
             current_user.isSeller = False
+    if reviews4seller is None:
+        return render_template('profile_subpages/reviews.html', title='Reviews', user=user, reviews=reviews, sellerReviews=sellerReviews)
     return render_template('profile_subpages/reviews.html', title='Reviews', user=user, reviews=reviews, sellerReviews=sellerReviews, reviews4seller=reviews4seller)
 
 @bp.route('/settings', methods=['GET', 'POST'])
@@ -261,7 +263,7 @@ def add_user_to_seller(id):
 
 ### ADDING THE REVIEW FORMS TO THE PAGE---NEED to create the forms first
 class UpdateForms(FlaskForm):
-    rating1 = SelectField(_l('Product Rating'), validators = [DataRequired()], choices=ratingChoices)    
+    rating1 = SelectField(_l('Rating'), validators = [DataRequired()], choices=ratingChoices)    
     submit1 = SubmitField(_l('Submit Review'))
     description1= StringField(_l('Description'), validators=[DataRequired()])
 
@@ -269,7 +271,7 @@ class DeleteForms(FlaskForm):
     submit2 = SubmitField(_l('Delete Review'))
 
 class LeaveForms(FlaskForm):
-    rating3 = SelectField(_l('Product Rating'), validators = [DataRequired()], choices=ratingChoices)    
+    rating3 = SelectField(_l('Rating'), validators = [DataRequired()], choices=ratingChoices)    
     submit3 = SubmitField(_l('Submit Review'))
     description3= StringField(_l('Description'), validators=[DataRequired()])
 

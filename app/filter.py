@@ -8,6 +8,7 @@ from .models.purchase import Purchase
 from .models.cart import Cart
 from .models.testingDevon import Review
 from .models.fulfill import Fulfill
+from .models.user import User
 
 
 from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField, SelectField

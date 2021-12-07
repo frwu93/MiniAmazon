@@ -47,6 +47,7 @@
         {% if current_user.is_authenticated %}
         <ul class= "bar">
           <li><a href="{{ url_for('index.index') }}">Home</a></li>
+          <li><a href="{{ url_for('index.products') }}">Products</a></li>
           <li><a href="{{ url_for('carts.cart') }}">Cart</a></li>
           {% if current_user.isSeller %} <li><a href="{{ url_for('inventory.inventory')}}">Seller View</a></li>        {% endif %}
           <li><a href="{{ url_for('users.profile') }}">Profile</a></li>

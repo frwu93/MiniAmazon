@@ -123,13 +123,13 @@ def checkout_success(coupon = None):
             current_user.isSeller = False
     coupon = Coupon.find_coupon(coupon)
     payment = calculate_payment(cart_items, coupon)
-    order_id = Order.add_order(current_user.id, payment["total"], coupon)
+    order_id = Order.add_order(current_user.id, payment["total"], coupon.code)
     Order.add_to_history(order_id, cart_items)
     User.updateBalanceWithdrawal(current_user.id, payment["total"])
     for item in cart_items:
         individualCost = calculate_payment([item], coupon)['subtotal']
         curBalance = float(User.get(item.seller_id).balance) + individualCost
-        User.updateBalanceDeposit(item.seller_id, item.price * item.quantity)
+        User.updateBalanceDeposit(item.seller_id, individualCost)
         User.add_sold(item.seller_id, individualCost, datetime.datetime.now(), curBalance, item.product_name, item.quantity)
     Product.decrease_purchased_quantity(cart_items)
     Cart.clear_user_cart(current_user.id)
