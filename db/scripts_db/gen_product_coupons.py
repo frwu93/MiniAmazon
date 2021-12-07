@@ -12,7 +12,7 @@ products = pd.read_csv('./data/Products_large.csv', header = None)
 
 for i in range(500):
     coupon_code = coupons.iloc[fake.random_int(min=0, max=len(coupons)-1),0]
-    product_id = products.iloc[fake.random_int(min=0, max=len(products)-1),0]
+    product_id = fake.random_int(min=1, max=len(products)-1)
     new_row = {'coupon_code': coupon_code, 'product_id':product_id}
     pcs = pcs.append(new_row, ignore_index = True)
 pcs = pcs.drop_duplicates(subset = ['coupon_code'])
