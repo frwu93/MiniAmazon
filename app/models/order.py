@@ -1,13 +1,11 @@
 from flask import current_app as app
 
 class Order:
-    def __init__(self, id, buyer_id, time_ordered, products, prices, quantities):
+    def __init__(self, id, buyer_id, time_ordered, coupon):
         self.id = id
         self.buyer_id = buyer_id
         self.time_ordered = time_ordered
-        self.products = products
-        self.prices = prices
-        self.quantities = quantities
+        self.coupon = coupon
 
     @staticmethod
     def add_order(buyer_id, cost):
@@ -45,6 +43,19 @@ class Order:
         except Exception as e:
             print(e)
             print("Adding to Order History Failed - HISTORY HAS BEEN LOST")
-
-
+    
+    @staticmethod
+    def get_coupon(id):
+        try:
+            rows = app.db.execute('''
+            SELECT coupon_used
+            FROM Orders
+            WHERE order_id = :id
+            ''',
+                    id = id)
+            coupon_used = rows[0][0]
+            return coupon_used
+        except Exception as e:
+            print(e)
+            print("Couldn't find used coupon")
     

@@ -63,7 +63,7 @@
                                     <td>{{item.quantity}}</td>
                                     <td>${{item.order_cost}}</td>
                                     <td>{{item.fulfillment_status}}</td>
-                                    <td>{{item.order_link}}</td>
+                                    <td><a href = "{{ url_for('users.order_confirmation', order_id = item.order_id) }}">Order Link</a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
