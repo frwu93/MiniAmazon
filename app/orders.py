@@ -65,7 +65,7 @@ def verify_transaction(coupon = None):
         #successful transaction
         curBalance = float(User.get(current_user.id).balance)
         for item in cart_items:
-            individualCost = calculate_payment([item], coupon)['total']
+            individualCost =calculate_payment([item], coupon)['total']
             curBalance -= individualCost
             User.add_purchase(current_user.id, individualCost, datetime.datetime.now(), curBalance, item.product_name, item.quantity)
         return redirect(url_for('orders.checkout_success', coupon = code))   
