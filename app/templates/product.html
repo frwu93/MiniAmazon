@@ -53,6 +53,8 @@
     </div>
     <br>
       <!-- Product Review -->
+      
+      {% if myBool %}
       {% if myreview %} Your review: {{myreview.description}}
       <br>
       Rating: {{myreview.rating}}
@@ -75,7 +77,11 @@
         </p>
         {{ form.submit(class_="btn btn-black") }}
       </form>
+    {% endif %}
+
+
       {% endif %}
+    
       <br><br>
       <div> 
         <a href="{{ url_for('review.review_page', id=product.id) }}">See All Reviews For This Product</a> 
@@ -84,5 +90,6 @@
   </div>
 
  </main>
- 
  {% endblock %}
+ 
+
