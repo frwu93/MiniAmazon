@@ -16,7 +16,11 @@ def product(id):
     # get all available products for sale:
     product = Product.get(id)
     quantity = request.args.get('quantity')
-
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     if quantity: 
         success = Cart.add_to_cart(current_user.id, id, quantity)
         if success:

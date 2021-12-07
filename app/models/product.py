@@ -290,7 +290,7 @@ SELECT id, name, products.price, imageLink, SUM(order_history.quantity)
 FROM (PRODUCTS left join order_history on products.id=order_history.product_id) 
 WHERE available = :available
 GROUP BY id 
-ORDER BY sum DESC NULLS LAST LIMIT 7;
+ORDER BY sum DESC NULLS LAST LIMIT 6;
 ''',
                               available=available)
         
@@ -303,7 +303,7 @@ ORDER BY sum DESC NULLS LAST LIMIT 7;
 SELECT products.id, name, price, imageLink, avg(rating) 
 FROM (products left join product_rating on products.id=product_rating.product_id) 
 WHERE available = :available
-group by products.id ORDER BY avg DESC NULLS LAST LIMIT 7;
+group by products.id ORDER BY avg DESC NULLS LAST LIMIT 6;
 ''',
                               available=available)
         
