@@ -6,6 +6,7 @@ import datetime
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.cart import Cart
+from .models.Purchase_History import Purchase_History
 from .models.testingDevon import Review
 from .models.fulfill import Fulfill
 from flask import current_app as app
@@ -65,6 +66,11 @@ def product(id):
     print(request.form.keys())
     print(type(quantity))
     review = Review.get_avg(id)
+    myBool=False
+    lst=Purchase_History.get_product_names(current_user.id)
+    if product.name in lst:
+        myBool=True
+    print(myBool)
     myreview = Review.get(current_user.id, id)
     if review==None:
         review=0
@@ -72,6 +78,8 @@ def product(id):
         datetime.time
         Review.submitReview(current_user.id, id, form.rating.data, datetime.datetime.now() , form.description.data)     
         return redirect(url_for('index.product', id=id))
+        #return render_template('product.html', product=product, review=review, form = form, myBool=myBool)
+
     else:
         if quantity:
             if int(quantity) > Product.get(id).quantity: 
@@ -89,7 +97,7 @@ def product(id):
         # find the products current user has bought:
         if product:
             return render_template('product.html',
-                            product=product, review = review, form = form, myreview = myreview)
+                            product=product, review = review, form = form, myreview = myreview, myBool=myBool)
         else:
             return render_template('index.html',
                             avail_products= products,

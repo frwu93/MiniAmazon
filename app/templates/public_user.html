@@ -66,11 +66,11 @@
                         </div>
                         </div>
                     </div>
-                    <div class="col">
+                    <div>
                         {% if myself %}
                         {% if myBool%}
                         {% if current_user_review %}
-                        <h1 class="m-3 pt-3">My Current Review</h1>
+                        <h1>My Current Review</h1>
                             <div class="card">
                                 <blockquote class="blockquote mb-0 card-body">
                                     <p>{{ current_user_review.description}}</p>
@@ -87,10 +87,10 @@
                             </div>
                             
                     </div>
-                    
+                    <p></p><p></p><p></p>
                      <!-- Product Review -->
                     
-                     <h1 class="m-3 pt-3">Update Review for Seller</h1>
+                     <h1>Update Review for Seller</h1>
                      <form action="" method="post" validate>
                        {{ form.hidden_tag() }}
                        <p>
@@ -112,7 +112,7 @@
                 
                      {%else%}
                      <div class="col">
-                        <h1 class="m-3 pt-3">Leave Review for Seller</h1>
+                        <h1>Leave Review for Seller</h1>
                      <form action="" method="post" validate>
                         {{ form3.hidden_tag() }}
                         <p>
