@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <head>
   <link rel="icon" type="image/png" href="http://www.yogihosting.com/wp-content/themes/yogi-yogihosting/Images/favicon.ico">
   <meta charset="utf-8" />
@@ -12,6 +13,17 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
+<p>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li style="color: red;">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+</p>
 <br><br>
 <a href="{{ url_for('inventory.analytics') }}" type="button" class="btn btn-dark">Analytics</a>
 <a href="{{ url_for('inventory.sellItem') }}" type="button" class="btn btn-dark">Sell a product</a>
@@ -25,6 +37,7 @@
       <th scope="col">Rating</th>
       <th scope="col">Product Quantity</th>
       <th scope="col">Price</th>
+      <th scope="col">Coupon</th>
       <th scope="col">Remove Listing</th>
     </tr>
   </thead>
@@ -34,7 +47,7 @@
         <th scope="row">{{product.id}}</th>
         <td><a href="{{ url_for('index.product', id=product.id) }}">{{product.name}}</a></td>
         <td>
-          {{product.rating}}
+          {{ "%.2f"|format(product.rating) }}
         </td>
         <td data-order="{{product.quantity}}">
           {{product.quantity}} 
@@ -48,6 +61,9 @@
             Change
           </button>
           
+        </td>
+        <td>
+            <a href="{{ url_for('inventory.addCoupon', id=product.id) }}">Add coupon</a>          
         </td>
         <td><a href="{{ url_for('inventory.deleteItem', id=product.id) }}" type="button" class="btn btn-dark" onclick="return confirm('Are you sure?')">Remove listing</a>
         </td>
@@ -153,7 +169,7 @@
       </div>
 
 
-      
+  
     {% endfor %}
   </tbody>
   <script>

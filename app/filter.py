@@ -52,6 +52,7 @@ def filter():
     maxP = int(maxP)
 
     if(minP > maxP):
+        print("Not good")
         flash('Min price must be less than max price!')
         return redirect(url_for('index.products'))
 
@@ -65,11 +66,8 @@ def filterResults(category, rating, min, max):
     
     #for product in products:
      #   product.rating = Review.get_avg(product.id)
-    if products:
-        return render_template('filter.html', avail_products = products)
-    else:
-        return redirect(url_for('index.index'))
 
+    return render_template('filter.html', avail_products = products)
 
 
 

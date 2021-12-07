@@ -141,9 +141,8 @@ group by products.id ORDER BY avg DESC NULLS LAST
         if product.avg:
             rating = float(round(product.avg, 2))
         else:
-            rating = "N/A"
-        print(type(rating))
-        myjson["data"].append([product.id, product.name, product.price, product.imagelink, rating])
+            rating = 0.00
+        myjson["data"].append([product.id, product.name, product.price, product.imagelink, "{:.2f}".format(rating)])
     return(myjson)
     #return {
         #'data': [{'name': product.name, 'price': product.price, 'quantity': product.quantity} for product in products]

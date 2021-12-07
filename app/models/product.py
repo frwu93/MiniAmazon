@@ -26,7 +26,7 @@ class Product:
         if Review.get_avg(id):
             self.rating = Review.get_avg(id)
         else:
-            self.rating = "N/A"
+            self.rating = 0
 
     @staticmethod
     def get_seller_name(id):

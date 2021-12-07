@@ -6,6 +6,17 @@
     <link rel="stylesheet" href="ratings.css">
 </head>
 <br>
+<p>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li style="color: red;">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+</p>
 <form action="{{ url_for('filter.filter') }}" method="post">
     <label for="categories">Category:</label>
   
@@ -63,7 +74,7 @@
           <th scope="row">{{product.id}}</th>
           <td><a href="{{ url_for('index.product', id=product.id) }}">{{product.name}}</a></td>
           <td>${{product.price}}</td>
-          <td>{{product.rating}}</td>
+          <td>{{ "%.2f Stars"|format(product.rating) }}</td>
         </tr>
       {% endfor %}
     </tbody>
