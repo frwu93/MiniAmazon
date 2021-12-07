@@ -1,0 +1,73 @@
+body r-main{
+    margin-top: 20px;
+    background-color: lightgray;
+}
+.main r-main{
+    padding: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.sidebar r-main{
+    background-color: #333;
+    color: white;
+    height: 100%;
+}
+.sidebar a r-main{
+    margin-left: 10px;
+    display: block;
+    color: white;
+    padding-bottom: 10px;
+    font-size: 30px;
+    text-decoration: none;
+}
+.card r-main{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.content r-main{
+    background-color: whitesmoke;
+}
+
+.r-main{
+    display: flex;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+.r-side{
+    width: 500px;
+    margin: 10px;
+}
+.reviews-main{
+    flex: 1;
+}
+
+.review-container{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    overflow: auto;
+    height: 500px;
+}
+
+.review-content{
+    display: flex;
+    flex-direction: column;
+}
+
+.line{
+    margin: 5px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+.review-title{
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: #000000;
+    font-weight: bold;
+    text-align: center;
+    display: flex;
+}
+
+.main-review-page{
+    display: flex;
+    flex-direction: column;
+}

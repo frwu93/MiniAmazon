@@ -75,9 +75,7 @@ def verify_transaction(coupon = None):
         #successful transaction
         curBalance = float(User.get(current_user.id).balance)
         for item in cart_items:
-            individualCost = float(item.price) * float(item.quantity)
-            if coupon is not None:
-                individualCost = calculate_payment([item], coupon)['total']
+            individualCost =calculate_payment([item], coupon)['total']
             curBalance -= individualCost
             User.add_purchase(current_user.id, individualCost, datetime.datetime.now(), curBalance, item.product_name, item.quantity)
         return redirect(url_for('orders.checkout_success', coupon = code))   
@@ -104,7 +102,7 @@ def checkout_success(coupon = None):
     Order.add_to_history(order_id, cart_items)
     User.updateBalanceWithdrawal(current_user.id, payment["total"])
     for item in cart_items:
-        individualCost = float(item.price) * float(item.quantity)
+        individualCost = calculate_payment([item], coupon)['total']
         curBalance = float(User.get(item.seller_id).balance) + individualCost
         User.updateBalanceDeposit(item.seller_id, item.price * item.quantity)
         User.add_sold(item.seller_id, individualCost, datetime.datetime.now(), curBalance, item.product_name, item.quantity)
