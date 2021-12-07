@@ -26,6 +26,7 @@ class FilterForm(FlaskForm):
     minStars = DecimalField(_l('List Price'), validators=[NumberRange(min=0, max=5, message="Price must be nonnegative")])
     submit = SubmitField(_l('List Item'))
 
+
 @bp.route('/filter', methods=['POST'])
 def filter(): 
     # get all available products for sale:
