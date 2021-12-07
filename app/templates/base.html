@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/products.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/product.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/reviews.css') }}">
   <style>
     body {
         font-family: "Lato", sans-serif;
@@ -50,7 +51,7 @@
           <li><a href="{{ url_for('inventory.inventory')}}">Seller View</a></li>
           <li><a href="{{ url_for('users.profile') }}">Profile</a></li>
           <li><a href="{{ url_for('users.logout') }}">Log Out</a></li>
-          <li class= "welcome-msg"> Hello {{current_user.firstname}}! </li>
+          <li class= "welcome-msg", style = "float: right"> Hello {{current_user.firstname}}! </li>
         </ul>
         {% else %}
         <ul class= "bar">

@@ -13,7 +13,7 @@ babel = Babel()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-
+    
     app.db = DB(app)
     login.init_app(app)
     babel.init_app(app)

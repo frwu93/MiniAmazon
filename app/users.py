@@ -217,21 +217,17 @@ def publicUser(id):
     if form.submit1.data and form.validate_on_submit:
         print(id, current_user.id, form.rating1.data, datetime.datetime.now())
         Review.update_SellerReview(id, current_user.id, form.rating1.data, form.description1.data, datetime.datetime.now())
-        return render_template('public_user.html', title='Public User', user=user, form = form, 
-        form2 = form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview , form3=form3, myself=myself, myBool=myBool)
-
+        return redirect(url_for('users.publicUser', id=id))
     if form3.submit3.data and form3.validate_on_submit:
         print("3")
         print((id, current_user.id, form3.rating3.data, datetime.datetime.now()))
         Review.submitSellerReview(id, current_user.id, form3.rating3.data, form3.description3.data, datetime.datetime.now())
-        return render_template('public_user.html', title='Public User', user=user, form = form, 
-        form2 =form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview , form3=form3, myself=myself, myBool=myBool)
+        return redirect(url_for('users.publicUser', id=id))
 
     if form2.submit2.data and form2.validate_on_submit():
         print("2")
         Review.delete_SellerReview(id, current_user.id)
-        return render_template('public_user.html', title='Public User', user=user, form = form, 
-        form2 =form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview , form3=form3, myself=myself, myBool=myBool)
+        return redirect(url_for('users.publicUser', id=id))
 
     print("4")
     return render_template('public_user.html', title='Public User', user=user, form = form, 
