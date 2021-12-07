@@ -29,9 +29,10 @@
     <div class="product-description">
       <div class ="p-category">{{product.category}}</div>
       <div class ="p-name">{{product.name}}</div>
-      {% if product.seller_id == current_user.id %} <a href="{{ url_for('index.productEdit', id=product.id) }}">edit</a> {% endif %}
       <p>Listed by <a href="{{ url_for('users.publicUser', id=product.seller_id) }}">{{product.seller_name}}</a></p>
-      <div class ="p-description">{{product.description}}</div>
+      <div class ="p-description">{{product.description}}
+        {% if product.seller_id == current_user.id %} <a href="{{ url_for('index.productEdit', id=product.id) }}">edit {% endif %}
+      </div>
       <div class ="p-stock">{% if product.quantity == 0 %} OUT OF STOCK {% elif product.quantity <= 10%} Only {{product.quantity}} left in stock {% else %} Quantity: {{product.quantity}} {% endif %}</div>
     </div>
   

@@ -4,10 +4,19 @@
 
 <html>
 
-<head>
-    <link rel="stylesheet" type="text/css" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="purchase.css">
-</head>
+    <head>
+        <link rel="stylesheet" type="text/css" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="profile.css">
+        <link rel="icon" type="image/png" href="http://www.yogihosting.com/wp-content/themes/yogi-yogihosting/Images/favicon.ico">
+        <meta charset="utf-8" />
+      
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+      
+      
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+      <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+    </head>
 
 <body>
     <div>
@@ -40,7 +49,7 @@
                 <div class="card mb-3 content">
                     <h1 class="m-3 pt-3">Your Order History</h1>
                     <div class="card-body">
-                        <table class='table table-hover table-bordered container'>
+                        <table class='table table-hover table-bordered container' id="table1">
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">Order ID</th>
@@ -77,7 +86,14 @@
     </div>
 
 </body>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+  
+<script>
+    $(document).ready(function () {
+        $('#table1').DataTable();
+    });
+</script>
 </html>
 
 

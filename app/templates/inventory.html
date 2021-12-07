@@ -22,6 +22,7 @@
     <tr>
       <th scope="col">Product ID</th>
       <th scope="col">Product Name</th>
+      <th scope="col">Rating</th>
       <th scope="col">Product Quantity</th>
       <th scope="col">Price</th>
       <th scope="col">Remove Listing</th>
@@ -32,6 +33,9 @@
       <tr id={{product.id}}>
         <th scope="row">{{product.id}}</th>
         <td>{{product.name}}</td>
+        <td>
+          {{product.rating}}
+        </td>
         <td data-order="{{product.quantity}}">
           {{product.quantity}} 
           <button type="button" class="btn btn-dark" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{product.id}}" data-id={{product.id}}> 
@@ -169,8 +173,23 @@
   
 <script>
     $(document).ready(function () {
-        $('#myTable').DataTable();
+        $('#myTable').DataTable({
+          "columnDefs": [
+            {
+                // The `data` parameter refers to the data for the cell (defined by the
+                // `data` option, which defaults to the column being worked with, in
+                // this case `data: 0`.
+                "render": function ( data, type, row ) {
+                  var baseUrl = window.location.origin;
+                  var url = baseUrl.concat("/", "product", "/", row[0])
+                  return '<a href=' + url +'>' + data +'</a>';
+                    //return data +' ('+ row[0]+')';
+                },
+                "targets": 1
+            }
+          ]
     });
+  });
 </script>
 
 <br><br>
