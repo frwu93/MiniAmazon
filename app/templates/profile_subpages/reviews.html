@@ -99,6 +99,19 @@
                                                 <a href="{{ url_for('review.review_page', id=review.product_id) }}">View Product Review</a> 
                                             </div>
                                             {% endfor %}
+                                            {% for rev in reviews4seller %}
+                                            <div class="card p-3">
+                                                <blockquote class="blockquote mb-0 card-body">
+                                                <p>{{ rev.description}}</p>
+                                                <footer class="blockquote-footer">
+                                                <small class="text-muted">
+                                                <cite title="User"> </cite> You rated this seller {{ rev.rating }} <cite> stars on  {{ rev.time_reviewed }}</cite>
+                                                </small>
+                                                </footer>
+                                                </blockquote>
+                                                <a href="{{ url_for('users.publicUser', id=rev.seller_id) }}">View Seller Review Page</a> 
+                                            </div>
+                                            {% endfor %}
                                     </div>
                                 </div>
                         </div>

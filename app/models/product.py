@@ -38,15 +38,6 @@ WHERE id = :id
                               id=id)
         return rows[0]
 
-    @staticmethod
-    def get_seller_name(id):
-        rows = app.db.execute('''
-SELECT firstname, lastname
-FROM Users
-WHERE id = :id
-''',
-                              id=id)
-        return rows[0]
 
     @staticmethod
     def get(id):
