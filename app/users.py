@@ -10,6 +10,7 @@ from .models.user import User
 from.models.testingDevon import Review
 from .models.Purchase_History import Purchase_History
 from .models.Balance_History import Balance_History
+from.models.Public_User_Products import Public_User_Products
 import datetime
 
 
@@ -145,6 +146,17 @@ def reviews():
 def settings():
     user = User.get(current_user.id)
     return render_template('profile_subpages/settings.html', title='Settings', user=user)
+
+@bp.route('/user/<int:id>', methods=['GET', 'POST'])
+def publicUser(id):
+    user = User.get(id)
+    return render_template('public_user.html', title='Public User', user=user)
+
+@bp.route('/user/<int:id>/products', methods=['GET', 'POST'])
+def publicUserProducts(id):
+    public_user_products = Public_User_Products.get_public_user_products_by_uid(id)
+    user = User.get(id)
+    return render_template('public_user_products.html', title='Public User Products', public_user_products=public_user_products, user=user)
 
 @bp.route('/logout')
 def logout():
