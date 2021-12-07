@@ -21,6 +21,11 @@ bp = Blueprint('orders', __name__)
 @bp.route('/checkout/', methods=['GET'])
 @bp.route('/checkout/<coupon>', methods=['GET'])
 def checkout(coupon = None):
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     print("CHECKOUT")
     print(coupon)
     if current_user.is_authenticated:
@@ -44,6 +49,11 @@ def checkout(coupon = None):
 @bp.route('/checkout/verify/')
 @bp.route('/checkout/verify/<coupon>')
 def verify_transaction(coupon = None):
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     print('verifying transaction')
     if current_user.is_authenticated:
         cart_items = Cart.get_cart_products_by_uid(current_user.id)
@@ -82,6 +92,11 @@ def checkout_success(coupon = None):
     cart_items = Cart.get_cart_products_by_uid(current_user.id)
     print("NOTICE ME")
     print(coupon)
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     coupon = Coupon.find_coupon(coupon)
     payment = calculate_payment(cart_items, coupon)
     print(payment['total'])

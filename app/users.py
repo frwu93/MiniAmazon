@@ -33,6 +33,8 @@ class LoginForm(FlaskForm):
     submit = SubmitField(_l('Sign In'))
 
 
+
+
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -100,7 +102,11 @@ def profile():
         id = User.updatePassword(current_user.id, password)
     if profilepic:
         id = User.updateProfilePic(current_user.id, profilepic)
-    
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     user = User.get(current_user.id)
     return render_template('profile.html', title='Profile', user=user)
 
@@ -139,7 +145,11 @@ def paymentHistory():
         return redirect(url_for('users.paymentHistory'))
     if profilepic:
         id = User.updateProfilePic(current_user.id, profilepic)
-    
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     balance_history = Balance_History.get_balance_history_by_uid(current_user.id)
     user = User.get(current_user.id)
     return render_template('profile_subpages/payment_history.html', title='Payment', balance_history=balance_history, user=user)
@@ -151,6 +161,11 @@ def purchaseHistory():
         id = User.updateProfilePic(current_user.id, profilepic)
     purchase_history = Purchase_History.get_purchase_history_by_uid(current_user.id)
     user = User.get(current_user.id)
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     return render_template('profile_subpages/purchase_history.html', title='Purchase', purchase_history=purchase_history, user=user)
 
 @bp.route('/reviews', methods=['GET', 'POST'])
@@ -161,6 +176,11 @@ def reviews():
     user = User.get(current_user.id)
     reviews =  Review.get_UserReviews(current_user.id)
     sellerReviews=Review.get_SellerReviews(current_user.id)
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     return render_template('profile_subpages/reviews.html', title='Reviews', user=user, reviews=reviews, sellerReviews=sellerReviews)
 
 @bp.route('/settings', methods=['GET', 'POST'])
@@ -170,6 +190,11 @@ def settings():
         id = User.updateProfilePic(current_user.id, profilepic)
     user = User.get(current_user.id)
     is_seller = User.isSeller(current_user.id)
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     return render_template('profile_subpages/settings.html', title='Settings', user=user, is_seller=is_seller)
 
 @bp.route('/settings/newSeller/<int:id>')
@@ -205,7 +230,11 @@ def publicUser(id):
     myself = True
     if (current_user.id==id):
         myself=False
-
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     ##boolean for whether or not you have bought an item from the seller 
     lst = Purchase_History.get_all_Sellers(current_user.id)
     print(lst)
@@ -237,6 +266,11 @@ def publicUser(id):
 def publicUserProducts(id):
     public_user_products = Public_User_Products.get_public_user_products_by_uid(id)
     user = User.get(id)
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     return render_template('public_user_products.html', title='Public User Products', public_user_products=public_user_products, user=user)
 
 @bp.route('/user/order/<int:order_id>', methods=['GET', 'POST'])
@@ -246,6 +280,11 @@ def order_confirmation(order_id):
     coupon_code = Order.get_coupon(order_id)
     coupon = Coupon.find_coupon(coupon_code)
     payment = calculate_payment(purchased_items, coupon)
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     return render_template('order_success.html', title='Order Success', user = User.get(current_user.id), order_id = order_id, cart_items = purchased_items, payment = payment, coupon = coupon)
 
 @bp.route('/logout')
