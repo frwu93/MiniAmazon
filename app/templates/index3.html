@@ -10,7 +10,7 @@
 <div class= "product-grid">
   {% for product in avail_products %}
     <div class= "product">
-      <img class="product-image"  src="{{product.imageLink}}" alt="">
+      <img class="product-image"  src="{{product.imagelink}}" alt="">
       <div ><a class="product-name" href="{{ url_for('index.product', id=product.id) }}">{{product.name}}</a></div>
       <div class="product-price">${{"%.2f"|format(product.price)}}</div>
       <div class="product-quantity">Times Sold: {{product.sum}}</div>
@@ -22,7 +22,7 @@
 <div class= "product-grid">
   {% for product in top_rated %}
     <div class= "product">
-      <img class="product-image"  src="{{product.imageLink}}" alt="">
+      <img class="product-image"  src="{{product.imagelink}}" alt="">
       <div ><a class="product-name" href="{{ url_for('index.product', id=product.id) }}">{{product.name}}</a></div>
       <div class="product-price">${{product.price}}</div>
       <div class="product-quantity">Rating: {{ "%.2f Stars"|format(product.avg) }}</div>
