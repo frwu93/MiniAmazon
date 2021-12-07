@@ -5,9 +5,10 @@ import datetime
 from flask import render_template, redirect, url_for, flash, request
 from .models.product import Product
 from .models.purchase import Purchase
+from .models.coupon import Coupon
 from .models.fulfill import Fulfill
-from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField, SelectField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange, Required
+from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField, SelectField, DateField
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange, Required, Length
 from flask_wtf import FlaskForm
 from flask_babel import _, lazy_gettext as _l
 
@@ -39,6 +40,13 @@ class ProductForm(FlaskForm):
     category = SelectField(u'Category', choices = categories, validators = [Required()])
     price = DecimalField(_l('List Price'), validators=[DataRequired(), NumberRange(min=0, message="Price must be nonnegative")])
     submit = SubmitField(_l('List Item'))
+
+class CouponForm(FlaskForm):
+    percentOff = DecimalField(_l('Percent Off'), validators=[DataRequired(), NumberRange(min=1, max=100, message="Percent Off must be from 1-100")])
+    couponCode = StringField(_l('Coupon Code'), validators=[DataRequired(), Length(max=10)])
+    start = DateField('Start Date', format='%m/%d/%Y')
+    end = DateField('End Date', format='%m/%d/%Y')
+    submit = SubmitField(_l('Create Coupon'))
 
 
 
@@ -160,3 +168,16 @@ def changePrice(id, price):
     return redirect(url_for('inventory.inventory'))
 
 
+@bp.route('/addCoupon/<int:id>', methods=['GET', 'POST'])
+def addCoupon(id):
+    form = CouponForm()
+    if form.validate_on_submit():
+        print(type(form.start.data))
+        print(form.end.data)
+        Coupon.new_coupon(form.couponCode.data,
+                             form.percentOff.data,
+                             form.start.data,
+                             form.end.data,
+                             id)
+        return redirect(url_for('inventory.inventory'))
+    return render_template('create_coupon.html', form = form, id = id)

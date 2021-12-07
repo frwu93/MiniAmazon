@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Edit Info</h1>
+
+<form action="" method="post" novalidate>
+  {{ form.hidden_tag() }}
+  <p>
+    {{ form.productName.label }}<br/>
+    {{ form.productName(size=32, value = curr_name) }}<br/>
+    {% for error in form.productName.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.description.label }}<br/>
+    {{ form.description(size=128,  value = curr_description) }}<br/>
+    {% for error in form.description.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.imageLink.label }}<br/>
+    {{ form.imageLink(size=32, value = curr_imageLink) }}<br/>
+    {% for error in form.imageLink.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.category.label }}<br/>
+    {{ form.category }}<br/>
+    {% for error in form.imageLink.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  {{ form.submit(class_="btn btn-black") }}
+</form>
+
+{% endblock %}
