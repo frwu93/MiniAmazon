@@ -3,6 +3,14 @@ from flask import current_app as app
 
 class Balance_History:
     def __init__(self, amount, time_initiated, balance_type, balance):
+        """
+        All the information relevant for the balance_history page
+        Args:
+            amount (float): amount of transaction
+            time_initiated (timestamp): the time when transaction was made
+            balance_type (String): type of the transaction
+            balance (float): the running balance after transaction
+        """
         self.date = time_initiated
         if balance_type == "D" or balance_type == "W":
             if amount < 0:
@@ -21,6 +29,14 @@ class Balance_History:
 
     @staticmethod
     def get_balance_history_by_uid(id):
+        """
+        Gets the information for the balance history for the user with given id
+        Args:
+            id (integer): id of the user
+
+        Returns:
+            Balance_History: Balance history object with all relevant information
+        """
         rows = app.db.execute("""
             SELECT amount, time_initiated, balance_type, cur_balance
             FROM Balance_History
