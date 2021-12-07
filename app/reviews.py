@@ -40,6 +40,15 @@ class DeleteForm(FlaskForm):
 
 @bp.route('/product/reviews/<int:id>', methods = ["GET", "POST"])
 def review_page(id):
+    """[summary]
+    Renders a product review page for the given product. Only allows a viewer to submit review if they have purchased the product. Allows users to view all product reviews 
+    for given product, sorted based on rating reviews, and also allows users to delete/update current reviews. 
+    Args:
+        id ([type]): [int]
+
+    Returns:
+        [type]: [new template]
+    """
     form = UpdateForm()
     form2=DeleteForm()
     getAvg=Review.get_avg(id)
@@ -54,39 +63,17 @@ def review_page(id):
     current_user_review = Review.current_user_review(current_user.id ,id)
     if form.submit.data and form.validate_on_submit():
         Review.update_Review(current_user.id, id, form.rating.data, datetime.datetime.now() , form.description.data)
-        return redirect(url_for('review.review_page', id=id))
+        return render_template('reviews.html', title='Review', numReview = numReview, getAvg = getAvg, product= product, reviews=reviews, current_user_review=current_user_review, form = form,
+        form2 =form2)
 
     if form2.submit1.data and form2.validate_on_submit():
         Review.delete_Review(current_user.id, id)
-        return redirect(url_for('review.review_page', id=id))
-
+        return render_template('reviews.html', title='Review', numReview = numReview, getAvg = getAvg, product= product, reviews=reviews, current_user_review=current_user_review, form = form,
+        form2 =form2)
         
     return render_template('reviews.html', title='Review', numReview = numReview, getAvg = getAvg, product= product, reviews=reviews, 
     current_user_review=current_user_review, form = form, form2=form2)
 
 ### TAKING CARE OF SELLER BELOWS FROM HERE BELOW
-@bp.route('/reviews/<int:id>')
-def seller_reviews(id):
-    form = UpdateForm()
-    form2=DeleteForm()
-    current_user_review=Review.current_Seller_Review(current_user.id, id)
-    reviews=Review.get_Seller_Reviews(id)
-    if current_user.is_authenticated:
-        if (User.isSeller(current_user.id)):
-            current_user.isSeller = True
-        else:
-            current_user.isSeller = False
-    #NEED TO UPDATE REVIEW FUNCTION SO IT DOES UPDATE
-    #also need a place to INSERT Seller Reviews
-    if form.submit.data and form.validate_on_submit():
-        #Review.update_Review(current_user.id, id, form.rating.data, datetime.datetime.now() , form.description.data)
-        return render_template('sellerReviews.html', title='Seller Review', reviews=reviews, current_user_review=current_user_review, form = form,
-        form2 =form2)
+### Function below no longer in use
 
-    if form2.submit1.data and form2.validate_on_submit():
-        #Review.delete_Review(current_user.id, id)
-        return render_template('sellerReviews.html', title='Seller Review', reviews=reviews, current_user_review=current_user_review, form = form,
-        form2 =form2)
-
-    return render_template('sellerReviews.html', title='Seller Review', reviews=reviews, current_user_review=current_user_review, form = form,
-        form2 =form2)

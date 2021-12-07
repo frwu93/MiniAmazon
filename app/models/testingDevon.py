@@ -20,6 +20,15 @@ from flask import Blueprint
 ##I am going to try and implement all of my stuff below here
 class Review:
    def __init__(self, buyer_id, product_id, rating, time_reviewed, description):
+       """[summary]
+Initalizes a Product Review Object
+       Args:
+           buyer_id (int): unique buyer id
+           product_id (int): unique product id
+           rating (int): product review rating
+           time_reviewed (datetime): date at time of rating
+           description (char[]): review description
+       """
        self.buyer_id = buyer_id
        self.product_id = product_id
        self.rating = rating
@@ -28,6 +37,12 @@ class Review:
  
    @staticmethod
    def get(buyer_id, product_id):
+       """[summary]
+    Returns all product ratings with these buyer_id and product_id
+       Args:
+           buyer_id (int): unique buyer id 
+           product_id (int): unique product id 
+       """
        rows = app.db.execute('''
 SELECT *
 FROM Product_Rating
@@ -43,10 +58,10 @@ WHERE buyer_id = :buyer_id AND product_id = :product_id
    @staticmethod
    def submitReview(buyer_id, product_id, rating, time_reviewed, description):
        try:
-           rows = app.db.execute("""
+           rows = app.db.execute('''
                INSERT INTO Product_Rating(buyer_id,product_id, rating, time_reviewed, description)
                VALUES(:buyer_id, :product_id, :rating, :time_reviewed, :description)
-               """,
+               ''',
                                  buyer_id=buyer_id,
                                  product_id=product_id,
                                  rating=int(rating),
@@ -65,8 +80,18 @@ WHERE buyer_id = :buyer_id AND product_id = :product_id
 
    @staticmethod
    def submitSellerReview(seller_id, buyer_id, rating, description, time_reviewed):
-       print(description)
-       try:
+
+       #print(description)
+        """[summary]
+        Submits a seller review for these given paramaters
+       Args:
+           seller_id (int): unique seller review
+           buyer_id (int): unique buyer review
+           rating (char[]): rating for review
+           description (char[]): review description
+           time_reviewed (datetime): current time
+       """
+        try:
            rows = app.db.execute("""
                INSERT INTO Seller_Rating(seller_id,buyer_id, rating, description, time_reviewed)
                VALUES(:seller_id, :buyer_id, :rating, :description, :time_reviewed)
@@ -80,7 +105,7 @@ WHERE buyer_id = :buyer_id AND product_id = :product_id
            print("backend reg; inserted into db")
            #print("Inserted: ", id)
            return None
-       except Exception as e:
+        except Exception as e:
            print(e)
            # likely user already reviewed this
            # reporting needed
@@ -90,6 +115,11 @@ WHERE buyer_id = :buyer_id AND product_id = :product_id
  
    @staticmethod
    def get_all(available=True):
+       """[summary]
+Finds all avaiable products, ordered by ID
+       Args:
+           available (bool, optional): Is the procut available. Defaults to True.
+       """
        rows = app.db.execute('''
 SELECT *
 FROM Product_Rating
@@ -102,6 +132,11 @@ ORDER BY id
  
    @staticmethod
    def get_avg(product_id):
+       """[summary]
+Finds the average product review for a given product
+       Args:
+           product_id (int):  unique product id
+       """
        rows = app.db.execute('''
 SELECT AVG(rating)
 FROM Product_Rating
@@ -116,6 +151,11 @@ WHERE product_id = :product_id
 
    @staticmethod
    def get_avgSeller(seller_id):
+       """[summary]
+Finds the average seller review for a given seller 
+       Args:
+           seller_id (int): unique seller id
+       """
        rows = app.db.execute('''
 SELECT AVG(rating)
 FROM Seller_Rating
@@ -129,6 +169,11 @@ WHERE seller_id = :seller_id
 
    @staticmethod
    def get_Number(product_id):
+       """[summary]
+Finds the number of reviews a specific product has
+       Args:
+           product_id (int): unique product id
+       """
        rows = app.db.execute('''
 SELECT COUNT(rating)
 FROM Product_Rating
@@ -139,6 +184,11 @@ WHERE product_id = :product_id
 
    @staticmethod
    def get_NumberSeller(seller_id):
+       """[summary]
+Finds the number of reviews a specific seller has
+       Args:
+           seller_id (int): unique seller id
+       """
        rows = app.db.execute('''
 SELECT COUNT(rating)
 FROM Seller_Rating
@@ -153,6 +203,11 @@ WHERE seller_id = :seller_id
     
    @staticmethod
    def get_Reviews(product_id):
+       """[summary]
+Finds all reviews for a given product and returns them in descending rating order
+       Args:
+           product_id (int): unique product id
+       """
        rows = app.db.execute('''
 SELECT *
 FROM Product_Rating
@@ -164,6 +219,11 @@ ORDER BY rating DESC
 
    @staticmethod
    def get_UserReviews(buyer_id):
+       """[summary]
+Finds all product reviews a certain buyer has left
+       Args:
+           buyer_id (int): unique buyer id
+       """
        rows = app.db.execute('''
 SELECT *
 FROM Product_Rating
@@ -179,6 +239,12 @@ ORDER BY time_reviewed DESC
 
    @staticmethod
    def current_user_review(buyer_id, product_id):
+       """[summary]
+Finds the current users review for a specific product
+       Args:
+           buyer_id (int): unique buyer id
+           product_id (int): unique product id
+       """
        rows = app.db.execute('''
 SELECT *
 FROM Product_Rating
@@ -199,6 +265,19 @@ WHERE product_id = :product_id AND buyer_id=:buyer_id
 
    @staticmethod
    def update_Review( buyer_id, product_id, rating, time_reviewed, description):
+       """[summary]
+Updates product review with the given parameters
+       Args:
+           buyer_id (int): unique buyer id
+           product_id (int): unique product id
+           rating (char): review to be updated
+           time_reviewed (datetime): current time
+           description (char[]): new review description
+
+       Returns:
+           [type]: [description]
+       """
+       
        try:
            app.db.execute('''
            UPDATE Product_Rating 
@@ -211,6 +290,18 @@ WHERE product_id = :product_id AND buyer_id=:buyer_id
            return None
    @staticmethod
    def update_SellerReview(seller_id, buyer_id, rating, description, time_reviewed):
+       """[summary]
+Updates seller rating with the inputed paramters
+       Args:
+           seller_id (int): unique seller id
+           buyer_id (int): unique buyer id
+           rating (char): review to be updated
+           description (char[]): current time
+           time_reviewed (datetime): new review description
+
+       Returns:
+           None: 
+       """
        try:
            app.db.execute('''
            UPDATE Seller_Rating 
@@ -225,6 +316,15 @@ WHERE product_id = :product_id AND buyer_id=:buyer_id
 
    @staticmethod
    def delete_Review(buyer_id, product_id):
+       """[summary]
+Deletes the product review for the given buyer and product
+       Args:
+           buyer_id (int): unique buyer id
+           product_id (int): unique product id
+
+       Returns:
+           None: 
+       """
        try:
            app.db.execute('''
            DELETE FROM Product_Rating 
@@ -237,6 +337,15 @@ WHERE product_id = :product_id AND buyer_id=:buyer_id
 
    @staticmethod
    def delete_SellerReview(seller_id, buyer_id):
+       """[summary]
+Deletes the seller review for the given seller and buyer
+       Args:
+           seller_id (int): unique seller id
+           buyer_id (int): unique buyer id
+
+       Returns:
+           None: 
+       """
        try:
            app.db.execute('''
            DELETE FROM Seller_Rating 
@@ -251,6 +360,11 @@ WHERE product_id = :product_id AND buyer_id=:buyer_id
    
    @staticmethod
    def get_Seller_Reviews(seller_id):
+       """[summary]
+Finds and returns the first review with this seller id
+       Args:
+           seller_id (int): unique seller id
+       """
        rows = app.db.execute('''
 SELECT *
 FROM Seller_Rating
@@ -264,6 +378,11 @@ WHERE seller_id = :seller_id
 
    @staticmethod
    def get_SellerReviews(seller_id):
+       """[summary]
+        Gets all reviews for this given seller
+       Args:
+           seller_id (int): unique seller id
+       """
        rows = app.db.execute('''
 SELECT *
 FROM Seller_Rating
@@ -276,6 +395,12 @@ ORDER BY time_reviewed DESC
 
    @staticmethod
    def current_Seller_Review(buyer_id, seller_id):
+       """[summary]
+Finds this buyers review for the seller
+       Args:
+           buyer_id (int): unique buyer id
+           seller_id (int): unique seller id
+       """
        rows = app.db.execute('''
 SELECT *
 FROM Seller_Rating
@@ -285,6 +410,26 @@ WHERE seller_id = :seller_id AND buyer_id=:buyer_id
        if rows is not None and len(rows)>=1:
            #print("hello", rows)
            return rows[0]
+       return None
+
+
+   @staticmethod
+   def get_buyer_review_for_sellers(buyer_id):
+       """[summary]
+        Find all reviews this buyer has left for any seller 
+       Args:
+           buyer_id (int): unique buyer id
+       """
+       rows = app.db.execute('''
+SELECT *
+FROM Seller_Rating
+WHERE buyer_id=:buyer_id
+ORDER BY time_reviewed DESC
+''', buyer_id=buyer_id
+                             )
+       if rows is not None and len(rows)>=1:
+           #print("hello", rows)
+           return [row for row in rows]
        return None
 
        
