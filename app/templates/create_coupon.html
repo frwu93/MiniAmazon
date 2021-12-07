@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>jQuery UI Datepicker - Default functionality</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+    <script>
+    $( function() {
+      $( "#datepicker" ).datepicker({'disableTextInput':true});
+    } );
+    </script>
+    <script>
+        $( function() {
+            $( "#datepicker2" ).datepicker({'disableTextInput':true});
+        } );
+    </script>
+  </head>
+<h1>Create Coupon for Product {{id}}</h1>
+
+<form action="" method="post" novalidate>
+  {{ form.hidden_tag() }}
+  <p>
+    {{ form.couponCode.label }}<br/>
+    {{ form.couponCode}}<br/>
+    {% for error in form.couponCode.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.percentOff.label }}<br/>
+    {{ form.percentOff}}<br/>
+    {% for error in form.percentOff.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.start.label }}<br/>
+    {{ form.start(id='datepicker2') }}<br/>
+    {% for error in form.start.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.end.label }}<br/>
+    {{ form.end(id='datepicker') }}<br/>
+    {% for error in form.end.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  {{ form.submit(class_="btn btn-black") }}
+</form>
+
+{% endblock %}
