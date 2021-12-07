@@ -11,7 +11,6 @@ from .models.testingDevon import Review
 from .models.fulfill import Fulfill
 from flask import current_app as app
 
-
 from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange, Required
 from flask_wtf import FlaskForm
@@ -45,7 +44,6 @@ def index():
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid_since(
             current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
-
     else:
         purchases = None
     # render the page by adding information to the index.html file
@@ -53,7 +51,6 @@ def index():
                            purchase_history=purchases,
                            avail_products = BestSellingProducts,
                            top_rated = TopRatedProducts)
-
 
 @bp.route('/product/<int:id>', methods = ["GET", "POST"])
 def product(id):
@@ -142,7 +139,6 @@ group by products.id ORDER BY avg DESC NULLS LAST
 ''',
                               available=available)
     
-
     myjson={}
     myjson["data"] = []
     for product in products:

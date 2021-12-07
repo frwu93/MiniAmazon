@@ -123,3 +123,21 @@
     text-decoration: none;
     color: #ffffff;
   }
+
+  .view-all-btn{
+    display: inline-block;
+    background-color: #8a8e94;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #ffffff;
+    padding: 12px 30px;
+    transition: all .5s;
+    text-align: center;
+    border: 1px black;
+    margin-bottom: 15px;
+  }
+  .view-all-btn:hover {
+    background-color: #000000;
+    text-decoration: none;
+    color: #ffffff;
+  }
