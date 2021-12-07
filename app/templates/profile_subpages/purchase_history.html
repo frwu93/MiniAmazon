@@ -51,6 +51,7 @@
                                     <th scope="col">Total Cost</th> 
                                     <th scope="col">Fullfillment Status</th>
                                     <th scope="col">Order Link</th> 
+                                    <th scope="col">Seller Link</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,6 +65,7 @@
                                     <td>${{item.order_cost}}</td>
                                     <td>{{item.fulfillment_status}}</td>
                                     <td><a href = "{{ url_for('users.order_confirmation', order_id = item.order_id) }}">Order Link</a></td>
+                                    <td><a href="{{ url_for('users.publicUser', id=item.seller_id) }}">{{item.seller_id}}</a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

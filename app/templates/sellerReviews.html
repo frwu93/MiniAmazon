@@ -1,21 +1,6 @@
 {% extends "base.html" %}
-
 {% block content %}
  
-
-   <div id="reviews" class="row">
-       <div class="col">
-           <ul class="review-list">
-               <li class="review-list-item"><strong>Product Name: </strong>{{ product.name}}</li>
-               <li class="review-list-item"><strong>Number of Reviews: </strong>{{numReview}}</li>
-               <li class="review-list-item"><strong>Average Rating: </strong>{{getAvg}}</li>
-           </ul>
-       </div>
-
-   </div>
-
-
-
 
 <div id="reviews" class="row mt-2">
     <div class="col-12">
@@ -28,7 +13,7 @@
                 <p>{{ review.description}}</p>
                 <footer class="blockquote-footer">
                     <small class="text-muted">
-                        <cite title="User">Buyer # {{ review.buyer_id }}</cite> rated it {{ review.rating }} <cite> stars </cite>
+                        <cite title="User">Buyer # {{ review.buyer_id }}</cite> gave this seller {{ review.rating }} <cite> stars </cite>
                     </small>
                 </footer>
             </blockquote>
@@ -51,7 +36,7 @@
                 </footer>
                 <form action="" method="post" novalidate>
                     {{ form2.hidden_tag() }}
-                    {{ form2.submit1(class_="btn btn-black") }}
+                    {{ form2.submit(class_="btn btn-black") }}
                 </form>
             </blockquote>
         </div>

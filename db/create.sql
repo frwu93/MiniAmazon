@@ -60,7 +60,7 @@ CREATE TABLE Product_Rating (
     rating INT NOT NULL,
     CHECK(rating in (0, 1, 2, 3, 4, 5)),
     time_reviewed timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
-    description VARCHAR(255), 
+    description VARCHAR(2555), 
     PRIMARY KEY (buyer_id, product_id)
 );
 

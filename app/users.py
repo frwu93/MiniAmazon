@@ -17,11 +17,14 @@ from .models.coupon import Coupon
 
 import datetime
 from .carts import calculate_payment
+from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField, SelectField
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
 
 
 from flask import Blueprint
 bp = Blueprint('users', __name__)
 
+ratingChoices=[(1,1), (2,2), (3,3), (4,4), (5,5)]
 
 class LoginForm(FlaskForm):
     email = StringField(_l('Email'), validators=[DataRequired(), Email()])
@@ -145,17 +148,73 @@ def purchaseHistory():
 def reviews():
     user = User.get(current_user.id)
     reviews =  Review.get_UserReviews(current_user.id)
-    return render_template('profile_subpages/reviews.html', title='Reviews', user=user, reviews=reviews)
+    sellerReviews=Review.get_SellerReviews(current_user.id)
+    return render_template('profile_subpages/reviews.html', title='Reviews', user=user, reviews=reviews, sellerReviews=sellerReviews)
 
 @bp.route('/settings', methods=['GET', 'POST'])
 def settings():
     user = User.get(current_user.id)
     return render_template('profile_subpages/settings.html', title='Settings', user=user)
 
+### ADDING THE REVIEW FORMS TO THE PAGE---NEED to create the forms first
+class UpdateForms(FlaskForm):
+    rating1 = SelectField(_l('Product Rating'), validators = [DataRequired()], choices=ratingChoices)    
+    submit1 = SubmitField(_l('Submit Review'))
+    description1= StringField(_l('Description'), validators=[DataRequired()])
+
+class DeleteForms(FlaskForm):
+    submit2 = SubmitField(_l('Delete Review'))
+
+class LeaveForms(FlaskForm):
+    rating3 = SelectField(_l('Product Rating'), validators = [DataRequired()], choices=ratingChoices)    
+    submit3 = SubmitField(_l('Submit Review'))
+    description3= StringField(_l('Description'), validators=[DataRequired()])
+
+
 @bp.route('/user/<int:id>', methods=['GET', 'POST'])
 def publicUser(id):
+    form = UpdateForms()
+    form2=DeleteForms()
+    form3=LeaveForms()
+    current_user_review=Review.current_Seller_Review(current_user.id, id)
+    reviews=Review.get_Seller_Reviews(id)
     user = User.get(id)
-    return render_template('public_user.html', title='Public User', user=user)
+    getAvg=Review.get_avgSeller(id)
+    numReview=Review.get_NumberSeller(id)
+    myself = True
+    if (current_user.id==id):
+        myself=False
+
+    ##boolean for whether or not you have bought an item from the seller 
+    lst = Purchase_History.get_all_Sellers(current_user.id)
+    print(lst)
+    print("yo")
+    myBool = False
+    if id in lst:
+        myBool=True
+
+    if form.submit1.data and form.validate_on_submit:
+        print(id, current_user.id, form.rating1.data, datetime.datetime.now())
+        Review.update_SellerReview(id, current_user.id, form.rating1.data, form.description1.data, datetime.datetime.now())
+        return render_template('public_user.html', title='Public User', user=user, form = form, 
+        form2 = form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview , form3=form3, myself=myself, myBool=myBool)
+
+    if form3.submit3.data and form3.validate_on_submit:
+        print("3")
+        print((id, current_user.id, form3.rating3.data, datetime.datetime.now()))
+        Review.submitSellerReview(id, current_user.id, form3.rating3.data, form3.description3.data, datetime.datetime.now())
+        return render_template('public_user.html', title='Public User', user=user, form = form, 
+        form2 =form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview , form3=form3, myself=myself, myBool=myBool)
+
+    if form2.submit2.data and form2.validate_on_submit():
+        print("2")
+        Review.delete_SellerReview(id, current_user.id)
+        return render_template('public_user.html', title='Public User', user=user, form = form, 
+        form2 =form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview , form3=form3, myself=myself, myBool=myBool)
+
+    print("4")
+    return render_template('public_user.html', title='Public User', user=user, form = form, 
+    form2 =form2, current_user_review = current_user_review, reviews= reviews, getAvg= getAvg,numReview=numReview, form3=form3 , myself=myself, myBool=myBool)
 
 @bp.route('/user/<int:id>/products', methods=['GET', 'POST'])
 def publicUserProducts(id):
@@ -177,3 +236,5 @@ def logout():
     logout_user()
     return redirect(url_for('index.index'))
 
+#<a href="{{ url_for('users.publicUser, id=selllerreview.seller_id) }}">View My Seller Page</a>
+# <cite title="User"> </cite> You were rated {{ sellerreview.rating }} <cite> stars on  {{ sellerreview.time_reviewed }}</cite>

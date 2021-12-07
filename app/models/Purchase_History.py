@@ -13,6 +13,7 @@ class Purchase_History:
         self.fulfillment_status = fulfillment_status
         self.order_cost = '{:.2f}'.format(price*quantity)
         self.order_link = "<Link>"
+        self.seller_id = seller_id
 
     @staticmethod
     def get_purchase_history_by_uid(id):

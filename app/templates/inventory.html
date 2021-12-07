@@ -176,57 +176,59 @@
 <br><br>
 {% if current_user.is_authenticated %}
 <h2>Your recent sales:</h2>
-<table class='table table-hover table-bordered container' id = 'myTable2'>
-  <thead class="thead-dark">
-    <script type="text/javascript">  
-      function selects(){  
-          var masterCheck = document.getElementById("masterCheck");
-          masterCheck.checked = !masterCheck.checked; 
-          var ele=document.getElementsByTagName('input');  
-          for(var i=0; i<ele.length; i++){  
-              if(ele[i].type=='checkbox')  
-                  ele[i].checked = !ele[i].checked;  
-          }  
-      } 
-                          
-  </script>  
-    <tr>
-      <th scope="col"><input type="checkbox"  onclick='selects()' value="Select All" id="masterCheck"/> </th>
-      <th scope="col">Purchase ID</th>
-      <th scope="col">Buyer Address</th>
-      <th scope="col">Product ID</th>
-      <th scope="col">Quantity</th>
-      <th scope="col">Time Ordered</th>
-      <th scope="col">Fulfillment Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <form>
-      <input type="submit" value="Fulfill" style="float: left">
-      <br><br>
-      {% for fulfill in order_fulfill%}
-        <tr>
-          <td>
-            <input type="checkbox" name="fulfill-{{fulfill.id}}-{{fulfill.product_id}}"
-            value="fulfill" {% if fulfill.fulfilled == "Fulfilled" %} disabled {% else %}{% endif %}>
-          </td>
-          <th scope="row">{{fulfill.id}}</th>
-          <td>{{fulfill.buyer_address}}</td>
-          <td>{{fulfill.product_id}}</td>
-          <td>{{fulfill.quantity}}</td>
-          <td>{{fulfill.time_ordered}}</td>
-          <td>{{fulfill.fulfilled}} </td>
+<form>
+  <table class='table table-hover table-bordered container' id="myTable2">
+    <thead class="thead-dark">
+      <script type="text/javascript">  
+        function selects(){  
+            var masterCheck = document.getElementById("masterCheck");
+            masterCheck.checked = !masterCheck.checked; 
+            var ele=document.getElementsByTagName('input');  
+            for(var i=0; i<ele.length; i++){  
+                if(ele[i].type=='checkbox')  
+                    ele[i].checked = !ele[i].checked;  
+            }  
+        } 
+                            
+    </script>  
+      <tr>
+        <th scope="col"><input type="checkbox"  onclick='selects()' value="Select All" id="masterCheck"/> </th>
+        <th scope="col">Purchase ID</th>
+        <th scope="col">Buyer Address</th>
+        <th scope="col">Product ID</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Time Ordered</th>
+        <th scope="col">Fulfillment Status</th>
+      </tr>
+    </thead>
+    <tbody>
+        <input type="submit" value="Fulfill" style="float: left">
+        <br><br>
+        {% for fulfill in order_fulfill%}
+          <tr>
+            <td>
+              <input type="checkbox" name="fulfill-{{fulfill.id}}-{{fulfill.product_id}}"
+              value="fulfill" {% if fulfill.fulfilled == "Fulfilled" %} disabled {% else %}{% endif %}>
+            </td>
+            <th scope="row">{{fulfill.id}}</th>
+            <td>{{fulfill.buyer_address}}</td>
+            <td>{{fulfill.product_id}}</td>
+            <td>{{fulfill.quantity}}</td>
+            <td>{{fulfill.time_ordered}}</td>
+            <td>{{fulfill.fulfilled}} </td>
 
-        </tr>
-      {% endfor %}
-    </form>
-  </tbody>
-</table>
+          </tr>
+        {% endfor %}
+      </form>
+    </tbody>
+  </table>
+</form>
 <script>
   $(document).ready(function () {
       $('#myTable2').DataTable();
   });
 </script>
+
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
 {% endif %}
