@@ -94,7 +94,7 @@
                             <tbody>
                                 {% for item in purchase_history%}
                                 <tr>
-                                    <th scope="row">{{item.order_id}}</th>
+                                    <th scope="row" data-order="{{item.time_ordered}}">{{item.order_id}}</th>
                                     <td>{{item.time_ordered}}</td>
                                     <td>{{item.product_name}}</td>
                                     <td>${{item.price}}</td>
@@ -119,7 +119,9 @@
   
 <script>
     $(document).ready(function () {
-        $('#table1').DataTable();
+        $('#table1').DataTable({
+        "order": [[ 1, "desc" ]]
+    });
     });
 </script>
 </html>
