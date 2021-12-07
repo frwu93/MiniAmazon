@@ -76,56 +76,57 @@ def product(id):
             current_user.isSeller = True
         else:
             current_user.isSeller = False
+    
+        form = ReviewForm()
+        product = Product.get(id)
 
-    form = ReviewForm()
-    product = Product.get(id)
+        #Should only show when form is submitted to checkout some quantity
+        quantity = request.args.get('quantity')
+        review = Review.get_avg(id)
+        myBool=False
+        lst=Purchase_History.get_product_names(current_user.id)
 
-    #Should only show when form is submitted to checkout some quantity
-    quantity = request.args.get('quantity')
-    review = Review.get_avg(id)
-    myBool=False
-    lst=Purchase_History.get_product_names(current_user.id)
+        #Verifies that you have bought this product so you can leave a review
+        if product.name in lst:
+            myBool=True
+        print(myBool)
+        myreview = Review.get(current_user.id, id)
+        if review==None:
+            review=0
 
-    #Verifies that you have bought this product so you can leave a review
-    if product.name in lst:
-        myBool=True
-    print(myBool)
-    myreview = Review.get(current_user.id, id)
-    if review==None:
-        review=0
+        #If you fill out review form, refresh and added review to database
+        if form.validate_on_submit():
+            datetime.time
+            Review.submitReview(current_user.id, id, form.rating.data, datetime.datetime.now() , form.description.data)     
+            return redirect(url_for('index.product', id=id))
 
-    #If you fill out review form, refresh and added review to database
-    if form.validate_on_submit():
-        datetime.time
-        Review.submitReview(current_user.id, id, form.rating.data, datetime.datetime.now() , form.description.data)     
-        return redirect(url_for('index.product', id=id))
 
+        else:
+            #If you attempt to check out
+            if quantity:
+                if int(quantity) > Product.get(id).quantity: 
+                    flash('This item is out of stock! Please wait until the seller restocks before purchasing.')
+                    return render_template('product.html', form = form,
+                        product=product, myreview = myreview)
+                success = Cart.add_to_cart(current_user.id, id, quantity)
+                if success:
+                    return redirect(url_for('index.added_to_cart', id=id))
+                else:
+                    flash('Could not add to cart. Check to see if you already have this item in your cart.')
+                    return render_template('product.html', form = form,
+                        product=product, myreview = myreview)
+
+            # else
+            if product:
+                return render_template('product.html',
+                                product=product, review = review, form = form, myreview = myreview, myBool=myBool)
+            else:
+                return render_template('index.html',
+                                avail_products= products,
+                                purchase_history= purchases)
 
     else:
-        #If you attempt to check out
-        if quantity:
-            if int(quantity) > Product.get(id).quantity: 
-                flash('This item is out of stock! Please wait until the seller restocks before purchasing.')
-                return render_template('product.html', form = form,
-                    product=product, myreview = myreview)
-            success = Cart.add_to_cart(current_user.id, id, quantity)
-            if success:
-                return redirect(url_for('index.added_to_cart', id=id))
-            else:
-                flash('Could not add to cart. Check to see if you already have this item in your cart.')
-                return render_template('product.html', form = form,
-                    product=product, myreview = myreview)
-
-        # else
-        if product:
-            return render_template('product.html',
-                            product=product, review = review, form = form, myreview = myreview, myBool=myBool)
-        else:
-            return render_template('index.html',
-                            avail_products= products,
-                            purchase_history= purchases)
-
-
+        return redirect(url_for('index.index'))
 #Added product to cart confirmation
 @bp.route('/product/addedToCart/<int:id>')
 def added_to_cart(id):
