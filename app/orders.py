@@ -21,14 +21,22 @@ bp = Blueprint('orders', __name__)
 @bp.route('/checkout/', methods=['GET'])
 @bp.route('/checkout/<coupon>', methods=['GET'])
 def checkout(coupon = None):
+    """
+    Triggered when a user decides to place their order. Redirects to the
+    checkout page.
+
+    Args:
+        coupon (str, optional): Coupon code, if applicable. Defaults to None.
+
+    Returns:
+        Redirect to checkout page
+    """
     if current_user.is_authenticated:
         if (User.isSeller(current_user.id)):
             current_user.isSeller = True
         else:
             current_user.isSeller = False
-    print("CHECKOUT")
-    print(coupon)
-    if current_user.is_authenticated:
+            
         cart_items = Cart.get_cart_products_by_uid(current_user.id) 
         if len(cart_items) == 0:
             flash(f'Your cart is empty! Please add items before checking out.')
@@ -38,8 +46,6 @@ def checkout(coupon = None):
         if coupon is not None:
             coupon = Coupon.find_coupon(coupon)
             code = coupon.code
-            print("COUPON IS ")
-            print(coupon)
         payment = calculate_payment(cart_items, coupon)
     else:
         cart_items = None
@@ -49,19 +55,29 @@ def checkout(coupon = None):
 @bp.route('/checkout/verify/')
 @bp.route('/checkout/verify/<coupon>')
 def verify_transaction(coupon = None):
+    """
+    Triggered when user proceeds with the transaction from the checkout page.
+    Verifies that the transaction is valid, checking for sufficient funds,
+    sufficient inventory, etc. 
+
+    Args:
+        coupon (str, optional): Coupon code, if applicable. Defaults to None.
+
+    Returns:
+        Redirect to order confirmation page if valid. Otherwise, redirects to the checkout
+        page
+    """
     if current_user.is_authenticated:
         if (User.isSeller(current_user.id)):
             current_user.isSeller = True
         else:
             current_user.isSeller = False
-    print('verifying transaction')
-    if current_user.is_authenticated:
+            
         cart_items = Cart.get_cart_products_by_uid(current_user.id)
         code = None
         if coupon is not None:
             coupon = Coupon.find_coupon(coupon)
             code = coupon.code
-            print(coupon.code)
         payment = calculate_payment(cart_items, coupon)
         if len(cart_items) == 0:
             return redirect(url_for('orders.checkout'))
@@ -86,10 +102,20 @@ def verify_transaction(coupon = None):
 @bp.route('/checkout/success', methods=['GET'])
 @bp.route('/checkout/success/<coupon>', methods=['GET'])
 def checkout_success(coupon = None):
-    ##Must verify that a) enough supply b) enough monie
+    """
+    Upon a successful transaction verification, this method
+    calculates the payment info, adds the order into the database,
+    and updates buyer and seller balances accordingly, as well
+    as the inventory
+
+    Args:
+        coupon (str, optional): Coupon code, if applicable. Defaults to None.
+
+    Returns:
+        Returns order confirmation page.
+    """
     cart_items = Cart.get_cart_products_by_uid(current_user.id)
-    print("NOTICE ME")
-    print(coupon)
+
     if current_user.is_authenticated:
         if (User.isSeller(current_user.id)):
             current_user.isSeller = True
@@ -97,7 +123,6 @@ def checkout_success(coupon = None):
             current_user.isSeller = False
     coupon = Coupon.find_coupon(coupon)
     payment = calculate_payment(cart_items, coupon)
-    print(payment['total'])
     order_id = Order.add_order(current_user.id, payment["total"], coupon)
     Order.add_to_history(order_id, cart_items)
     User.updateBalanceWithdrawal(current_user.id, payment["total"])
@@ -112,21 +137,25 @@ def checkout_success(coupon = None):
 
 @bp.route('/checkout/apply-coupon', methods=['GET', 'POST'])
 def apply_coupon():
-    print("IM HERE")
+    """
+    Allows user to apply a coupon during checkout process. Checks
+    that a coupon is valid for a product in the user's cart (if the 
+    coupon is item-specific), and checks that the coupon is within the valid date range
+
+    Returns:
+        Redirects to the checkout page with updated discounts, if applicable
+    """
     code = request.form['coupon'].upper()
     coupon = Coupon.find_coupon(code)
     if coupon is None:
         flash(f'The coupon code {code} is not valid!')
-        print("KYS")
         return redirect(url_for('orders.checkout'))
     if Coupon.is_expired(code):
         flash(f'The coupon code {code} is not currently active!')
-        print("WTF")
         return redirect(url_for('orders.checkout'))
     if coupon.product_id is not None:
         if not Cart.contains_item(current_user.id, coupon.product_id):
             flash(f'This coupon {code} is not applicable to an item in your cart!')
-            print("QUE")
             return redirect(url_for('orders.checkout'))
     return redirect(url_for('orders.checkout', coupon = code))
 
