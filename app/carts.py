@@ -4,6 +4,7 @@ import datetime
 
 from .models.cart import Cart
 from .models.product import Product
+from .models.user import User
 from flask import render_template, redirect, url_for, flash, request
 
 
@@ -14,12 +15,11 @@ bp = Blueprint('carts', __name__)
 
 @bp.route('/cart', methods=['GET'])
 def cart():
-    """
-    Routes the website to the cart page if the user is authenticated
-    Returns:
-        Cart webpage
-    """
     if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
         cart_items = Cart.get_cart_products_by_uid(current_user.id) #TODO: make this goddamn fcn
         saved_items = Cart.get_saved_products_by_uid(current_user.id) #TODO: make this goddamn fcn
         payment = calculate_payment(cart_items)
@@ -45,6 +45,11 @@ def changeQuantity(buyer_id, product_id, quantity, page):
         Redirects back to either cart page or orders page, depending
         on which one the user was on
     """
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     Cart.change_quantity(buyer_id, product_id, quantity)
     if page == 1:
         return redirect(url_for('orders.checkout'))
@@ -61,6 +66,11 @@ def deleteItem(buyer_id, product_id):
     Returns:
         Redirects to cart page
     """
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     deleted = Cart.delete_item(buyer_id, product_id)
     return redirect(url_for('carts.cart'))
 
@@ -78,6 +88,11 @@ def moveSavedItemToCart(buyer_id, product_id):
     Returns:
         Redirects to cart page
     """
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     Cart.toggle_saved(buyer_id, product_id)
     return redirect(url_for('carts.cart'))
 
@@ -93,6 +108,11 @@ def addToCart(buyer_id, product_id):
     Returns:
         Redirect to cart page
     """
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     Cart.add_to_cart(buyer_id, product_id, quantity)
     return redirect(url_for('carts.cart'))
 
@@ -108,6 +128,11 @@ def addToSaved(buyer_id, product_id):
     Returns:
         Redirects to cart page
     """
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     Cart.add_to_saved(buyer_id, product_id)
     return redirect(url_for('carts.cart'))
 
@@ -124,10 +149,16 @@ def calculate_payment(cart_items, coupon = None):
         dict: dictionary with payment info stored
     """
     subtotal = get_subtotal(cart_items)
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
+    subtotal = get_subtotal(cart_items)
     saved = 0
     if coupon is not None:
         subtotal *= (1 - coupon.percent_off/100)
-        saved = Cart.get_subtotal(cart_items) - subtotal 
+        saved = get_subtotal(cart_items) - subtotal 
         print(saved)
     tax = 0.03*subtotal
     total = subtotal + tax

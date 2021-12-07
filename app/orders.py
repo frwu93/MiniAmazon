@@ -32,6 +32,11 @@ def checkout(coupon = None):
         Redirect to checkout page
     """
     if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
+            
         cart_items = Cart.get_cart_products_by_uid(current_user.id) 
         if len(cart_items) == 0:
             flash(f'Your cart is empty! Please add items before checking out.')
@@ -63,6 +68,11 @@ def verify_transaction(coupon = None):
         page
     """
     if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
+            
         cart_items = Cart.get_cart_products_by_uid(current_user.id)
         code = None
         if coupon is not None:
@@ -105,6 +115,12 @@ def checkout_success(coupon = None):
         Returns order confirmation page.
     """
     cart_items = Cart.get_cart_products_by_uid(current_user.id)
+
+    if current_user.is_authenticated:
+        if (User.isSeller(current_user.id)):
+            current_user.isSeller = True
+        else:
+            current_user.isSeller = False
     coupon = Coupon.find_coupon(coupon)
     payment = calculate_payment(cart_items, coupon)
     order_id = Order.add_order(current_user.id, payment["total"], coupon)

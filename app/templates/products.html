@@ -39,10 +39,10 @@
     <option value="5">5</option>
   </select>
   <br>
-  <label for="minPrice">min price:</label>
+  <label for="minPrice">Min. price:</label>
   <input type="float" id="minPrice" name="minPrice" min="0">
 
-  <label for="maxPrice">max price:</label>
+  <label for="maxPrice">Max. price:</label>
   <input type="float" id="maxPrice" name="maxPrice" min="minPrice">
 
   <br>
@@ -102,6 +102,16 @@
                     //return data +' ('+ row[0]+')';
                 },
                 "targets": 1
+            },
+            {
+                // The `data` parameter refers to the data for the cell (defined by the
+                // `data` option, which defaults to the column being worked with, in
+                // this case `data: 0`.
+                "render": function ( data, type, row ) {
+                  return '$' + data;
+                    //return data +' ('+ row[0]+')';
+                },
+                "targets": 2
             },
             {
                 // The `data` parameter refers to the data for the cell (defined by the
