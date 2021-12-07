@@ -11,7 +11,12 @@ from.models.testingDevon import Review
 from .models.Purchase_History import Purchase_History
 from .models.Balance_History import Balance_History
 from.models.Public_User_Products import Public_User_Products
+from .models.order import Order
+from .models.coupon import Coupon
+
+
 import datetime
+from .carts import calculate_payment
 from wtforms import StringField, IntegerField, BooleanField, SubmitField, DecimalField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
 
@@ -82,6 +87,7 @@ def profile():
     email = request.args.get('email')
     address = request.args.get('address')
     password = request.args.get('password')
+    profilepic = request.args.get('profilepic')
     if firstname:
         id = User.updateFirstName(current_user.id, firstname)
     if lastname:
@@ -92,6 +98,8 @@ def profile():
         id = User.updateAddress(current_user.id, address)
     if password:
         id = User.updatePassword(current_user.id, password)
+    if profilepic:
+        id = User.updateProfilePic(current_user.id, profilepic)
     
     user = User.get(current_user.id)
     return render_template('profile.html', title='Profile', user=user)
@@ -118,6 +126,7 @@ def register():
 def paymentHistory():
     deposit = request.args.get('deposit')
     withdraw = request.args.get('withdraw')
+    profilepic = request.args.get('profilepic')
     if deposit:
         id = User.updateBalanceDeposit(current_user.id, deposit)
         curBalance = User.get(current_user.id).balance
@@ -128,6 +137,8 @@ def paymentHistory():
         curBalance = User.get(current_user.id).balance
         User.add_withdrawal(current_user.id, withdraw, datetime.datetime.now(), curBalance)
         return redirect(url_for('users.paymentHistory'))
+    if profilepic:
+        id = User.updateProfilePic(current_user.id, profilepic)
     
     balance_history = Balance_History.get_balance_history_by_uid(current_user.id)
     user = User.get(current_user.id)
@@ -135,12 +146,18 @@ def paymentHistory():
 
 @bp.route('/purchaseHistory', methods=['GET', 'POST'])
 def purchaseHistory():
+    profilepic = request.args.get('profilepic')
+    if profilepic:
+        id = User.updateProfilePic(current_user.id, profilepic)
     purchase_history = Purchase_History.get_purchase_history_by_uid(current_user.id)
     user = User.get(current_user.id)
     return render_template('profile_subpages/purchase_history.html', title='Purchase', purchase_history=purchase_history, user=user)
 
 @bp.route('/reviews', methods=['GET', 'POST'])
 def reviews():
+    profilepic = request.args.get('profilepic')
+    if profilepic:
+        id = User.updateProfilePic(current_user.id, profilepic)
     user = User.get(current_user.id)
     reviews =  Review.get_UserReviews(current_user.id)
     sellerReviews=Review.get_SellerReviews(current_user.id)
@@ -148,8 +165,17 @@ def reviews():
 
 @bp.route('/settings', methods=['GET', 'POST'])
 def settings():
+    profilepic = request.args.get('profilepic')
+    if profilepic:
+        id = User.updateProfilePic(current_user.id, profilepic)
     user = User.get(current_user.id)
-    return render_template('profile_subpages/settings.html', title='Settings', user=user)
+    is_seller = User.isSeller(current_user.id)
+    return render_template('profile_subpages/settings.html', title='Settings', user=user, is_seller=is_seller)
+
+@bp.route('/settings/newSeller/<int:id>')
+def add_user_to_seller(id):
+    User.updateSellers(id)
+    return redirect(url_for('users.settings'))
 
 ### ADDING THE REVIEW FORMS TO THE PAGE---NEED to create the forms first
 class UpdateForms(FlaskForm):
@@ -216,6 +242,15 @@ def publicUserProducts(id):
     public_user_products = Public_User_Products.get_public_user_products_by_uid(id)
     user = User.get(id)
     return render_template('public_user_products.html', title='Public User Products', public_user_products=public_user_products, user=user)
+
+@bp.route('/user/order/<int:order_id>', methods=['GET', 'POST'])
+def order_confirmation(order_id):
+    print("HERE BRO")
+    purchased_items = Purchase_History.get_purchase_history_by_order_id(order_id)
+    coupon_code = Order.get_coupon(order_id)
+    coupon = Coupon.find_coupon(coupon_code)
+    payment = calculate_payment(purchased_items, coupon)
+    return render_template('order_success.html', title='Order Success', user = User.get(current_user.id), order_id = order_id, cart_items = purchased_items, payment = payment, coupon = coupon)
 
 @bp.route('/logout')
 def logout():
