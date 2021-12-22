@@ -60,7 +60,8 @@ def review_page(id):
             current_user.isSeller = True
         else:
             current_user.isSeller = False
-    current_user_review = Review.current_user_review(current_user.id ,id)
+        current_user_review = Review.current_user_review(current_user.id ,id)
+    current_user_review = None
     if form.submit.data and form.validate_on_submit():
         Review.update_Review(current_user.id, id, form.rating.data, datetime.datetime.now() , form.description.data)
         return render_template('reviews.html', title='Review', numReview = numReview, getAvg = getAvg, product= product, reviews=reviews, current_user_review=current_user_review, form = form,

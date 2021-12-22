@@ -286,6 +286,11 @@ def publicUser(id):
     Returns:
         render_template: renders the public user view html page
     """
+    if not current_user.is_authenticated:
+        print("WHY AM I HERE")
+        flash('Log in to view a user profile!')
+        return redirect( url_for('index.index'))
+        
     form = UpdateForms()
     form2=DeleteForms()
     form3=LeaveForms()
