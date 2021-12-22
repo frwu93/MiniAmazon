@@ -49,10 +49,10 @@
     </select>
     <br>
     <label for="minPrice">min price:</label>
-    <input type="float" id="minPrice" name="minPrice" min="0">
+    <input type="number" step="0.01" id="minPrice" name="minPrice" min="0">
   
     <label for="maxPrice">max price:</label>
-    <input type="float" id="maxPrice" name="maxPrice" min="minPrice">
+    <input type="number" step="0.01" id="maxPrice" name="maxPrice" min="minPrice">
   
     <br>
     <input type="submit" value="Filter">

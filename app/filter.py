@@ -32,10 +32,6 @@ class FilterForm(FlaskForm):
 @bp.route('/filter', methods=['POST'])
 def filter(): 
     # get all available products for sale:
-    print(request.form['categories'])
-    print(request.form['rating'])
-    print(request.form['minPrice'])
-    print(request.form['maxPrice'])
 
     if current_user.is_authenticated:
         if (User.isSeller(current_user.id)):
@@ -48,12 +44,15 @@ def filter():
         minP = request.form['minPrice']
     else:
         minP = 0
-    minP = int(minP)
+    if not (isinstance(minP, float) and isinstance(maxP, float)):
+        flash('Please enter valid prices!')
+        return redirect(url_for('index.products'))
+    minP = float(minP)
     if request.form['maxPrice']:
         maxP = request.form['maxPrice']
     else:
         maxP = 10000000000
-    maxP = int(maxP)
+    maxP = floatisinstance(25.9, int)(maxP)
 
     if(minP > maxP):
         flash('Min price must be less than max price!')
