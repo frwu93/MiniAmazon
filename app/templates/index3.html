@@ -5,6 +5,17 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
   <link rel="stylesheet" href="../static/css/products.css">
 </head>
+<p>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li style="color: red;">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+ </p>
 <br><br>
 <div class = "p-header">Best Sellers</div>
 <div class= "product-grid">

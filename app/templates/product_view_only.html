@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<head>
+  <link rel="stylesheet" href="../static/css/products.css">
+</head>
+
+ <p>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li style="color: red;">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+ </p>
+ 
+ <main class="product-container">
+  <!-- Left Column / Image -->
+  <div class="left-column">
+    <img src="{{product.imageLink}}" alt="">
+  </div>
+  <!-- Right Column -->
+  <div class="right-column">
+    <!-- Product Description -->
+    <div class="product-description">
+      <div class ="p-category">{{product.category}}</div>
+      <div class ="p-name">{{product.name}}</div>
+      <p>Listed by <a href="{{ url_for('users.publicUser', id=product.seller_id) }}">{{product.seller_name}}</a></p>
+      <div class ="p-description">{{product.description}}</div>
+      <div class ="p-stock">{% if product.quantity == 0 %} OUT OF STOCK {% elif product.quantity <= 10%} Only {{product.quantity}} left in stock {% else %} Quantity: {{product.quantity}} {% endif %}</div>
+    </div>
+  
+    <!-- Product Pricing -->
+    <div class="p-price"> ${{product.price}}</div>
+    <br><br>
+    <div class="p-addcart">
+      <form>
+        <div class="p-quantity" for="quantity">Quantity:</div>
+        <input class="p-input" type="number" id="quantity" name="quantity" min="1" max={{product.quantity}}>
+        <input class="cart-btn" type="submit" value="Add to Cart">
+        <a  class= "cart-btn" href="{{ url_for('carts.addToSaved', buyer_id = 0, product_id=product.id) }}" style = "float: left">Save For Later</a>
+      </form>   
+    </div>
+    <br><br><br><br>
+    <div>
+      <div class="review-rating">Average Product Review: {{review}}</span>
+      </div>
+    </div>
+    <br>
+      <!-- Product Review -->
+      
+      {% if myBool %}
+      {% if myreview %} Your review: {{myreview.description}}
+      <br>
+      Rating: {{myreview.rating}}
+      {% else %}  
+      <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+          {{ form.rating.label }}<br/>
+          {{ form.rating(size=1) }}<br/>
+          {% for error in form.rating.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        </p>
+        <p>
+          {{ form.description.label }}<br/>
+          {{ form.description(size=96) }}<br/>
+          {% for error in form.description.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        </p>
+        {{ form.submit(class_="btn btn-black") }}
+      </form>
+    {% endif %}
+
+
+      {% endif %}
+    
+      <br><br>
+      <div> 
+        <a href="{{ url_for('review.review_page', id=product.id) }}">See All Reviews For This Product</a> 
+      </div>
+
+  </div>
+
+ </main>
+ {% endblock %}
+ 
+

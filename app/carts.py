@@ -113,10 +113,14 @@ def addToCart(buyer_id, product_id):
             current_user.isSeller = True
         else:
             current_user.isSeller = False
-    Cart.add_to_cart(buyer_id, product_id, quantity)
-    return redirect(url_for('carts.cart'))
+        Cart.add_to_cart(buyer_id, product_id, quantity)
+        return redirect(url_for('carts.cart'))
+    else:
+        flash('Please log in to add items to cart!')
+        return redirect(url_for('index.product', id = product_id))
 
-@bp.route('/cart/save-for-later/<int:buyer_id>-<int:product_id>')
+
+@bp.route('/cart/save-for-later/<int:buyer_id>/<int:product_id>')
 def addToSaved(buyer_id, product_id):
     """
     Allows a user to add an item to their "saved for later" list
@@ -128,11 +132,13 @@ def addToSaved(buyer_id, product_id):
     Returns:
         Redirects to cart page
     """
-    if current_user.is_authenticated:
-        if (User.isSeller(current_user.id)):
-            current_user.isSeller = True
-        else:
-            current_user.isSeller = False
+    if not current_user.is_authenticated:
+        flash('Please log in to save this product!')
+        return redirect(url_for('index.product', id = product_id))
+    if (User.isSeller(current_user.id)):
+        current_user.isSeller = True
+    else:
+        current_user.isSeller = False
     Cart.add_to_saved(buyer_id, product_id)
     return redirect(url_for('carts.cart'))
 

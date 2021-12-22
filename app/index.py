@@ -91,8 +91,6 @@ def product(id):
             myBool=True
         print(myBool)
         myreview = Review.get(current_user.id, id)
-        if review==None:
-            review=0
 
         #If you fill out review form, refresh and added review to database
         if form.validate_on_submit():
@@ -100,9 +98,12 @@ def product(id):
             Review.submitReview(current_user.id, id, form.rating.data, datetime.datetime.now() , form.description.data)     
             return redirect(url_for('index.product', id=id))
 
-
         else:
-            #If you attempt to check out
+            #If you attempt to add to cart
+            if not current_user.is_authenticated:
+                flash('Please log in to add this product to your cart!')
+                return render_template('product_view_only.html', product = product, review = review, form = form, myreview = None, myBool=None)
+
             if quantity:
                 if int(quantity) > Product.get(id).quantity: 
                     flash('This item is out of stock! Please wait until the seller restocks before purchasing.')
@@ -126,7 +127,11 @@ def product(id):
                                 purchase_history= purchases)
 
     else:
-        return redirect(url_for('index.index'))
+        form = ReviewForm()
+        product = Product.get(id)
+        review = Review.get_avg(id)
+        return render_template('product_view_only.html', product = product, review = review, form = form, myreview = None, myBool=None)
+
 #Added product to cart confirmation
 @bp.route('/product/addedToCart/<int:id>')
 def added_to_cart(id):
