@@ -41,7 +41,6 @@ class Order:
             order_id = rows[0][0]
             return order_id
         except Exception as e:
-            print(e)
             print("Adding to Orders Failed")
     
     @staticmethod
@@ -69,7 +68,6 @@ class Order:
                         price = price,
                         quantity = quantity)
         except Exception as e:
-            print(e)
             print("Adding to Order History Failed")
     
     @staticmethod
@@ -94,6 +92,5 @@ class Order:
             coupon_used = rows[0][0]
             return coupon_used
         except Exception as e:
-            print(e)
             print("Couldn't find used coupon")
     

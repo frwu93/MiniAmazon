@@ -218,8 +218,6 @@ def reviews():
     reviews =  Review.get_UserReviews(current_user.id)
     sellerReviews=Review.get_SellerReviews(current_user.id)
     reviews4seller=Review.get_buyer_review_for_sellers(current_user.id)
-    print(reviews4seller)
-    print("hi")
     if current_user.is_authenticated:
         if (User.isSeller(current_user.id)):
             current_user.isSeller = True
@@ -287,7 +285,6 @@ def publicUser(id):
         render_template: renders the public user view html page
     """
     if not current_user.is_authenticated:
-        print("WHY AM I HERE")
         flash('Log in to view a user profile!')
         return redirect( url_for('index.index'))
         

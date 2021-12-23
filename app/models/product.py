@@ -183,7 +183,6 @@ ORDER BY id
             print("Deleted: ", id)
             return id
         except Exception  as e:
-            print(e)
             print("Could not delete: ", id)
             return None
 
@@ -200,7 +199,6 @@ ORDER BY id
                                 quantity=quantity)
             return id
         except Exception  as e:
-            print(e)
             print("Could not change quantity: ", id)
             return None
 
@@ -217,7 +215,6 @@ ORDER BY id
                                 price=price)
             return id
         except Exception  as e:
-            print(e)
             print("Could not change quantity: ", id)
             return None
     
@@ -242,7 +239,6 @@ ORDER BY id
                                   category=category)
             return id
         except Exception  as e:
-            print(e)
             print("Could not change quantity: ", id)
             return None
 
@@ -259,7 +255,6 @@ ORDER BY id
                                 description=description)
             return id
         except Exception  as e:
-            print(e)
             print("Could not change description: ", id)
             return None
 
@@ -278,7 +273,6 @@ ORDER BY id
                                 amount=amount)
             return id
         except Exception  as e:
-            print(e)
             print("Decreasing purchased items failed")
 
 
@@ -301,7 +295,6 @@ ORDER BY id
             print("Inserted: ", id)
             return Product.get(id)
         except Exception as e:
-            print(e)
             # likely email already in use; better error checking and
             # reporting needed
             print("not added")

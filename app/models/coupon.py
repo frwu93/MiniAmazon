@@ -46,7 +46,6 @@ class Coupon:
                     code = code)
             return Coupon(*(rows[0])) if rows is not None else None
         except Exception as e:
-            print(e)
             print("Couldn't find coupon")
 
     @staticmethod
@@ -73,7 +72,6 @@ class Coupon:
                     code = code)
             return len(rows) == 0
         except Exception as e:
-            print(e)
             print("Couldn't find coupon")
 
 
@@ -104,7 +102,6 @@ class Coupon:
                                   start=start,
                                   end=end)
             coupon = rows[0][0]
-            print("Inserted: ", coupon)
 
             rows = app.db.execute('''
                 INSERT INTO Product_Coupons(coupon, product_id)
@@ -117,10 +114,9 @@ class Coupon:
             flash("Coupon created: " + code + " for product " + str(product_id))
             return coupon
         except Exception as e:
-            print(e)
             # likely email already in use; better error checking and
             # reporting needed
-            print("not added")
+            print("Coupon not added")
             return None
     
     

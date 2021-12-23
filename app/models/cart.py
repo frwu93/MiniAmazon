@@ -87,8 +87,6 @@ class Cart:
                                 product_id = product_id,
                                 quantity=quantity)
         except Exception as e:
-            print(e)
-            print(f"Could not change quantity of {product_id} to {quantity}")
             return None
 
     @staticmethod
@@ -113,7 +111,6 @@ class Cart:
                                 buyer_id = buyer_id, 
                                 product_id = product_id)
         except Exception as e:
-            print(e)
             print(f'Could note delete {product_id}')
             return None
     
@@ -142,7 +139,6 @@ class Cart:
             product_id = rows[0][1]
             return product_id
         except Exception as e:
-            print(e)
             print("Adding to Cart Failed")
             return None
 
@@ -171,7 +167,6 @@ class Cart:
             product_id = rows[0][1]
             return product_id
         except Exception as e:
-            print(e)
             print("Adding to Saved Failed")
             return None
     
@@ -192,7 +187,6 @@ class Cart:
             ''',
                     buyer_id = buyer_id)
         except Exception as e:
-            print(e)
             print("Clearing Cart failed")
 
     @staticmethod
@@ -218,7 +212,6 @@ class Cart:
                     buyer_id = buyer_id,
                     product_id = product_id)
         except Exception as e:
-            print(e)
             print("Toggling saved failed")
     
     @staticmethod
@@ -244,7 +237,6 @@ class Cart:
                     product_id = product_id)
             return len(rows) > 0
         except Exception as e:
-            print(e)
             print("can't find item")
 
     

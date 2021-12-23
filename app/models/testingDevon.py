@@ -68,8 +68,6 @@ WHERE buyer_id = :buyer_id AND product_id = :product_id
                                  time_reviewed=time_reviewed,
                                  description = description)
       
-           print("backend reg; inserted into db")
-           #print("Inserted: ", id)
            return None
        except Exception as e:
            print(e)
@@ -80,8 +78,6 @@ WHERE buyer_id = :buyer_id AND product_id = :product_id
 
    @staticmethod
    def submitSellerReview(seller_id, buyer_id, rating, description, time_reviewed):
-
-       #print(description)
         """[summary]
         Submits a seller review for these given paramaters
        Args:
@@ -103,7 +99,6 @@ WHERE buyer_id = :buyer_id AND product_id = :product_id
                                  time_reviewed=time_reviewed)
       
            print("backend reg; inserted into db")
-           #print("Inserted: ", id)
            return None
         except Exception as e:
            print(e)
@@ -252,7 +247,6 @@ WHERE product_id = :product_id AND buyer_id=:buyer_id
 ''', product_id=product_id, buyer_id=buyer_id
                              )
        if rows is not None and len(rows)>=1:
-           #print("hello", rows)
            return rows[0]
        return None
 
@@ -372,7 +366,6 @@ WHERE seller_id = :seller_id
 ''', seller_id=seller_id
                              )
        if rows is not None and len(rows)>=1:
-           #print("hello", rows)
            return rows[0]
        return None
 
@@ -408,7 +401,6 @@ WHERE seller_id = :seller_id AND buyer_id=:buyer_id
 ''', seller_id=seller_id, buyer_id=buyer_id
                              )
        if rows is not None and len(rows)>=1:
-           #print("hello", rows)
            return rows[0]
        return None
 
@@ -428,7 +420,6 @@ ORDER BY time_reviewed DESC
 ''', buyer_id=buyer_id
                              )
        if rows is not None and len(rows)>=1:
-           #print("hello", rows)
            return [row for row in rows]
        return None
 

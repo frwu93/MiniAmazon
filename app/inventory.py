@@ -54,14 +54,12 @@ class CouponForm(FlaskForm):
 @bp.route('/inventory')
 def inventory():
     # get all available your products for sale:
-    print("go to inventory")
     products = Product.get_all_by_seller(current_user.id, True)
     args = request.args
 
     #Check which items to fulfill
     for i in args.keys():
         if i.startswith("fulfill"):
-            print(i, " whoops")
             mylist = i.split("-")
             order_id = mylist[1]
             product_id = mylist[2]
@@ -154,8 +152,6 @@ def analytics():
 @bp.route('/deleteItem/<int:id>')
 def deleteItem(id):
     # get all available products for sale:
-    print("Removing  item: ", id)
-
     product = Product.remove_listing(id)
     return redirect(url_for('inventory.inventory'))
 
@@ -164,7 +160,6 @@ def deleteItem(id):
 @bp.route('/inventory/changeQuantity/<int:id>-<int:quantity>')
 def changeQuantity(id, quantity):
     # get all available products for sale:
-    print("Changing quantity of ", id, " to ", quantity)
     product = Product.change_quantity(id, quantity)
     return redirect(url_for('inventory.inventory'))
 
@@ -172,7 +167,6 @@ def changeQuantity(id, quantity):
 @bp.route('/inventory/changePrice/<int:id>-<float:price>')
 def changePrice(id, price):
     # get all available products for sale:
-    print("Changing price of ", id, " to ", price)
     product = Product.change_price(id, price)
     return redirect(url_for('inventory.inventory'))
 
@@ -181,8 +175,6 @@ def changePrice(id, price):
 def addCoupon(id):
     form = CouponForm()
     if form.validate_on_submit():
-        print(type(form.start.data))
-        print(form.end.data)
         Coupon.new_coupon(form.couponCode.data,
                              form.percentOff.data,
                              form.start.data,

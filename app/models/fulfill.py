@@ -67,7 +67,6 @@ ORDER BY time_ordered
                         order_id=order_id,
                         product_id=product_id)
         except Exception as e:
-            print(e)
             print(f"Could not fulfill product: {product_id} for order: {order_id}")
             return None
 

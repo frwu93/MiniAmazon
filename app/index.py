@@ -55,7 +55,6 @@ def index():
             current_user.isSeller = True
         else:
             current_user.isSeller = False
-        print(current_user.isSeller)
 
     else:
         purchases = None
@@ -89,7 +88,6 @@ def product(id):
         #Verifies that you have bought this product so you can leave a review
         if product.name in lst:
             myBool=True
-        print(myBool)
         myreview = Review.get(current_user.id, id)
 
         #If you fill out review form, refresh and added review to database
